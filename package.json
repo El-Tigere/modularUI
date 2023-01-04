@@ -1,0 +1,11 @@
+{
+  "name": "modularui",
+  "version": "1.0.0",
+  "description": "It's like react but different.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "El_Tigere",
+  "license": "ISC"
+}
