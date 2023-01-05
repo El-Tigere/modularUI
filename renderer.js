@@ -1,56 +1,75 @@
-// there are probably much better ways of implementing this
-function renderOne(part, tag, elements) {
-    let start = part.indexOf(tag[0]);
-    let name = tag[0].match(/[\w\d]+:[\w\d]+/)[0];
-    let open = `<${name}`; // > is missing because open tags can have arguments but always start with <name
-    let close = `</${name}>`;
-    let counter = 0;
+class Element {
     
-    // find closing tag
-    let i;
-    for(i = start + tag.length; i < part.length; i++) {
-        if(part.substring(i).startsWith(open)) {
-            counter++;
-        }
-        if(part.substring(i).startsWith(close)) {
-            if(counter == 0) break;
-            else counter--;
-        }
+    // namespaces: {'xmlNamespace': require('according import')}; getElement: (content, args) => `<html>`
+    constructor(namespaces, getElement) {
+        this.namespaces = namespaces;
+        this.getElement = getElement;
     }
-    let end = i;
-    let content = part.substring(start + tag[0].length, end);
     
-    // find arguments
-    let args = {};
-    (tag[0].substring(1 + name.length).match(/[\w\d]+(?:\s*=\s*(?:".*"|\d+))?/g) || []).forEach((e) => {
-        let parts = e.split('=');
-        if(parts[1]) {
-            args[parts[0]] = parts[1].startsWith('"') ? parts[1].substring(1, parts[1].length - 1) : + parts[1];
-        } else {
-            args[parts[0]] = 1;
-        }
-    });
-    
-    // insert the resulting elements
-    let nameParts = name.split(':');
-    let result = elements[nameParts[0]][nameParts[1]](content, args).trim();
-    return part.substring(0, start) + result + part.substring(end + close.length, part.length);
-}
-
-function render(part, elements) {
-    let tagRegex = /<[\w\d]+:[\w\d]+(?:\s+[\w\d]+(?:\s*=\s*(?:".*"|\d+))?)*>/; // matches an open tag with arguments like <div class="h">
-    
-    // find first tag
-    let tag = part.match(tagRegex);
-    while(tag && tag[0]) {
-        // render tag
-        part = renderOne(part, tag, elements);
+    // renders the element
+    render(content, args) {
+        // first call the getElement function
+        let part = this.getElement(content, args);
         
-        // find next tag
-        tag = part.match(tagRegex);
+        // then render the custom tags
+        return this.renderCustomElements(part);
     }
     
-    return part;
+    // renders the custom elements used in this element; there are probably much better ways of implementing this
+    renderCustomElements(part) {
+        const tagRegex = /<[\w\d]+:[\w\d]+(?:\s+[\w\d]+(?:\s*=\s*(?:".*"|\d+))?)*>/g; // matches an open tag with arguments like <div class="h">
+        
+        // find first tag
+        let tags = part.match(tagRegex);
+        while(tags && tags[0]) {
+            
+            // get last open tag (can not contain another custom tag)
+            let tag = tags[tags.length - 1];
+            
+            // get tag information
+            let start = part.indexOf(tag);
+            let name = tag.match(/[\w\d]+:[\w\d]+/)[0];
+            let open = `<${name}`; // > is missing because open tags can have arguments but always start with <name
+            let close = `</${name}>`;
+            let counter = 0;
+            
+            // find closing tag
+            let i;
+            for(i = start + tag.length; i < part.length; i++) {
+                if(part.substring(i).startsWith(open)) {
+                    counter++;
+                }
+                if(part.substring(i).startsWith(close)) {
+                    if(counter == 0) break;
+                    else counter--;
+                }
+            }
+            let end = i;
+            let content = part.substring(start + tag.length, end);
+            
+            // find arguments
+            let args = {};
+            (tag.substring(1 + name.length).match(/[\w\d]+(?:\s*=\s*(?:".*"|\d+))?/g) || []).forEach((e) => {
+                let parts = e.split('=');
+                if(parts[1]) {
+                    args[parts[0]] = parts[1].startsWith('"') ? parts[1].substring(1, parts[1].length - 1) : + parts[1];
+                } else {
+                    args[parts[0]] = 1;
+                }
+            });
+            
+            // insert the resulting elements
+            let nameParts = name.split(':');
+            let result = this.namespaces[nameParts[0]][nameParts[1]].render(content, args).trim();
+            part = part.substring(0, start) + result + part.substring(end + close.length, part.length);
+            
+            // find next tag
+            tags = part.match(tagRegex);
+            
+        }
+        
+        return part;
+    }
+    
 }
-
-exports.render = render;
+exports.Element = Element;

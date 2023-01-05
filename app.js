@@ -1,4 +1,15 @@
-exports.main = (content, args) => `
+const {Element} = require('./renderer');
+
+exports.test = new Element({}, (content, args) => `
+<div>
+    <h1>${args.header}</h1>
+    ${content}
+</div>
+`);
+
+exports.main = new Element({
+    'app': require('./app')
+}, (content, args) => `
 <div>
     <p>test</p>
     <p>zweite Zeile</p>
@@ -9,11 +20,4 @@ exports.main = (content, args) => `
         </app:test>
     </app:test>
 </div>
-`;
-
-exports.test = (content, args) => `
-<div>
-    <h1>${args.header}</h1>
-    ${content}
-</div>
-`
+`);
