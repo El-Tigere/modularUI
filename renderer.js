@@ -6,17 +6,23 @@ class Element {
         this.getElement = getElement;
     }
     
-    // renders the element
-    render(content, args) {
+    /**
+     * renders the element
+     * @param {*} content the xml inbetween the opening and closing tag
+     * @param {*} args the xml attributes passed in the open tag
+     * @param {*} requestData the data from the http request (like form data)
+     * @returns 
+     */
+    render(content, args, requestData) {
         // first call the getElement function
-        let part = this.getElement(content, args);
+        let part = this.getElement(content, args, requestData);
         
         // then render the custom tags
-        return this.renderCustomElements(part);
+        return this.renderCustomElements(part, requestData);
     }
     
     // renders the custom elements used in this element; there are probably much better ways of implementing this
-    renderCustomElements(part) {
+    renderCustomElements(part, requestData) {
         const tagRegex = /<[\w\d]+:[\w\d]+(?:\s+[\w\d]+(?:\s*=\s*(?:".*"|\d+))?)*>/g; // matches an open tag with arguments like <div class="h">
         
         // find first tag
@@ -60,7 +66,7 @@ class Element {
             
             // insert the resulting elements
             let nameParts = name.split(':');
-            let result = this.namespaces[nameParts[0]][nameParts[1]].render(content, args).trim();
+            let result = this.namespaces[nameParts[0]][nameParts[1]].render(content, args, requestData).trim();
             part = part.substring(0, start) + result + part.substring(end + close.length, part.length);
             
             // find next tag
