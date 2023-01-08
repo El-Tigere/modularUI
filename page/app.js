@@ -2,7 +2,8 @@ const {Element} = require('../renderer');
 
 const namespaces = {
     'app': require('./app'),
-    'logos': require('./logos/logos')
+    'logos': require('./logos/logos'),
+    'login': require('./login/login')
 };
 
 exports.main = new Element(namespaces, (content, args) => `
@@ -33,27 +34,10 @@ exports.mainbody = new Element(namespaces, (content, args) => `
     <logos:logo size=50></logos:logo>
     <logos:logo size=25></logos:logo>
     <p>def</p>
-    <app:form></app:form>
-    <app:info></app:info>
+    <login:form></login:form>
+    <login:info></login:info>
 </main>
 <footer>
     <p>xyz</p>
 </footer>
-`);
-
-exports.form = new Element(namespaces, (content, args) => `
-<form action="/" method="post">
-    <fieldset>
-        <legend>login</legend>
-        <label for="username">username: </label>
-        <input id="username" type="text" name="username"><br>
-        <label for="password">password: </label>
-        <input id="password" type="password" name="password"><br>
-        <input type="submit" value="submit">
-    </fieldset>
-</form>
-`);
-
-exports.info = new Element(namespaces, (content, args, data) => `
-<p>username: ${data.username || ''}</p>
 `);
