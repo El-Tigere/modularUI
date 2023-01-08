@@ -9,6 +9,7 @@ const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 const app = require('./page/app');
 
 function respondWidthContent(req, res, requestData) {
+    requestData.req = req;
     
     // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
     const url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
@@ -49,18 +50,17 @@ const server = http.createServer((req, res) => {
     
     if(req.method == 'POST') {
         let end = false;
-        const data = {};
+        const formData = {};
         req.on('data', (chunk) => {
             (chunk + '').split('&').forEach((e) => {
                 const parts = e.split('=');
-                if(parts[0] && parts[1]) data[parts[0]] = parts[1];
+                if(parts[0] && parts[1]) formData[parts[0]] = parts[1];
             });
         });
         function respond() {
             if(!end) {
-                console.log(data);
                 end = true;
-                respondWidthContent(req, res, data);
+                respondWidthContent(req, res, {'formData': formData});
             }
         }
         req.on('end', respond);

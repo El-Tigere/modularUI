@@ -10,7 +10,7 @@ class Element {
      * renders the element
      * @param {*} content the xml inbetween the opening and closing tag
      * @param {*} args the xml attributes passed in the open tag
-     * @param {*} requestData the data from the http request (like form data)
+     * @param {*} request the data from the http request (req: http request, formData: data from forms)
      * @returns 
      */
     render(content, args, requestData) {
