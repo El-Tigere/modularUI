@@ -23,21 +23,26 @@ exports.main = new Element(namespaces, (content, args) => `
 `);
 
 exports.mainbody = new Element(namespaces, (content, args) => `
-<header>
-    <logos:logo size=128></logos:logo>
-    <span>abc</span>
-</header>
-<main>
-    <logos:logo size=400></logos:logo>
-    <logos:logo size=200></logos:logo>
-    <logos:logo size=100></logos:logo>
-    <logos:logo size=50></logos:logo>
-    <logos:logo size=25></logos:logo>
-    <p>def</p>
-    <login:form></login:form>
-    <login:info></login:info>
-</main>
-<footer>
-    <p>xyz</p>
-</footer>
+<app:header></app:header>
+<app:content></app:content>
 `);
+
+exports.header = new Element(namespaces, (content, args, data) => `
+<header>
+    <aside><logos:logo size=64></logos:logo></aside>
+    <h1>Testseite</h1>
+    <aside class="user-info">
+        ${(data.formData && data.formData.username) ? `<p>logged in as</p><p><b>${data.formData.username}</b></p>` : '<p>not logged in</p><p><a href="login">login</a></p>'}
+    </aside>
+</header>
+`);
+
+exports.content = new Element(namespaces, (content, args) => `
+<main>
+    <h1>Testseite</h1>
+    <p>Das ist eine Testseite.</p>
+    <h1>Login</h1>
+    <login:form></login:form>
+</main>
+`);
+

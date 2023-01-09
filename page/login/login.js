@@ -13,6 +13,7 @@ exports.form = new Element({}, (content, args) => `
 </form>
 `);
 
+/* debug element */
 exports.info = new Element({}, (content, args, data) => `
 <p>username: ${(data.formData || {}).username || ''}</p>
 <p>method: ${data.req.method}</p>

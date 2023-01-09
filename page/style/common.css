@@ -2,4 +2,39 @@ body {
     background-color: #222;
     color: #EEE;
     font-family: Arial, Helvetica, sans-serif;
+    margin: 0px;
+}
+
+/* header */
+header {
+    /*background-color: #333;*/
+    box-shadow: 0px 0px 8px #000;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 8px 0px 8px 0px;
+}
+
+header aside {
+    width: 200px;
+    display: grid;
+    place-items: center;
+}
+
+.user-info p {
+    text-align: center;
+    margin: 0px;
+}
+
+.user-info p + p {
+    margin: 5px 0px 0px 0px;
+}
+
+/* main content */
+main {
+    margin: 50px 100px 50px 100px;
 }
