@@ -22,15 +22,15 @@ exports.main = new Element(namespaces, (content, args) => `
 </html>
 `);
 
-exports.mainbody = new Element(namespaces, (content, args) => `
+exports.mainbody = new Element(namespaces, (content, args, data) => `
 <app:header></app:header>
-<app:content></app:content>
+${(data.req.url || '/') == '/login' ? '<login:content></login:content>': '<app:content></app:content>'}
 `);
 
 exports.header = new Element(namespaces, (content, args, data) => `
 <header>
     <aside><logos:logo size=64></logos:logo></aside>
-    <h1>Testseite</h1>
+    <h1><a href="/">Testseite</a></h1>
     <aside class="user-info">
         ${(data.formData && data.formData.username) ? `<p>logged in as</p><p><b>${data.formData.username}</b></p>` : '<p>not logged in</p><p><a href="login">login</a></p>'}
     </aside>
@@ -41,8 +41,14 @@ exports.content = new Element(namespaces, (content, args) => `
 <main>
     <h1>Testseite</h1>
     <p>Das ist eine Testseite.</p>
-    <h1>Login</h1>
-    <login:form></login:form>
+    <h2>Unterüberschrift</h2>
+    <p>Damit die Seite interessanter ist, sind hier noch mehr Überschriften und Texte.</p>
+    <h2>Mehr Text</h2>
+    <p>
+        Hier ist<br>
+        ein<br>
+        Beispieltext
+    </p>
+    <p>lorem ipsum oder so</p>
 </main>
 `);
-

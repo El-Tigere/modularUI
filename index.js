@@ -19,25 +19,26 @@ function respondWidthContent(req, res, requestData) {
         return;
     }
     
-    // respond with the main page when the url '/' is requested
-    if(url == '/') {
-        res.writeHead(200, {'ContentType': 'text/html'});
-        let page = app.main.render('', {}, requestData).trim();
-        res.end(page);
-        return;
-    }
-    
-    // respond with resources
-    // TODO: add a way to use client side external js files
-    if(!url.endsWith('.js') && fs.existsSync('page/' + url)) {
+    if(url && url != '/' && !url.endsWith('.js') && fs.existsSync('page/' + url) && fs.lstatSync('page/' + url).isFile()) {
+        // respond with resources
+        // TODO: add a way to use client side external js files
         const ending = (url.match(/\.[\w\d]+$/) || [])[0];
         if(ending && mimeTypes[ending]) {
             res.writeHead(200, {'ContentType': mimeTypes[ending]});
             res.end(fs.readFileSync('page/' + url));
         } else {
+            console.log(url);
+            console.log(fs.lstatSync('page/' + url).isFile());
             res.writeHead(415);
             res.end();
         }
+        return;
+    } else {
+        // respond with the main page
+        // TODO: add a way of having multiple main pages
+        res.writeHead(200, {'ContentType': 'text/html'});
+        let page = app.main.render('', {}, requestData).trim();
+        res.end(page);
         return;
     }
     

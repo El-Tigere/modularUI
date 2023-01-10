@@ -1,6 +1,10 @@
 const {Element} = require('../../renderer');
 
-exports.form = new Element({}, (content, args) => `
+const namespaces = {
+    'login': require('./login')
+}
+
+exports.form = new Element(namespaces, (content, args) => `
 <form action="/" method="post">
     <fieldset>
         <legend>login</legend>
@@ -13,8 +17,16 @@ exports.form = new Element({}, (content, args) => `
 </form>
 `);
 
+exports.content = new Element(namespaces, (content, args) => `
+<main>
+    <h1>Login</h1>
+    <login:form></login:form>
+</main>
+`);
+
+
 /* debug element */
-exports.info = new Element({}, (content, args, data) => `
+exports.info = new Element(namespaces, (content, args, data) => `
 <p>username: ${(data.formData || {}).username || ''}</p>
 <p>method: ${data.req.method}</p>
 `);
