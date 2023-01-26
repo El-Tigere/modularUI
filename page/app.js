@@ -24,7 +24,9 @@ exports.main = new Element(namespaces, (content, args) => `
 
 exports.mainbody = new Element(namespaces, (content, args, data) => `
 <app:header></app:header>
+<center>
 ${(data.req.url || '/') == '/login' ? '<login:content></login:content>': '<app:content></app:content>'}
+</center>
 `);
 
 exports.header = new Element(namespaces, (content, args, data) => `
@@ -50,5 +52,6 @@ exports.content = new Element(namespaces, (content, args) => `
         Beispieltext
     </p>
     <p>lorem ipsum oder so</p>
+    <div class="test-square"></div>
 </main>
 `);
