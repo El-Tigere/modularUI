@@ -8,6 +8,9 @@ const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 
 const app = require('./page/app');
 
+// TODO: automatically delete entrys
+const sessionData = {};
+
 function getCookies(req) {
     let cookies = {};
     req.headers?.cookie?.split(';')?.forEach((e) => {
@@ -19,8 +22,20 @@ function getCookies(req) {
     return cookies;
 }
 
-function respondWidthContent(req, res, requestData) {
-    requestData.req = req;
+// TODO: make this (a lot) more secure
+function generateSessionToken() {
+    let token;
+    do {
+        token = '';
+        for(let i = 0; i < 64; i++) {
+            token += ((Math.random() * 16) >> 0).toString(16);
+        }
+    } while(sessionData.hasOwnProperty(token))
+    return token;
+}
+
+function respondWidthContent(req, res, data) {
+    data.req = req;
     
     // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
     const url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
@@ -48,7 +63,7 @@ function respondWidthContent(req, res, requestData) {
         // respond with the main page
         // TODO: add a way of having multiple main pages
         res.writeHead(200, {'ContentType': 'text/html'});
-        let page = app.main.render('', {}, requestData).trim();
+        let page = app.main.render('', {}, data).trim();
         res.end(page);
         return;
     }
@@ -60,7 +75,17 @@ function respondWidthContent(req, res, requestData) {
 
 const server = http.createServer((req, res) => {
     
+    let data = {};
+    
     const cookies = getCookies(req);
+    if(!cookies.hasOwnProperty('sessionToken') || !sessionData.hasOwnProperty(cookies['sessionToken'] || 'x')) {
+        let token = generateSessionToken();
+        sessionData[token] = {};
+        res.setHeader('Set-Cookie', 'sessionToken=' + token)
+    }
+    
+    data['cookies'] = cookies;
+    data['sessionData'] = sessionData[cookies['sessionToken']];
     
     if(req.method == 'POST') {
         let end = false;
@@ -74,14 +99,14 @@ const server = http.createServer((req, res) => {
         function respond() {
             if(!end) {
                 end = true;
-                respondWidthContent(req, res, {'formData': formData});
+                data['formData'] = formData;
             }
         }
         req.on('end', respond);
         setTimeout(respond, 5000);
-    } else {
-        respondWidthContent(req, res, {});
     }
+    
+    respondWidthContent(req, res, data);
     
 });
 
