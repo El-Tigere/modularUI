@@ -8,6 +8,17 @@ const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 
 const app = require('./page/app');
 
+function getCookies(req) {
+    let cookies = {};
+    req.headers?.cookie?.split(';')?.forEach((e) => {
+        let [key, ...value] = e.split('=');
+        key = key.trim();
+        value = decodeURIComponent(value?.join('=').trim());
+        if(key) cookies[key] = value;
+    });
+    return cookies;
+}
+
 function respondWidthContent(req, res, requestData) {
     requestData.req = req;
     
@@ -48,6 +59,8 @@ function respondWidthContent(req, res, requestData) {
 }
 
 const server = http.createServer((req, res) => {
+    
+    const cookies = getCookies(req);
     
     if(req.method == 'POST') {
         let end = false;
