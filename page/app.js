@@ -25,7 +25,7 @@ exports.main = new Element(namespaces, (content, args) => `
 exports.mainbody = new Element(namespaces, (content, args, data) => `
 <app:header></app:header>
 <center>
-${(data.req.url || '/') == '/login' ? '<login:content></login:content>': '<app:content></app:content>'}
+${(data.url || '/') == '/login' ? '<login:content></login:content>': '<app:content></app:content>'}
 </center>
 `);
 
@@ -34,7 +34,7 @@ exports.header = new Element(namespaces, (content, args, data) => `
     <aside><logos:logo size=64></logos:logo></aside>
     <h1><a href="/">Testseite</a></h1>
     <aside class="user-info">
-        ${(data.formData && data.formData.username) ? `<p>logged in as</p><p><b>${data.formData.username}</b></p>` : '<p>not logged in</p><p><a href="login">login</a></p>'}
+        ${(data?.formData?.username) ? `<p>logged in as</p><p><b>${data.formData.username}</b></p>` : '<p>not logged in</p><p><a href="login">login</a></p>'}
     </aside>
 </header>
 `);

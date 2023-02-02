@@ -34,59 +34,70 @@ function generateSessionToken() {
     return token;
 }
 
-function respondWidthContent(req, res, data) {
-    data.req = req;
+// TODO: alternative for having a "url" here (save current page in sessionData)
+function respondMainPage(res, resCode, url, data) {
+    data.url = url;
+    res.writeHead(resCode, {'ContentType': 'text/html'});
+    let page = app.main.render('', {}, data).trim();
+    res.end(page);
+}
+
+function respondResource(res, url) {
+    const ending = (url.match(/\.[\w\d]+$/) || [])[0];
+    if(ending && mimeTypes[ending]) {
+        res.writeHead(200, {'ContentType': mimeTypes[ending]});
+        res.end(fs.readFileSync('page/' + url));
+    } else {
+        console.log('unknown file type:')
+        console.log('url: ' + url);
+        console.log(fs.lstatSync('page/' + url).isFile());
+        res.writeHead(415);
+        res.end();
+    }
+    return;
+}
+
+function respond(req, res, data) {
     
     // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
     const url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
     if(url == '') {
-        res.writeHead(404);
-        res.end();
+        respondMainPage(res, 404, '/404', data);
         return;
     }
     
     if(url && url != '/' && !url.endsWith('.js') && fs.existsSync('page/' + url) && fs.lstatSync('page/' + url).isFile()) {
         // respond with resources
         // TODO: add a way to use client side external js files
-        const ending = (url.match(/\.[\w\d]+$/) || [])[0];
-        if(ending && mimeTypes[ending]) {
-            res.writeHead(200, {'ContentType': mimeTypes[ending]});
-            res.end(fs.readFileSync('page/' + url));
-        } else {
-            console.log(url);
-            console.log(fs.lstatSync('page/' + url).isFile());
-            res.writeHead(415);
-            res.end();
-        }
+        respondResource(res, url);
         return;
     } else {
         // respond with the main page
         // TODO: add a way of having multiple main pages
-        res.writeHead(200, {'ContentType': 'text/html'});
-        let page = app.main.render('', {}, data).trim();
-        res.end(page);
+        respondMainPage(res, 200, url, data);
         return;
     }
-    
-    res.writeHead(404);
-    res.end;
     
 }
 
 const server = http.createServer((req, res) => {
     
     let data = {};
+    data.req = req;
     
+    // get cookies
     const cookies = getCookies(req);
+    data.cookies = cookies;
+    
+    // get session data and create session token if necessary
     if(!cookies.hasOwnProperty('sessionToken') || !sessionData.hasOwnProperty(cookies['sessionToken'] || 'x')) {
         let token = generateSessionToken();
         sessionData[token] = {};
         res.setHeader('Set-Cookie', 'sessionToken=' + token)
     }
+    data.sessionData = sessionData[cookies['sessionToken']];
     
-    data['cookies'] = cookies;
-    data['sessionData'] = sessionData[cookies['sessionToken']];
-    
+    // get data from http POST
     if(req.method == 'POST') {
         let end = false;
         const formData = {};
@@ -96,17 +107,20 @@ const server = http.createServer((req, res) => {
                 if(parts[0] && parts[1]) formData[parts[0]] = parts[1];
             });
         });
-        function respond() {
+        function endTransfer() {
             if(!end) {
                 end = true;
-                data['formData'] = formData;
+                data.formData = formData;
+                // respond
+                respond(req, res, data);
             }
         }
-        req.on('end', respond);
-        setTimeout(respond, 5000);
+        req.on('end', endTransfer);
+        setTimeout(endTransfer, 5000);
+    } else {
+        // respond
+        respond(req, res, data);
     }
-    
-    respondWidthContent(req, res, data);
     
 });
 
