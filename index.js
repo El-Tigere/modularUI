@@ -90,12 +90,13 @@ const server = http.createServer((req, res) => {
     data.cookies = cookies;
     
     // get session data and create session token if necessary
-    if(!cookies.hasOwnProperty('sessionToken') || !sessionData.hasOwnProperty(cookies['sessionToken'] || 'x')) {
-        let token = generateSessionToken();
-        sessionData[token] = {};
-        res.setHeader('Set-Cookie', 'sessionToken=' + token)
+    let sessionToken = cookies['sessionToken'];
+    if(!sessionToken || !sessionData.hasOwnProperty(sessionToken)) {
+        sessionToken = generateSessionToken();
+        sessionData[sessionToken] = {};
+        res.setHeader('Set-Cookie', 'sessionToken=' + sessionToken)
     }
-    data.sessionData = sessionData[cookies['sessionToken']];
+    data.sessionData = sessionData[sessionToken];
     
     // get data from http POST
     if(req.method == 'POST') {
