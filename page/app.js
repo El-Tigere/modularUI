@@ -3,7 +3,8 @@ const {Element} = require('../renderer');
 const namespaces = {
     'app': require('./app'),
     'logos': require('./logos/logos'),
-    'login': require('./login/login')
+    'login': require('./login/login'),
+    'random': require('./random/random')
 };
 
 exports.main = new Element(namespaces, (content, args) => `
@@ -15,6 +16,7 @@ exports.main = new Element(namespaces, (content, args) => `
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Testseite</title>
         <link rel="stylesheet" href="style/common.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
         <script src="client.js"></script>
     </head>
     <body>
@@ -26,7 +28,9 @@ exports.main = new Element(namespaces, (content, args) => `
 exports.mainbody = new Element(namespaces, (content, args, data) => `
 <app:header></app:header>
 <center>
-${(data.url || '/') == '/login' ? '<login:content></login:content>': '<app:content></app:content>'}
+${data.url == '/' ? '<app:content></app:content>' : ''}
+${data.url == '/login' ? '<login:content></login:content>' : ''}
+${data.url == '/random' ? '<random:content></random:content>' : ''}
 </center>
 `);
 
@@ -54,5 +58,7 @@ exports.content = new Element(namespaces, (content, args) => `
     </p>
     <p>lorem ipsum oder so</p>
     <div class="test-square"></div>
+    <h2>Links</h2>
+    <a href="/random">Zufall</a>
 </main>
 `);
