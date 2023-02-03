@@ -66,9 +66,9 @@ function respond(req, res, data) {
         return;
     }
     
-    if(url && url != '/' && !url.endsWith('.js') && fs.existsSync('page/' + url) && fs.lstatSync('page/' + url).isFile()) {
+    if(url && url != '/' /*&& !url.endsWith('.js')*/ && fs.existsSync('page/' + url) && fs.lstatSync('page/' + url).isFile()) {
         // respond with resources
-        // TODO: add a way to use client side external js files
+        // TODO: add a way to not send client side js files
         respondResource(res, url);
         return;
     } else {

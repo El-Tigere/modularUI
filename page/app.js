@@ -15,6 +15,7 @@ exports.main = new Element(namespaces, (content, args) => `
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Testseite</title>
         <link rel="stylesheet" href="style/common.css">
+        <script src="client.js"></script>
     </head>
     <body>
         <app:mainbody></app:mainbody>
