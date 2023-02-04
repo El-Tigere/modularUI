@@ -93,7 +93,7 @@ const server = http.createServer((req, res) => {
     let sessionToken = cookies['sessionToken'];
     if(!sessionToken || !sessionData.hasOwnProperty(sessionToken)) {
         sessionToken = generateSessionToken();
-        sessionData[sessionToken] = {};
+        sessionData[sessionToken] = {someKey: 'someData'};
         res.setHeader('Set-Cookie', 'sessionToken=' + sessionToken)
     }
     data.sessionData = sessionData[sessionToken];
@@ -103,7 +103,7 @@ const server = http.createServer((req, res) => {
         let end = false;
         const formData = {};
         req.on('data', (chunk) => {
-            (chunk + '').split('&').forEach((e) => {
+            decodeURIComponent(chunk.toString()).split('&').forEach((e) => {
                 const parts = e.split('=');
                 if(parts[0] && parts[1]) formData[parts[0]] = parts[1];
             });

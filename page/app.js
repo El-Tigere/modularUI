@@ -4,7 +4,7 @@ const namespaces = {
     'app': require('./app'),
     'logos': require('./logos/logos'),
     'login': require('./login/login'),
-    'random': require('./random/random')
+    'test': require('./test/test')
 };
 
 exports.main = new Element(namespaces, (content, args) => `
@@ -30,7 +30,7 @@ exports.mainbody = new Element(namespaces, (content, args, data) => `
 <center>
 ${data.url == '/' ? '<app:content></app:content>' : ''}
 ${data.url == '/login' ? '<login:content></login:content>' : ''}
-${data.url == '/random' ? '<random:content></random:content>' : ''}
+${data.url == '/test' ? '<test:content></test:content>' : ''}
 </center>
 `);
 
@@ -57,8 +57,7 @@ exports.content = new Element(namespaces, (content, args) => `
         Beispieltext
     </p>
     <p>lorem ipsum oder so</p>
-    <div class="test-square"></div>
     <h2>Links</h2>
-    <a href="/random">Zufall</a>
+    <a href="/test">Tests</a>
 </main>
 `);
