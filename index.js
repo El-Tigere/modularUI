@@ -101,17 +101,38 @@ const server = http.createServer((req, res) => {
     // get data from http POST
     if(req.method == 'POST') {
         let end = false;
-        const formData = {};
+        let postDataString = '';
         req.on('data', (chunk) => {
-            decodeURIComponent(chunk.toString()).split('&').forEach((e) => {
-                const parts = e.split('=');
-                if(parts[0] && parts[1]) formData[parts[0]] = parts[1];
-            });
+            postDataString += chunk.toString();
         });
         function endTransfer() {
             if(!end) {
                 end = true;
-                data.formData = formData;
+                let postDataObject = {};
+                
+                // parse post data
+                decodeURIComponent(postDataString).split('&').forEach((e) => {
+                    const parts = e.split('=');
+                    if(parts[0] && parts[1]) postDataObject[parts[0]] = parts[1];
+                });
+                data.postData = postDataObject;
+                // update sessionData
+                // TODO: make this readable
+                Object.keys(postDataObject).forEach((key) => {
+                    if(key.startsWith('updateData[') && key.endsWith(']') && key != 'updateData[]') {
+                        let path = key.substring('updateData['.length, key.length - ']'.length).split('][');
+                        let current = sessionData[sessionToken];
+                        for(let i = 0; i < path.length - 1; i++) {
+                            // break when the property that should be set does not already exist
+                            if(!current?.hasOwnProperty(path[i])) break;
+                            
+                            // go to the next key in the object path
+                            current = current[path[i]];
+                        };
+                        if(current?.hasOwnProperty(path[path.length - 1])) current[path[path.length - 1]] = postDataObject[key];
+                    }
+                });
+                
                 // respond
                 respond(req, res, data);
             }

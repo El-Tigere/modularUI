@@ -26,6 +26,7 @@ exports.content = new Element(namespaces, (content, args, data) => `
             ${Object.values(data.sessionData || {}).map((e) => `<td>${e}</td>`)}
         </tr>
     </table>
+    <button onClick="testSessionData()">send some sessionData</button>
     <h2>Schriftgröße</h2>
     <p>Ein bisschen normaler Text.</p>
     <div class="test-square"></div>
