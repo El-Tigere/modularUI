@@ -1,6 +1,17 @@
 class Element {
     
-    // namespaces: {'xmlNamespace': require('according import')}; getElement: (content, args) => `<html>`
+    /**
+     * @callback getElementCallback
+     * @param {string} content
+     * @param {Object} args
+     * @returns {string}
+     */
+    
+    /**
+     * constructor
+     * @param {Object.<string, Object>} namespaces an Object with this format: {'xmlNamespace': require('according import')}
+     * @param {getElementCallback} getElement
+     */
     constructor(namespaces, getElement) {
         this.namespaces = namespaces;
         this.getElement = getElement;
@@ -8,10 +19,10 @@ class Element {
     
     /**
      * renders the element
-     * @param {*} content the xml inbetween the opening and closing tag
-     * @param {*} args the xml attributes passed in the open tag
-     * @param {*} request the data from the http request (req: http request, formData: data from forms)
-     * @returns 
+     * @param {string} content the xml inbetween the opening and closing tag
+     * @param {Object} args the xml attributes passed in the open tag
+     * @param {Object} request the data from the http request (req: http request, formData: data from forms)
+     * @returns {string}
      */
     render(content, args, requestData) {
         // first call the getElement function

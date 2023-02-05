@@ -8,7 +8,7 @@ const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 
 const app = require('./page/app');
 
-// TODO: automatically delete entrys
+// TODO: automatically delete entries
 const sessionData = {};
 
 function getCookies(req) {
@@ -70,7 +70,7 @@ function respond(req, res, data) {
     
     if(url && url != '/' /*&& !url.endsWith('.js')*/ && fs.existsSync('page/' + url) && fs.lstatSync('page/' + url).isFile()) {
         // respond with resources
-        // TODO: add a way to not send client side js files
+        // TODO: add a way to not send server side js files
         respondResource(res, url);
         return;
     } else {
