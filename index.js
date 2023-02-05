@@ -94,7 +94,7 @@ const server = http.createServer((req, res) => {
     if(!sessionToken || !sessionData.hasOwnProperty(sessionToken)) {
         sessionToken = generateSessionToken();
         sessionData[sessionToken] = {someKey: 'someData'};
-        res.setHeader('Set-Cookie', 'sessionToken=' + sessionToken)
+        res.setHeader('Set-Cookie', `sessionToken=${sessionToken}; SameSite=Strict`)
     }
     data.sessionData = sessionData[sessionToken];
     
