@@ -37,7 +37,8 @@ function generateSessionToken() {
 // TODO: alternative for having a "url" here (save current page in sessionData)
 function respondMainPage(res, resCode, url, data) {
     data.url = url;
-    res.writeHead(resCode, {'ContentType': 'text/html'});
+    res.setHeader('Content-Type', 'text/html');
+    res.writeHead(resCode);
     let page = app.main.render('', {}, data).trim();
     res.end(page);
 }
@@ -45,7 +46,8 @@ function respondMainPage(res, resCode, url, data) {
 function respondResource(res, url) {
     const ending = (url.match(/\.[\w\d]+$/) || [])[0];
     if(ending && mimeTypes[ending]) {
-        res.writeHead(200, {'ContentType': mimeTypes[ending]});
+        res.setHeader('Content-Type', mimeTypes[ending]);
+        res.writeHead(200);
         res.end(fs.readFileSync('page/' + url));
     } else {
         console.log('unknown file type:')
