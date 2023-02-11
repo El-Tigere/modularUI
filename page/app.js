@@ -39,7 +39,7 @@ exports.header = new Element(namespaces, (content, args, data) => `
     <aside><logos:logo size=64></logos:logo></aside>
     <h1><a href="/">Testseite</a></h1>
     <aside class="user-info">
-        ${(data?.formData?.username) ? `<p>logged in as</p><p><b>${data.formData.username}</b></p>` : '<p>not logged in</p><p><a href="/login">login</a></p>'}
+        ${(data?.postData?.username) ? `<p>logged in as</p><p><b>${data.postData.username}</b></p>` : '<p>not logged in</p><p><a href="/login">login</a></p>'}
     </aside>
 </header>
 `);

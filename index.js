@@ -102,7 +102,7 @@ const server = http.createServer((req, res) => {
     let sessionToken = cookies['sessionToken'];
     if(!sessionToken || !sessionData.hasOwnProperty(sessionToken)) {
         sessionToken = generateSessionToken();
-        sessionData[sessionToken] = {someKey: 'someData'};
+        sessionData[sessionToken] = {pageState: {someKey: 'someData'}};
         res.setHeader('Set-Cookie', `sessionToken=${sessionToken}; SameSite=Strict`)
     }
     data.sessionData = sessionData[sessionToken];
@@ -125,12 +125,13 @@ const server = http.createServer((req, res) => {
                     if(parts[0] && parts[1]) postDataObject[parts[0]] = parts[1];
                 });
                 data.postData = postDataObject;
+                
                 // update sessionData
                 // TODO: make this readable
                 Object.keys(postDataObject).forEach((key) => {
                     if(key.startsWith('updateData[') && key.endsWith(']') && key != 'updateData[]') {
                         let path = key.substring('updateData['.length, key.length - ']'.length).split('][');
-                        let current = sessionData[sessionToken];
+                        let current = sessionData[sessionToken].pageState;
                         for(let i = 0; i < path.length - 1; i++) {
                             // break when the property that should be set does not already exist
                             if(!current?.hasOwnProperty(path[i])) break;

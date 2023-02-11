@@ -20,10 +20,10 @@ exports.content = new Element(namespaces, (content, args, data) => `
     <h2>sessionData</h2>
     <table>
         <tr>
-            ${Object.keys(data.sessionData || {}).map((e) => `<td>${e}</td>`)}
+            ${Object.keys(data.sessionData.pageState || {}).map((e) => `<td>${e}</td>`)}
         </tr>
         <tr>
-            ${Object.values(data.sessionData || {}).map((e) => `<td>${e}</td>`)}
+            ${Object.values(data.sessionData.pageState || {}).map((e) => `<td>${e}</td>`)}
         </tr>
     </table>
     <button onClick="testSessionData()">send some sessionData</button>
