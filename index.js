@@ -59,6 +59,7 @@ function respondResource(res, url) {
     return;
 }
 
+// TODO: implement responses with only one element of a page
 function respond(req, res, data) {
     
     // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
@@ -92,6 +93,7 @@ const server = http.createServer((req, res) => {
     data.cookies = cookies;
     
     // get session data and create session token if necessary
+    // TODO: only create session when on main page
     let sessionToken = cookies['sessionToken'];
     if(!sessionToken || !sessionData.hasOwnProperty(sessionToken)) {
         sessionToken = generateSessionToken();

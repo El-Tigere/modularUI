@@ -15,9 +15,9 @@ exports.main = new Element(namespaces, (content, args) => `
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Testseite</title>
-        <link rel="stylesheet" href="style/common.css">
+        <link rel="stylesheet" href="/style/common.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-        <script src="client.js"></script>
+        <script src="/client.js"></script>
     </head>
     <body>
         <app:mainbody></app:mainbody>
@@ -39,7 +39,7 @@ exports.header = new Element(namespaces, (content, args, data) => `
     <aside><logos:logo size=64></logos:logo></aside>
     <h1><a href="/">Testseite</a></h1>
     <aside class="user-info">
-        ${(data?.formData?.username) ? `<p>logged in as</p><p><b>${data.formData.username}</b></p>` : '<p>not logged in</p><p><a href="login">login</a></p>'}
+        ${(data?.formData?.username) ? `<p>logged in as</p><p><b>${data.formData.username}</b></p>` : '<p>not logged in</p><p><a href="/login">login</a></p>'}
     </aside>
 </header>
 `);
