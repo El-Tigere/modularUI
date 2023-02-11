@@ -34,9 +34,14 @@ function generateSessionToken() {
     return token;
 }
 
-// TODO: alternative for having a "url" here (save current page in sessionData)
+function splitUrl(url) {
+    let parts = url.split('/');
+    parts.splice(0, 1);
+    return parts;
+}
+
 function respondMainPage(res, resCode, url, data) {
-    data.url = url;
+    data.url = splitUrl(url);
     res.setHeader('Content-Type', 'text/html');
     res.writeHead(resCode);
     let page = app.main.render('', {}, data).trim();

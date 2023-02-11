@@ -20,19 +20,19 @@ exports.main = new Element(namespaces, (content, args) => `
         <script src="/client.js"></script>
     </head>
     <body>
-        <app:mainbody></app:mainbody>
+        <app:header></app:header>
+        <center>
+            <app:pagecontent></app:pagecontent>
+        </center>
     </body>
 </html>
 `);
 
-exports.mainbody = new Element(namespaces, (content, args, data) => `
-<app:header></app:header>
-<center>
-${data.url == '/' ? '<app:content></app:content>' : ''}
-${data.url == '/login' ? '<login:content></login:content>' : ''}
-${data.url == '/test' ? '<test:content></test:content>' : ''}
-</center>
-`);
+exports.pagecontent = new Element(namespaces, (content, args, data) => {
+    if(!data.url[0]) return '<app:content></app:content>';
+    if(data.url[0] == 'login') return '<login:content></login:content>';
+    if(data.url[0] == 'test') return '<test:content></test:content>';
+});
 
 exports.header = new Element(namespaces, (content, args, data) => `
 <header>
