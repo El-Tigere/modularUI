@@ -32,6 +32,7 @@ exports.pagecontent = new Element(namespaces, (content, args, data) => {
     if(!data.url[0]) return '<app:content></app:content>';
     if(data.url[0] == 'login') return '<login:content></login:content>';
     if(data.url[0] == 'test') return '<test:content></test:content>';
+    return '';
 });
 
 exports.header = new Element(namespaces, (content, args, data) => `
@@ -39,7 +40,7 @@ exports.header = new Element(namespaces, (content, args, data) => `
     <aside><logos:logo size=64></logos:logo></aside>
     <h1><a href="/">Testseite</a></h1>
     <aside class="user-info">
-        ${(data?.postData?.username) ? `<p>logged in as</p><p><b>${data.postData.username}</b></p>` : '<p>not logged in</p><p><a href="/login">login</a></p>'}
+        ${data.sessionData.login ? `<p>logged in as</p><p><b>${data.sessionData.login.username}</b></p>` : '<p>not logged in</p><p><a href="/login">login</a></p>'}
     </aside>
 </header>
 `);

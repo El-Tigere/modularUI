@@ -88,6 +88,13 @@ function respond(req, res, data) {
     
 }
 
+// TODO: add databases for actual user authentication
+function login(username, password, session) {
+    if(!username || !password) return false; // login if any username or password is used
+    session.login = {username: username};
+    return true;
+}
+
 const server = http.createServer((req, res) => {
     
     let data = {};
@@ -108,6 +115,7 @@ const server = http.createServer((req, res) => {
     data.sessionData = sessionData[sessionToken];
     
     // get data from http POST
+    // TODO: make this readable
     if(req.method == 'POST') {
         let end = false;
         let postDataString = '';
@@ -126,8 +134,8 @@ const server = http.createServer((req, res) => {
                 });
                 data.postData = postDataObject;
                 
-                // update sessionData
-                // TODO: make this readable
+                // update pageState in sessionData
+                // TODO: add a more general way of allowing clients to send data to the server
                 Object.keys(postDataObject).forEach((key) => {
                     if(key.startsWith('updateData[') && key.endsWith(']') && key != 'updateData[]') {
                         let path = key.substring('updateData['.length, key.length - ']'.length).split('][');
@@ -142,6 +150,11 @@ const server = http.createServer((req, res) => {
                         if(current?.hasOwnProperty(path[path.length - 1])) current[path[path.length - 1]] = postDataObject[key];
                     }
                 });
+                
+                // login
+                if(postDataObject.username && postDataObject.password) {
+                    login(postDataObject.username, postDataObject.password, sessionData[sessionToken]);
+                }
                 
                 // respond
                 respond(req, res, data);
