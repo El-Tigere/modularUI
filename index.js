@@ -5,6 +5,7 @@ const port = 8080;
 const host = '127.0.0.1';
 
 const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
+const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
 
 const app = require('./page/app');
 
@@ -67,12 +68,27 @@ function respondResource(res, url) {
 // TODO: implement responses with only one element of a page
 function respond(req, res, data) {
     
-    // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
-    const url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
-    if(url == '') {
+    let url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
+    
+    if(!url) {
+        // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
         respondMainPage(res, 404, '/404', data);
         return;
     }
+    
+    // redirect the url if possible (not to other domains but inside of the current domain)
+    console.log('original url: ' + url);
+    console.log(Object.keys(pageMap.redirect));
+    for(let key of Object.keys(pageMap.redirect)) {
+        console.log('key: ' + key);
+        console.log(url.startsWith(key));
+        if(url.startsWith(key)) {
+            
+            url = pageMap.redirect[key] + url.substring(key.length);
+            break;
+        }
+    }
+    console.log('redirected url: ' + url);
     
     if(url && url != '/' /*&& !url.endsWith('.js')*/ && fs.existsSync('page/' + url) && fs.lstatSync('page/' + url).isFile()) {
         // respond with resources
