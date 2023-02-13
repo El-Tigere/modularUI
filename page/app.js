@@ -4,7 +4,8 @@ const namespaces = {
     'app': require('./app'),
     'logos': require('./logos/logos'),
     'login': require('./login/login'),
-    'test': require('./test/test')
+    'test': require('./test/test'),
+    'error': require('./error/error')
 };
 
 exports.main = new Element(namespaces, (content, args) => `
@@ -30,6 +31,7 @@ exports.main = new Element(namespaces, (content, args) => `
 
 exports.pagecontent = new Element(namespaces, (content, args, data) => {
     if(!data.url[0]) return '<app:content></app:content>';
+    if(data.url[0] == '404') return '<error:notFoundContent></error:notFoundContent>';
     if(data.url[0] == 'login') return '<login:content></login:content>';
     if(data.url[0] == 'test') return '<test:content></test:content>';
     return '';

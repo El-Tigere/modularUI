@@ -4,10 +4,15 @@ const fs = require('fs');
 const port = 8080;
 const host = '127.0.0.1';
 
-const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
-const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
-
 const app = require('./page/app');
+
+const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
+// in pageMap (and mainPages): "/abc/123/" for entire directory; "/abc/123" for only this file
+const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
+const mainPages = {
+    "default": app.main,
+    "/": app.main
+};
 
 // TODO: automatically delete entries
 const sessionData = {};
@@ -41,11 +46,11 @@ function splitUrl(url) {
     return parts;
 }
 
-function respondMainPage(res, resCode, url, data) {
+function respondMainPage(element, res, resCode, url, data) {
     data.url = splitUrl(url);
     res.setHeader('Content-Type', 'text/html');
     res.writeHead(resCode);
-    let page = app.main.render('', {}, data).trim();
+    let page = element.render('', {}, data).trim();
     res.end(page);
 }
 
@@ -67,41 +72,44 @@ function respondResource(res, url) {
 
 // TODO: implement responses with only one element of a page
 function respond(req, res, data) {
-    
     let url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
+    console.log('url: ' + url);
     
     if(!url) {
         // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
-        respondMainPage(res, 404, '/404', data);
+        respondMainPage(mainPages.default, res, 404, '/404', data);
+        console.log('-> invalid');
         return;
     }
     
     // redirect the url if possible (not to other domains but inside of the current domain)
-    console.log('original url: ' + url);
-    console.log(Object.keys(pageMap.redirect));
     for(let key of Object.keys(pageMap.redirect)) {
-        console.log('key: ' + key);
-        console.log(url.startsWith(key));
-        if(url.startsWith(key)) {
-            
+        if((key.endsWith('/') && url.startsWith(key)) || url == key) {
             url = pageMap.redirect[key] + url.substring(key.length);
             break;
         }
     }
-    console.log('redirected url: ' + url);
     
-    if(url && url != '/' /*&& !url.endsWith('.js')*/ && fs.existsSync('page/' + url) && fs.lstatSync('page/' + url).isFile()) {
-        // respond with resources
-        // TODO: add a way to not send server side js files
+    // check if the requested url is a resource
+    // TODO: add a way to not send server side js files
+    if(fs.existsSync('page/' + url) && fs.lstatSync('page/' + url).isFile()) {
         respondResource(res, url);
-        return;
-    } else {
-        // respond with the main page
-        // TODO: add a way of having multiple main pages
-        respondMainPage(res, 200, url, data);
+        console.log('-> resource');
         return;
     }
     
+    // check if the requested url is a main page
+    for(let key of Object.keys(mainPages)) {
+        if((key.endsWith('/') && url.startsWith(key)) || url == key) {
+            respondMainPage(mainPages[key], res, 200, url, data);
+            console.log('-> main page');
+            return;
+        }
+    }
+    
+    // if this is reached, no useful response was found
+    respondMainPage(mainPages.default, res, 404, '/404', data);
+    console.log('-> not found');
 }
 
 // TODO: add databases for actual user authentication
