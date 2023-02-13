@@ -31,10 +31,10 @@ exports.main = new Element(namespaces, (content, args) => `
 
 exports.pagecontent = new Element(namespaces, (content, args, data) => {
     if(!data.url[0]) return '<app:content></app:content>';
-    if(data.url[0] == '404') return '<error:notFoundContent></error:notFoundContent>';
     if(data.url[0] == 'login') return '<login:content></login:content>';
     if(data.url[0] == 'test') return '<test:content></test:content>';
-    return '';
+    //if(data.url[0] == '404') return '<error:notFoundContent></error:notFoundContent>';
+    return '<error:notFoundContent></error:notFoundContent>';
 });
 
 exports.header = new Element(namespaces, (content, args, data) => `

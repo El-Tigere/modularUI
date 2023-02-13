@@ -99,6 +99,7 @@ function respond(req, res, data) {
     }
     
     // check if the requested url is a main page
+    // FIXME: respond with code 404 if page was not found (allow setting the response code in data when loading the page)
     for(let key of Object.keys(mainPages)) {
         if((key.endsWith('/') && url.startsWith(key)) || url == key) {
             respondMainPage(mainPages[key], res, 200, url, data);
