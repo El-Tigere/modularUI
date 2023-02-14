@@ -17,6 +17,28 @@ const mainPages = {
 // TODO: automatically delete entries
 const sessionData = {};
 
+/* example for the structure of the data object passed to the getElement function of elements:
+? for optional properties
+
+{
+    "req": {...},
+    "cookies": {
+        "sessionToken": "44bc25832a6ab5361a4308661a9197cd069a9176f14af0f3a585d099aa23e8f8"
+    },
+    "sessionData": {
+        "pageState": {"someKey": "someData"},
+        "login": {"username": "Peter"}
+    },
+    "postData?": {
+        "username": "abc",
+        "password": "123",
+        "updateData[colorTheme]": "hotdogStand"
+    },
+    "url": ["play", "level-select", "3-B"]
+}
+
+*/
+
 function getCookies(req) {
     let cookies = {};
     req.headers?.cookie?.split(';')?.forEach((e) => {
