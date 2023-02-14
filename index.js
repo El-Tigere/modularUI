@@ -11,7 +11,7 @@ const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
 const mainPages = {
     "default": app.main,
-    "/": app.main
+    "/": app.main // FIXME: this does not work if it is not "/"
 };
 
 // TODO: automatically delete entries
@@ -34,7 +34,8 @@ const sessionData = {};
         "password": "123",
         "updateData[colorTheme]": "hotdogStand"
     },
-    "url": ["play", "level-select", "3-B"]
+    "url": ["play", "level-select", "3-B"],
+    "resCode": 200
 }
 
 */
@@ -70,9 +71,10 @@ function splitUrl(url) {
 
 function respondMainPage(element, res, resCode, url, data) {
     data.url = splitUrl(url);
+    data.resCode = resCode; // sets res code to expected res code
     res.setHeader('Content-Type', 'text/html');
-    res.writeHead(resCode);
     let page = element.render('', {}, data).trim();
+    res.writeHead(data.resCode); // sends res code that might have changed
     res.end(page);
 }
 
@@ -95,12 +97,10 @@ function respondResource(res, url) {
 // TODO: implement responses with only one element of a page
 function respond(req, res, data) {
     let url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
-    console.log('url: ' + url);
     
     if(!url) {
         // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
         respondMainPage(mainPages.default, res, 404, '/404', data);
-        console.log('-> invalid');
         return;
     }
     
@@ -116,23 +116,19 @@ function respond(req, res, data) {
     // TODO: add a way to not send server side js files
     if(fs.existsSync('page/' + url) && fs.lstatSync('page/' + url).isFile()) {
         respondResource(res, url);
-        console.log('-> resource');
         return;
     }
     
     // check if the requested url is a main page
-    // FIXME: respond with code 404 if page was not found (allow setting the response code in data when loading the page)
     for(let key of Object.keys(mainPages)) {
         if((key.endsWith('/') && url.startsWith(key)) || url == key) {
             respondMainPage(mainPages[key], res, 200, url, data);
-            console.log('-> main page');
             return;
         }
     }
     
     // if this is reached, no useful response was found
     respondMainPage(mainPages.default, res, 404, '/404', data);
-    console.log('-> not found');
 }
 
 // TODO: add databases for actual user authentication
