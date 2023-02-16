@@ -16,6 +16,11 @@ const mainPages = {
 // TODO: automatically delete entries
 const sessionData = {};
 
+// init Elements
+let collector = {};
+mainPages.default.init(collector);
+// TODO: get functions for webpage parts with the init method of an Element subclass
+
 /* example for the structure of the data object passed to the getElement function of elements:
 ? for optional properties
 

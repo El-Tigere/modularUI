@@ -15,10 +15,24 @@ class Element {
     constructor(namespaces, getElement) {
         this.namespaces = namespaces;
         this.getElement = getElement;
+        this.initialized = false;
     }
     
     /**
-     * renders the element
+     * Initializes this Element and every other element relatet through namespaces recursively.
+     * @param {Object} collector an object that can be modified by every Element during initialization
+     */
+    init(collector) {
+        if(this.initialized) return;
+        this.initialized = true;
+        
+        Object.values(this.namespaces).forEach((e) => Object.values(e).forEach((se) => {
+            if(se instanceof Element) se.init(collector);
+        }));
+    }
+    
+    /**
+     * Renders the element.
      * @param {string} content the xml inbetween the opening and closing tag
      * @param {Object} args the xml attributes passed in the open tag
      * @param {Object} request the data from the http request (req: http request, formData: data from forms)
