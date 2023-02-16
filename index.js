@@ -10,7 +10,7 @@ const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
 const mainPages = {
     "default": app.main,
-    "/": app.main
+    "": app.main
 };
 
 // TODO: automatically delete entries
@@ -119,7 +119,6 @@ function respond(req, res, data) {
     }
     
     // check if the requested url is a main page
-    console.log(url);
     for(let key of Object.keys(mainPages)) {
         if(url == key || (url.startsWith(key + '/'))) {
             respondMainPage(mainPages[key], res, 200, url, data);
