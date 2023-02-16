@@ -7,11 +7,10 @@ const host = '127.0.0.1';
 const app = require('./page/app');
 
 const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
-// in pageMap (and mainPages): "/abc/123/" for entire directory; "/abc/123" for only this file
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
 const mainPages = {
     "default": app.main,
-    "/": app.main // FIXME: this does not work if it is not "/"
+    "/": app.main
 };
 
 // TODO: automatically delete entries
@@ -106,7 +105,7 @@ function respond(req, res, data) {
     
     // redirect the url if possible (not to other domains but inside of the current domain)
     for(let key of Object.keys(pageMap.redirect)) {
-        if((key.endsWith('/') && url.startsWith(key)) || url == key) {
+        if(url == key || (url.startsWith(key + '/'))) {
             url = pageMap.redirect[key] + url.substring(key.length);
             break;
         }
@@ -120,8 +119,9 @@ function respond(req, res, data) {
     }
     
     // check if the requested url is a main page
+    console.log(url);
     for(let key of Object.keys(mainPages)) {
-        if((key.endsWith('/') && url.startsWith(key)) || url == key) {
+        if(url == key || (url.startsWith(key + '/'))) {
             respondMainPage(mainPages[key], res, 200, url, data);
             return;
         }
