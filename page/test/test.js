@@ -9,6 +9,7 @@ exports.randomNumber = new Element(namespaces, (content, args) => parseInt(Math.
 exports.randomElement = new Element(namespaces, (content, args) => `
 <p id="randomElement">
     Hier ist eine zufällige Zahl: <test:randomNumber></test:randomNumber>
+    <button onClick="update('randomElement', {});">update</button>
 </p>
 `);
 

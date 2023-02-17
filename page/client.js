@@ -1,4 +1,3 @@
-console.log('console output from a clientside js file');
 
 function testSessionData() {
     $.ajax({
@@ -7,6 +6,11 @@ function testSessionData() {
         data: {updateData: {someKey: 'some other data'}},
         success: () => console.log('success')
     });
+}
+
+// TODO: don't do this in main thread
+function update(id, data) {
+    $('#' + id).load(document.URL, {getElement: id, elementData: data});
 }
 
 document.addEventListener('DOMContentLoaded', () => {
