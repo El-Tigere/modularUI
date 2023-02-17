@@ -1,4 +1,4 @@
-const {Element} = require('../../renderer');
+const {Element, RElement} = require('../../renderer');
 
 const namespaces = {
     'test': require('./test')
@@ -6,7 +6,7 @@ const namespaces = {
 
 exports.randomNumber = new Element(namespaces, (content, args) => parseInt(Math.random() * 100).toString());
 
-exports.randomElement = new Element(namespaces, (content, args) => `
+exports.randomElement = new RElement(namespaces, 'randomElement', (content, args) => `
 <p id="randomElement">
     Hier ist eine zufällige Zahl: <test:randomNumber></test:randomNumber>
     <button onClick="update('randomElement', {});">update</button>

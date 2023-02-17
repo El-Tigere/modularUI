@@ -104,3 +104,22 @@ class Element {
     
 }
 exports.Element = Element;
+
+// refreshable / reloadable element
+class RElement extends Element {
+    
+    constructor(namespaces, id, getElement) {
+        super(namespaces, getElement);
+        this.id = id;
+    }
+    
+    init(collector) {
+        if(this.initialized) return;
+        
+        collector.rElements[this.id] = this;
+        
+        super.init(collector);
+    }
+    
+}
+exports.RElement = RElement;

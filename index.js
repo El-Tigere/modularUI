@@ -17,9 +17,9 @@ const mainPages = {
 const sessionData = {};
 
 // init Elements
-let collector = {};
+let collector = {rElements: {}};
 mainPages.default.init(collector);
-// TODO: get functions for webpage parts with the init method of an Element subclass
+const rElements = collector.rElements;
 
 /* example for the structure of the data object passed to the getElement function of elements:
 ? for optional properties
@@ -183,6 +183,7 @@ const server = http.createServer((req, res) => {
                 
                 // update pageState in sessionData
                 // TODO: add a more general way of allowing clients to send data to the server
+                // TODO: make an object parser for this
                 Object.keys(postDataObject).forEach((key) => {
                     if(key.startsWith('updateData[') && key.endsWith(']') && key != 'updateData[]') {
                         let path = key.substring('updateData['.length, key.length - ']'.length).split('][');
@@ -201,6 +202,19 @@ const server = http.createServer((req, res) => {
                 // login
                 if(postDataObject.username && postDataObject.password) {
                     login(postDataObject.username, postDataObject.password, sessionData[sessionToken]);
+                }
+                
+                // refresh single elements
+                // TODO: add parameters to refreshed objects
+                if(postDataObject.getElement) {
+                    let element = rElements[postDataObject.getElement];
+                    if(element) {
+                        // TODO: somehow add url here
+                        respondMainPage(element, res, 200, '/', data);
+                    } else {
+                        respondMainPage(mainPages.default, res, 404, '/404', data);
+                    }
+                    return;
                 }
                 
                 // respond
