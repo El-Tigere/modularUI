@@ -142,6 +142,49 @@ function login(username, password, session) {
     return true;
 }
 
+/**
+ * Parses a string from a http post request into an object
+ * @param {string} str 
+ */
+function parsePostData(str) {
+    let obj = {};
+    
+    // split input into individual property assignments
+    const properties = str.split('&');
+    properties.forEach((p) => {
+        // split property into key and value
+        let [key, val] = p.split('=');
+        if(!(key && val)) return;
+        
+        // go to the object that should be changed
+        const keyParts = key.match(/[\w\d%!().\-_]+|\[\]/g);
+        let current = obj;
+        for(let i = 0; i < keyParts.length - 1; i++)
+        {
+            if(keyParts[i] == '[]') return; // this is only allowed for the last key part
+            
+            // create new object or array if necessary
+            if(!current[keyParts[i]]) {
+                if(keyParts[i + 1] && (!isNaN(keyParts[i + 1]) || keyParts[i + 1] == '[]')) current[keyParts[i]] = [];
+                else current[keyParts[i]] = {};
+            }
+            
+            // go to the next object/array
+            current = current[keyParts[i]];
+        }
+        
+        // insert value
+        const lastKey = keyParts[keyParts.length - 1];
+        if(lastKey == '[]' && current instanceof Array) {
+            current.push(val);
+        } else {
+            current[lastKey] = val;
+        }
+    });
+    
+    return obj;
+}
+
 const server = http.createServer((req, res) => {
     
     let data = {};
@@ -172,19 +215,20 @@ const server = http.createServer((req, res) => {
         function endTransfer() {
             if(!end) {
                 end = true;
-                let postDataObject = {};
+                // TODO: check for special characters in postDataString
+                let postDataObject = parsePostData(decodeURIComponent(postDataString));
                 
                 // parse post data
-                decodeURIComponent(postDataString).split('&').forEach((e) => {
+                /*decodeURIComponent(postDataString).split('&').forEach((e) => {
                     const parts = e.split('=');
                     if(parts[0] && parts[1]) postDataObject[parts[0]] = parts[1];
-                });
+                });*/
                 data.postData = postDataObject;
-                
+                console.log(decodeURIComponent(postDataString));
+                console.log(postDataObject);
                 // update pageState in sessionData
                 // TODO: add a more general way of allowing clients to send data to the server
-                // TODO: make an object parser for this
-                Object.keys(postDataObject).forEach((key) => {
+                /*Object.keys(postDataObject).forEach((key) => {
                     if(key.startsWith('updateData[') && key.endsWith(']') && key != 'updateData[]') {
                         let path = key.substring('updateData['.length, key.length - ']'.length).split('][');
                         let current = sessionData[sessionToken].pageState;
@@ -197,7 +241,10 @@ const server = http.createServer((req, res) => {
                         };
                         if(current?.hasOwnProperty(path[path.length - 1])) current[path[path.length - 1]] = postDataObject[key];
                     }
-                });
+                });*/
+                if(postDataObject.updateData) {
+                    Object.assign(sessionData[sessionToken].pageState, postDataObject.updateData);
+                }
                 
                 // login
                 if(postDataObject.username && postDataObject.password) {
