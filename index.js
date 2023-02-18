@@ -211,6 +211,13 @@ const server = http.createServer((req, res) => {
         let postDataString = '';
         req.on('data', (chunk) => {
             postDataString += chunk.toString();
+            
+            // limit request size
+            // TODO: find a better way of limiting the request size
+            if(postDataString.length > (1024 * 16)) {
+                end = true;
+                respondMainPage(mainPages.default, res, 404, '/404', data);
+            }
         });
         function endTransfer() {
             if(!end) {
