@@ -184,6 +184,7 @@ function parsePostData(str) {
     return obj;
 }
 
+// TODO: split this into multiple methods
 const server = http.createServer((req, res) => {
     
     let data = {};
@@ -203,86 +204,66 @@ const server = http.createServer((req, res) => {
     }
     data.sessionData = sessionData[sessionToken];
     
+    if(req.method != 'POST') {
+        // respond
+        respond(req, res, data);
+        return
+    }
+    
     // get data from http POST
-    // TODO: make this readable
-    if(req.method == 'POST') {
-        let end = false;
-        let postDataString = '';
-        req.on('data', (chunk) => {
-            postDataString += chunk.toString();
-            
-            // limit request size
-            // TODO: find a better way of limiting the request size
-            if(postDataString.length > (1024 * 16)) {
-                end = true;
-                respondMainPage(mainPages.default, res, 404, '/404', data);
-            }
-        });
-        function endTransfer() {
-            if(!end) {
-                end = true;
-                // TODO: check for special characters in postDataString
-                let postDataObject = parsePostData(decodeURIComponent(postDataString));
-                
-                // parse post data
-                /*decodeURIComponent(postDataString).split('&').forEach((e) => {
-                    const parts = e.split('=');
-                    if(parts[0] && parts[1]) postDataObject[parts[0]] = parts[1];
-                });*/
-                data.postData = postDataObject;
-                console.log(decodeURIComponent(postDataString));
-                console.log(postDataObject);
-                // update pageState in sessionData
-                // TODO: add a more general way of allowing clients to send data to the server
-                /*Object.keys(postDataObject).forEach((key) => {
-                    if(key.startsWith('updateData[') && key.endsWith(']') && key != 'updateData[]') {
-                        let path = key.substring('updateData['.length, key.length - ']'.length).split('][');
-                        let current = sessionData[sessionToken].pageState;
-                        for(let i = 0; i < path.length - 1; i++) {
-                            // break when the property that should be set does not already exist
-                            if(!current?.hasOwnProperty(path[i])) break;
-                            
-                            // go to the next key in the object path
-                            current = current[path[i]];
-                        };
-                        if(current?.hasOwnProperty(path[path.length - 1])) current[path[path.length - 1]] = postDataObject[key];
-                    }
-                });*/
-                if(postDataObject.updateData) {
-                    Object.assign(sessionData[sessionToken].pageState, postDataObject.updateData);
-                }
-                
-                // login
-                if(postDataObject.username && postDataObject.password) {
-                    login(postDataObject.username, postDataObject.password, sessionData[sessionToken]);
-                }
-                
-                // refresh single elements
-                // TODO: add parameters to refreshed objects
-                if(postDataObject.getElement) {
-                    let element = rElements[postDataObject.getElement];
-                    if(element) {
-                        // TODO: somehow add url here
-                        respondMainPage(element, res, 200, '/', data);
-                    } else {
-                        res.setHeader('Content-Type', 'text/plain');
-                        res.writeHead(404);
-                        res.end('');
-                    }
-                    return;
-                }
-                
-                // respond
-                respond(req, res, data);
-            }
+    let end = false;
+    let postDataString = '';
+    req.on('data', (chunk) => {
+        postDataString += chunk.toString();
+        
+        // limit request size
+        // TODO: find a better way of limiting the request size
+        if(postDataString.length > (1024 * 16)) {
+            end = true;
+            respondMainPage(mainPages.default, res, 404, '/404', data);
         }
-        req.on('end', endTransfer);
-        setTimeout(endTransfer, 5000);
-    } else {
+    });
+    function endTransfer() {
+        if(end) return;
+        end = true;
+        
+        // parse post data
+        // TODO: check for special characters in postDataString
+        let postDataObject = parsePostData(decodeURIComponent(postDataString));
+        data.postData = postDataObject;
+        console.log(decodeURIComponent(postDataString));
+        console.log(postDataObject);
+        
+        // update pageState in sessionData
+        if(postDataObject.updateData) {
+            Object.assign(sessionData[sessionToken].pageState, postDataObject.updateData);
+        }
+        
+        // login
+        if(postDataObject.username && postDataObject.password) {
+            login(postDataObject.username, postDataObject.password, sessionData[sessionToken]);
+        }
+        
+        // refresh single elements
+        // TODO: add parameters to refreshed objects
+        if(postDataObject.getElement) {
+            let element = rElements[postDataObject.getElement];
+            if(element) {
+                // TODO: somehow add url here
+                respondMainPage(element, res, 200, '/', data);
+            } else {
+                res.setHeader('Content-Type', 'text/plain');
+                res.writeHead(404);
+                res.end('');
+            }
+            return;
+        }
+        
         // respond
         respond(req, res, data);
     }
-    
+    req.on('end', endTransfer);
+    setTimeout(endTransfer, 5000);
 });
 
 server.listen(port, host, () => {
