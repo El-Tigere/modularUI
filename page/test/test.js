@@ -7,17 +7,17 @@ const namespaces = {
 exports.randomNumber = new Element(namespaces, (content, args) => parseInt(Math.random() * 100).toString());
 
 exports.randomElement = new RElement(namespaces, 'randomElement', (content, args) => `
-<p id="randomElement">
-    Hier ist eine zufällige Zahl: <test:randomNumber></test:randomNumber>
-    <button onClick="update('randomElement', {});">update</button>
-</p>
+Hier ist eine zufällige Zahl: <test:randomNumber></test:randomNumber>
+<button onClick="update('randomElement', {});">update</button>
 `);
 
 exports.content = new Element(namespaces, (content, args, data) => `
 <main>
     <h1>Tests<h1>
     <h2>Zufall</h2>
-    <test:randomElement></test:randomElement>
+    <p id="randomElement">
+        <test:randomElement></test:randomElement>
+    </p>
     <h2>sessionData</h2>
     <table>
         <tr>
