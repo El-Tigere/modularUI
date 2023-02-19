@@ -98,7 +98,6 @@ function respondResource(res, url) {
     return;
 }
 
-// TODO: implement responses with only one element of a page
 function respond(req, res, data) {
     let url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
     
@@ -266,7 +265,9 @@ const server = http.createServer((req, res) => {
                         // TODO: somehow add url here
                         respondMainPage(element, res, 200, '/', data);
                     } else {
-                        respondMainPage(mainPages.default, res, 404, '/404', data);
+                        res.setHeader('Content-Type', 'text/plain');
+                        res.writeHead(404);
+                        res.end('');
                     }
                     return;
                 }
