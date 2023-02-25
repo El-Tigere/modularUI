@@ -12,7 +12,7 @@ exports.form = new Element(namespaces, (content, args) => `
             <tr><td>username:</td><td><input id="username" type="text" name="username"></td></tr>
             <tr><td>password:</td><td><input id="password" type="password" name="password"></td></tr>
         </table>
-        <input type="submit" value="submit">
+        <input type="submit" value="login">
     </fieldset>
 </form>
 `);
