@@ -107,12 +107,37 @@ function respond(req, res, data) {
         return;
     }
     
+    // update pageState in sessionData
+    if(data.postData?.updateData) {
+        Object.assign(data.sessionData.pageState, data.postData.updateData);
+    }
+    
+    // login
+    if(data.postData?.username && data.postData?.password) {
+        login(data.postData.username, data.postData.password, data.sessionData);
+    }
+    
     // redirect the url if possible (not to other domains but inside of the current domain)
     for(let key of Object.keys(pageMap.redirect)) {
         if(url == key || (url.startsWith(key + '/'))) {
             url = pageMap.redirect[key] + url.substring(key.length);
             break;
         }
+    }
+    
+    // refresh single elements
+    // TODO: add parameters to refreshed objects
+    if(data.postData?.getElement) {
+        const element = rElements[data.postData.getElement];
+        if(element) {
+            respondMainPage(element, res, 200, url, data);
+        } else {
+            // invalid requested element -> respond with nothing
+            res.setHeader('Content-Type', 'text/plain');
+            res.writeHead(404);
+            res.end('');
+        }
+        return;
     }
     
     // check if the requested url is a resource
@@ -184,7 +209,6 @@ function parsePostData(str) {
     return obj;
 }
 
-// TODO: split this into multiple methods
 const server = http.createServer((req, res) => {
     
     let data = {};
@@ -195,7 +219,6 @@ const server = http.createServer((req, res) => {
     data.cookies = cookies;
     
     // get session data and create session token if necessary
-    // TODO: only create session when on main page
     let sessionToken = cookies['sessionToken'];
     if(!sessionToken || !sessionData.hasOwnProperty(sessionToken)) {
         sessionToken = generateSessionToken();
@@ -213,7 +236,10 @@ const server = http.createServer((req, res) => {
     // get data from http POST
     let end = false;
     let postDataString = '';
+    
     req.on('data', (chunk) => {
+        if(end) return;
+        
         postDataString += chunk.toString();
         
         // limit request size
@@ -223,6 +249,7 @@ const server = http.createServer((req, res) => {
             respondMainPage(mainPages.default, res, 404, '/404', data);
         }
     });
+    
     function endTransfer() {
         if(end) return;
         end = true;
@@ -231,33 +258,6 @@ const server = http.createServer((req, res) => {
         // TODO: check for special characters in postDataString
         let postDataObject = parsePostData(decodeURIComponent(postDataString));
         data.postData = postDataObject;
-        console.log(decodeURIComponent(postDataString));
-        console.log(postDataObject);
-        
-        // update pageState in sessionData
-        if(postDataObject.updateData) {
-            Object.assign(sessionData[sessionToken].pageState, postDataObject.updateData);
-        }
-        
-        // login
-        if(postDataObject.username && postDataObject.password) {
-            login(postDataObject.username, postDataObject.password, sessionData[sessionToken]);
-        }
-        
-        // refresh single elements
-        // TODO: add parameters to refreshed objects
-        if(postDataObject.getElement) {
-            let element = rElements[postDataObject.getElement];
-            if(element) {
-                // TODO: somehow add url here
-                respondMainPage(element, res, 200, '/', data);
-            } else {
-                res.setHeader('Content-Type', 'text/plain');
-                res.writeHead(404);
-                res.end('');
-            }
-            return;
-        }
         
         // respond
         respond(req, res, data);
