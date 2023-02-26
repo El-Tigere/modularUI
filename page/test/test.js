@@ -1,7 +1,8 @@
 const {Element, RElement} = require('../../renderer');
 
 const namespaces = {
-    'test': require('./test')
+    'test': require('./test'),
+    'controls': require('../controls')
 }
 
 exports.randomNumber = new Element(namespaces, (content, args) => parseInt(Math.random() * 100).toString());
@@ -11,6 +12,7 @@ Hier ist eine zufällige Zahl: <test:randomNumber></test:randomNumber>
 <button onClick="update('randomElement', {});">update</button>
 `);
 
+// TODO: fix margin stacking of switches (switch margin is distance from header margin and not from header itself for some reason)
 exports.content = new Element(namespaces, (content, args, data) => `
 <main>
     <h1>Tests</h1>
@@ -36,6 +38,12 @@ exports.content = new Element(namespaces, (content, args, data) => `
         <h2>Schriftgröße</h2>
         <p>Ein bisschen normaler Text.</p>
         <div class="test-square"></div>
+    </section>
+    <section id="schalter">
+        <h2>Schalter</h2>
+        <controls:switch></controls:switch>
+        <controls:switch></controls:switch>
+        <controls:switch></controls:switch>
     </section>
 </main>
 `);

@@ -17,3 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log($('h1'));
     console.log($('#randomElement'));
 });
+
+// controls
+function toggleButton(e) {
+    if(e.classList.contains('active')) {
+        e.classList.remove('active');
+    } else {
+        e.classList.add('active');
+    }
+}
