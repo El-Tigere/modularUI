@@ -22,9 +22,9 @@ exports.main = new Element(namespaces, (content, args) => `
     </head>
     <body>
         <app:header></app:header>
-        <center>
+        <div class="center">
             <app:pagecontent></app:pagecontent>
-        </center>
+        </div>
     </body>
 </html>
 `);
