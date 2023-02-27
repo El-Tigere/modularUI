@@ -1,3 +1,5 @@
+var colors = [false, false, false];
+
 function testSessionData() {
     $.ajax({
         type: 'POST',

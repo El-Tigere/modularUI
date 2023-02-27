@@ -40,9 +40,45 @@ exports.content = new Element(namespaces, (content, args, data) => `
         <div class="test-square"></div>
     </section>
     <section id="schalter">
-        <h2>Schalter</h2>
-        <controls:switch></controls:switch><controls:switch></controls:switch><controls:switch></controls:switch>
+        <test:schalter></test:schalter>
     </section>
 </main>
 <script src="/test/clientTest.js"></script>
 `);
+
+exports.schalter = new RElement(namespaces, 'schalter', (content, args) => `
+<h2>Schalter</h2>
+<table>
+    <tr>
+        <td>Rot: </td>
+        <td><controls:switch toggle="(s)=>colors[0]=s"></controls:switch></td>
+    </tr>
+    <tr>
+        <td>Grün: </td>
+        <td><controls:switch toggle="(s)=>colors[1]=s"></controls:switch></td>
+    </tr>
+    <tr>
+        <td>Blau: </td>
+        <td><controls:switch toggle="(s)=>colors[2]=s"></controls:switch></td>
+    </tr>
+    <tr>
+        <td><button onClick="update('schalter', {testColors: colors}); colors = [false, false, false];">speichern</button></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Ergebnis: </td>
+        <test:colorSquare></test:colorSquare>
+    </tr>
+</table>
+`);
+
+// FIXME: unreadable code
+exports.colorSquare = new Element(namespaces, (content, args, data) => {
+    let ps = data.sessionData.pageState;
+    if(ps.testColors && ps.testColors[2]) {
+        let colors = data.sessionData.pageState.testColors;
+        let hex = ((colors[0] == 'true') ? 'F' : '0') + ((colors[1] == 'true') ? 'F' : '0') + ((colors[2] == 'true') ? 'F' : '0');
+        return `<td><div id="color-square" style="width: 1em; height: 1em; background-color: #${hex};"></div></td>`;
+    }
+    return '<td><div id="color-square" style="width: 1em; height: 1em;"></div></td>';
+});

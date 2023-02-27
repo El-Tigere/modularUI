@@ -84,7 +84,8 @@ class Element {
             // find arguments
             let args = {};
             (tag.substring(1 + name.length).match(/[\w\d]+(?:\s*=\s*(?:".*"|\d+))?/g) || []).forEach((e) => {
-                let parts = e.split('=');
+                let eqPos = e.indexOf('=')
+                let parts = [e.substring(0, eqPos), e.substring(eqPos + 1)];
                 if(parts[1]) {
                     args[parts[0]] = parts[1].startsWith('"') ? parts[1].substring(1, parts[1].length - 1) : + parts[1];
                 } else {

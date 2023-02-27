@@ -21,9 +21,9 @@ let collector = {rElements: {}};
 mainPages.default.init(collector);
 const rElements = collector.rElements;
 
+// TODO: make the names and structure of this less complicated
 /* example for the structure of the data object passed to the getElement function of elements:
 ? for optional properties
-
 {
     "req": {...},
     "cookies": {
