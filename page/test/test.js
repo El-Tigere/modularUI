@@ -41,9 +41,8 @@ exports.content = new Element(namespaces, (content, args, data) => `
     </section>
     <section id="schalter">
         <h2>Schalter</h2>
-        <controls:switch></controls:switch>
-        <controls:switch></controls:switch>
-        <controls:switch></controls:switch>
+        <controls:switch></controls:switch><controls:switch></controls:switch><controls:switch></controls:switch>
     </section>
 </main>
+<script src="/test/clientTest.js"></script>
 `);
