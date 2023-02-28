@@ -77,7 +77,7 @@ function respondMainPage(element, res, resCode, url, data) {
     data.url = splitUrl(url);
     data.resCode = resCode; // sets res code to expected res code
     res.setHeader('Content-Type', 'text/html');
-    let page = element.render('', {}, data).trim();
+    let page = element.render('', {}, data);
     res.writeHead(data.resCode); // sends res code that might have changed
     res.end(page);
 }

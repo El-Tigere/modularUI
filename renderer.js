@@ -46,7 +46,7 @@ class Element {
         let part = this.getElement(content, args, requestData);
         
         // then render the custom tags
-        return this.renderCustomElements(part, requestData);
+        return this.renderCustomElements(part, requestData).trim();
     }
     
     // renders the custom elements used in this element; there are probably much better ways of implementing this
@@ -103,7 +103,7 @@ class Element {
             
         }
         
-        return part;
+        return part.trim();
     }
     
 }
