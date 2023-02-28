@@ -1,4 +1,3 @@
-// TODO: add one-tag-elements without content
 // TODO: reverse order of element rendering
 
 class Element {
@@ -65,21 +64,19 @@ class Element {
             let name = tag.match(/[\w\d]+:[\w\d]+/)[0];
             let open = `<${name}`; // > is missing because open tags can have arguments but always start with <name
             let close = `</${name}>`;
-            let counter = 0;
             
             // find closing tag
+            let counter = 1;
             let i;
             for(i = start + tag.length; i < part.length; i++) {
-                if(part.substring(i).startsWith(open)) {
-                    counter++;
-                }
-                if(part.substring(i).startsWith(close)) {
-                    if(counter == 0) break;
-                    else counter--;
-                }
+                if(part.substring(i).startsWith(open)) counter++;
+                if(part.substring(i).startsWith(close)) counter--;
+                if(counter == 0) break;
             }
-            let end = i;
-            let content = part.substring(start + tag.length, end);
+            
+            let compactElement = counter > 0; // compactElement: element with only an open tag
+            let content = compactElement ? '' : part.substring(start + tag.length, i);
+            let end = compactElement ? start + tag.length : i + close.length; 
             
             // find arguments
             let args = {};
@@ -96,7 +93,7 @@ class Element {
             // insert the resulting elements
             let nameParts = name.split(':');
             let result = this.namespaces[nameParts[0]][nameParts[1]].render(content, args, requestData).trim();
-            part = part.substring(0, start) + result + part.substring(end + close.length, part.length);
+            part = part.substring(0, start) + result + part.substring(end, part.length);
             
             // find next tag
             tags = part.match(tagRegex);
