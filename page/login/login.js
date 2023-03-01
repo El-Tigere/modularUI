@@ -20,7 +20,7 @@ exports.form = new Element(namespaces, (content, args) => `
 exports.content = new Element(namespaces, (content, args) => `
 <main>
     <h1>Login</h1>
-    <login:form></login:form>
+    <login:form>
 </main>
 `);
 
