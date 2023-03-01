@@ -22,27 +22,28 @@ exports.main = new Element(namespaces, (content, args) => `
         <script src="/client.js"></script>
     </head>
     <body>
-        <app:header></app:header>
+        <app:header>
         <div class="center">
-            <app:pagecontent></app:pagecontent>
+            <app:pagecontent>
         </div>
     </body>
 </html>
 `);
 
 exports.pagecontent = new Element(namespaces, (content, args, data) => {
-    if(!data.url[0]) return '<app:content></app:content>';
-    if(data.url[0] == 'login') return '<login:content></login:content>';
-    if(data.url[0] == 'test') return '<test:content></test:content>';
-    if(data.url[0] == '404') return '<error:notFoundContent></error:notFoundContent>';
+    if(!data.url[0]) return '<app:content>';
+    if(data.url[0] == 'login') return '<login:content>';
+    if(data.url[0] == 'test') return '<test:content>';
+    if(data.url[0] == '404') return '<error:notFoundContent>';
     
     data.resCode = 404;
-    return '<error:notFoundContent></error:notFoundContent>';
+    return '<error:notFoundContent>';
 });
 
+// TODO: change title of header to be content
 exports.header = new Element(namespaces, (content, args, data) => `
 <header>
-    <aside><logos:logo size=64></logos:logo></aside>
+    <aside><logos:logo size=64></aside>
     <h1><a href="/">Testseite</a></h1>
     <aside class="user-info">
         ${data.sessionData.login ? `<p>logged in as</p><p><b>${data.sessionData.login.username}</b></p>` : '<p>not logged in</p><p><a href="/login">login</a></p>'}
