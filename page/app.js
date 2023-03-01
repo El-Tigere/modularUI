@@ -59,7 +59,7 @@ exports.content = new Element(namespaces, (content, args) => `
         <p>
             Das ist eine Testseite. Damit die Seite interessanter ist, sind hier noch mehr Überschriften und Texte. An diesen Texten kann man sehen, wie andere Texte
             auf dieser Seite aussehen würden, ohne diese Texte hier hin zu kopieren. Das liegt daran, dass die meisten Texte äußerlich fast gleich aussehen und der
-            einzige Unterschied, der direkt auffällt die Länge des Textes ist. Der Inhalt des Textes beeinflusst nicht das aussehen des Textes, welches auf dieser Seite
+            einzige Unterschied, der direkt auffällt, die Länge des Textes ist. Der Inhalt des Textes beeinflusst nicht das aussehen des Textes, welches auf dieser Seite
             mit diesem Text getestet werden kann.
         </p>
     </section>
