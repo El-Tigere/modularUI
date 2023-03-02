@@ -4,6 +4,7 @@ const fs = require('fs');
 const port = 8080;
 const host = '127.0.0.1';
 
+// TODO change to multiple entry points (some sort of main element of each subpage)
 const app = require('./page/app');
 
 const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));

@@ -22,7 +22,7 @@ exports.main = new Element(namespaces, (content, args) => `
         <script src="/client.js"></script>
     </head>
     <body>
-        <app:header>
+        <app:header title="Testseite">
         <div class="center">
             <app:pagecontent>
         </div>
@@ -40,11 +40,10 @@ exports.pagecontent = new Element(namespaces, (content, args, data) => {
     return '<error:notFoundContent>';
 });
 
-// TODO: change title of header to be content
 exports.header = new Element(namespaces, (content, args, data) => `
 <header>
     <aside><logos:logo size=64></aside>
-    <h1><a href="/">Testseite</a></h1>
+    <h1><a href="/">${args.title}</a></h1>
     <aside class="user-info">
         ${data.sessionData.login ? `<p>logged in as</p><p><b>${data.sessionData.login.username}</b></p>` : '<p>not logged in</p><p><a href="/login">login</a></p>'}
     </aside>
