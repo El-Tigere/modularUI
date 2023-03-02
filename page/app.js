@@ -2,10 +2,10 @@ const {Element} = require('../renderer');
 
 const namespaces = {
     'app': require('./app'),
-    'logos': require('./logos/logos'),
+    'logos': require('./util/logos'),
     'login': require('./login/login'),
     'test': require('./test/test'),
-    'error': require('./error/error')
+    'error': require('./util/error')
 };
 
 // TODO: use compact elements with only open tag (in every file)

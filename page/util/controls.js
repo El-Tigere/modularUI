@@ -1,4 +1,4 @@
-const {Element} = require('../renderer');
+const {Element} = require('../../renderer');
 
 const namespaces = {};
 
