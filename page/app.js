@@ -8,7 +8,6 @@ const namespaces = {
     'error': require('./util/error')
 };
 
-// TODO: use compact elements with only open tag (in every file)
 exports.main = new Element(namespaces, (content, args) => `
 <!DOCTYPE html>
 <html lang="de">

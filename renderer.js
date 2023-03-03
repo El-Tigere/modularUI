@@ -1,4 +1,4 @@
-// TODO: reverse order of element rendering
+// TODO: reverse order of element rendering to allow for server side script elements that get executed in the correct order
 
 class Element {
     
@@ -74,6 +74,7 @@ class Element {
                 if(counter == 0) break;
             }
             
+            // TODO: ensure that an element is either used as a compact element or not
             let compactElement = counter > 0; // compactElement: element with only an open tag
             let content = compactElement ? '' : part.substring(start + tag.length, i);
             let end = compactElement ? start + tag.length : i + close.length; 

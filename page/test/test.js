@@ -8,7 +8,7 @@ const namespaces = {
 exports.randomNumber = new Element(namespaces, (content, args) => parseInt(Math.random() * 100).toString());
 
 exports.randomElement = new RElement(namespaces, 'randomElement', (content, args) => `
-Hier ist eine zufällige Zahl: <test:randomNumber></test:randomNumber>
+Hier ist eine zufällige Zahl: <test:randomNumber>
 <button onClick="update('randomElement', {});">update</button>
 `);
 
@@ -19,7 +19,7 @@ exports.content = new Element(namespaces, (content, args, data) => `
     <section id="zufall">
         <h2>Zufall</h2>
         <p id="randomElement">
-            <test:randomElement></test:randomElement>
+            <test:randomElement>
         </p>
     </section>
     <section id="sessionData">
@@ -40,7 +40,7 @@ exports.content = new Element(namespaces, (content, args, data) => `
         <div class="test-square"></div>
     </section>
     <section id="schalter">
-        <test:schalter></test:schalter>
+        <test:schalter>
     </section>
 </main>
 <script src="/test/clientTest.js"></script>
@@ -67,7 +67,7 @@ exports.schalter = new RElement(namespaces, 'schalter', (content, args) => `
     </tr>
     <tr>
         <td>Ergebnis: </td>
-        <test:colorSquare></test:colorSquare>
+        <test:colorSquare>
     </tr>
 </table>
 `);
