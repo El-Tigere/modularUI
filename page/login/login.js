@@ -1,7 +1,8 @@
 const {Element} = require('../../renderer');
 
 const namespaces = {
-    'login': require('./login')
+    'login': require('./login'),
+    'app': require('../app')
 }
 
 exports.form = new Element(namespaces, (content, args) => `
@@ -18,10 +19,12 @@ exports.form = new Element(namespaces, (content, args) => `
 `);
 
 exports.content = new Element(namespaces, (content, args) => `
-<main>
-    <h1>Login</h1>
-    <login:form>
-</main>
+<app:basePage>
+    <main>
+        <h1>Login</h1>
+        <login:form>
+    </main>
+</app:basePage>
 `);
 
 

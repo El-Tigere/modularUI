@@ -8,7 +8,7 @@ const namespaces = {
     'error': require('./util/error')
 };
 
-exports.main = new Element(namespaces, (content, args) => `
+exports.basePage = new Element(namespaces, (content, args) => `
 <!DOCTYPE html>
 <html lang="de">
     <head>
@@ -23,13 +23,14 @@ exports.main = new Element(namespaces, (content, args) => `
     <body>
         <app:header title="Testseite">
         <div class="center">
-            <app:pagecontent>
+            ${content}
         </div>
     </body>
 </html>
 `);
 
-exports.pagecontent = new Element(namespaces, (content, args, data) => {
+// TODO: use urls to directly get the page entry element
+exports.main = new Element(namespaces, (content, args, data) => {
     if(!data.url[0]) return '<app:content>';
     if(data.url[0] == 'login') return '<login:content>';
     if(data.url[0] == 'test') return '<test:content>';
@@ -49,30 +50,33 @@ exports.header = new Element(namespaces, (content, args, data) => `
 </header>
 `);
 
+// TODO: use a custom element for the sections with automatic heading
 exports.content = new Element(namespaces, (content, args) => `
-<main>
-    <h1>Testseite</h1>
-    <section id="unterueberschrift">
-        <h2>Unterüberschrift</h2>
-        <p>
-            Das ist eine Testseite. Damit die Seite interessanter ist, sind hier noch mehr Überschriften und Texte. An diesen Texten kann man sehen, wie andere Texte
-            auf dieser Seite aussehen würden, ohne diese Texte hier hin zu kopieren. Das liegt daran, dass die meisten Texte äußerlich fast gleich aussehen und der
-            einzige Unterschied, der direkt auffällt, die Länge des Textes ist. Der Inhalt des Textes beeinflusst nicht das aussehen des Textes, welches auf dieser Seite
-            mit diesem Text getestet werden kann.
-        </p>
-    </section>
-    <section id="mehrText">
-        <h2>Mehr Text</h2>
-        <p>
-            Hier ist<br>
-            ein<br>
-            Beispieltext
-        </p>
-        <p>lorem ipsum oder so</p>
-    </section>
-    <section id="links">
-        <h2>Links</h2>
-        <p>Tests: <a href="/test">Tests</a></p>
-    </section>
-</main>
+<app:basePage>
+    <main>
+        <h1>Testseite</h1>
+        <section id="unterueberschrift">
+            <h2>Unterüberschrift</h2>
+            <p>
+                Das ist eine Testseite. Damit die Seite interessanter ist, sind hier noch mehr Überschriften und Texte. An diesen Texten kann man sehen, wie andere Texte
+                auf dieser Seite aussehen würden, ohne diese Texte hier hin zu kopieren. Das liegt daran, dass die meisten Texte äußerlich fast gleich aussehen und der
+                einzige Unterschied, der direkt auffällt, die Länge des Textes ist. Der Inhalt des Textes beeinflusst nicht das aussehen des Textes, welches auf dieser Seite
+                mit diesem Text getestet werden kann.
+            </p>
+        </section>
+        <section id="mehrText">
+            <h2>Mehr Text</h2>
+            <p>
+                Hier ist<br>
+                ein<br>
+                Beispieltext
+            </p>
+            <p>lorem ipsum oder so</p>
+        </section>
+        <section id="links">
+            <h2>Links</h2>
+            <p>Tests: <a href="/test">Tests</a></p>
+        </section>
+    </main>
+</app:basePage>
 `);
