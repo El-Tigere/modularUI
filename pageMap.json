@@ -1,5 +1,5 @@
 {
     "redirect": {
-        "/favicon.ico": "/logos/text_logo_64.png"
+        "/favicon.ico": "/resources/text_logo_64.png"
     }
 }
