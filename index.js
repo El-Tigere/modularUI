@@ -127,7 +127,6 @@ function respond(req, res, data) {
     }
     
     // refresh single elements
-    // TODO: add parameters to refreshed objects
     if(data.postData?.getElement) {
         const element = rElements[data.postData.getElement];
         if(element) {
