@@ -14,9 +14,8 @@ Hier ist eine zufällige Zahl: <test:randomNumber>
 `);
 
 // TODO: fix margin stacking of switches (switch margin is distance from header margin and not from header itself for some reason)
-// TODO: move script to the header as a app:basePage argument
 exports.content = new Element(namespaces, (content, args, data) => `
-<app:basePage>
+<app:basePage scripts="/test/clientTest.js;/test/clientTest.js">
     <main>
         <h1>Tests</h1>
         <section id="zufall">
@@ -46,7 +45,6 @@ exports.content = new Element(namespaces, (content, args, data) => `
             <test:schalter>
         </section>
     </main>
-    <script src="/test/clientTest.js"></script>
 </app:basePage>
 `);
 

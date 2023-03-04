@@ -98,7 +98,7 @@ function respondResource(res, url) {
     }
     return;
 }
-
+// FIXME: favicon doesn't work
 function respond(req, res, data) {
     let url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
     

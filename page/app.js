@@ -8,6 +8,7 @@ const namespaces = {
     'error': require('./util/error')
 };
 
+// args.scripts = '/script.js;/abc/xyz.js'
 exports.basePage = new Element(namespaces, (content, args) => `
 <!DOCTYPE html>
 <html lang="de">
@@ -19,6 +20,7 @@ exports.basePage = new Element(namespaces, (content, args) => `
         <link rel="stylesheet" href="/style/common.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
         <script src="/client.js"></script>
+        ${args.scripts ? args.scripts.split(';') .map((e) => `<script src="${e}"></script>`).join('\r\n') : ''}
     </head>
     <body>
         <app:header title="Testseite">
