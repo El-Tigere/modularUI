@@ -22,7 +22,9 @@ exports.content = new Element(namespaces, (content, args) => `
 <app:basePage>
     <main>
         <h1>Login</h1>
-        <login:form>
+        <app:section>
+            <login:form>
+        </app:section>
     </main>
 </app:basePage>
 `);

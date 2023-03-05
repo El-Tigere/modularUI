@@ -18,14 +18,12 @@ exports.content = new Element(namespaces, (content, args, data) => `
 <app:basePage scripts="/test/clientTest.js;/test/clientTest.js">
     <main>
         <h1>Tests</h1>
-        <section id="zufall">
-            <h2>Zufall</h2>
+        <app:section name="Zufall">
             <p id="randomElement">
                 <test:randomElement>
             </p>
-        </section>
-        <section id="sessionData">
-            <h2>sessionData</h2>
+        </app:section>
+        <app:section name="sessionData">
             <table>
                 <tr>
                     ${Object.keys(data.sessionData.pageState || {}).map((e) => `<td>${e}</td>`).join('')}
@@ -35,52 +33,46 @@ exports.content = new Element(namespaces, (content, args, data) => `
                 </tr>
             </table>
             <button onClick="testSessionData()">send some sessionData</button>
-        </section>
-        <section id="schriftgroesse">
-            <h2>Schriftgröße</h2>
+        </app:section>
+        <app:section name="Schriftgröße">
             <p>Ein bisschen normaler Text.</p>
             <div class="test-square"></div>
-        </section>
-        <section id="schalter">
-            <test:schalter>
-        </section>
+        </app:section>
+        <app:section name="Schalter">
+            <table>
+                <tr>
+                    <td>Rot: </td>
+                    <td><controls:switch toggle="(s)=>colors[0]=s"></controls:switch></td>
+                </tr>
+                <tr>
+                    <td>Grün: </td>
+                    <td><controls:switch toggle="(s)=>colors[1]=s"></controls:switch></td>
+                </tr>
+                <tr>
+                    <td>Blau: </td>
+                    <td><controls:switch toggle="(s)=>colors[2]=s"></controls:switch></td>
+                </tr>
+                <tr>
+                    <td><button onClick="update('colorSquare', {testColors: colors});">speichern</button></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Ergebnis: </td>
+                    <td id="colorSquare"><test:colorSquare></td>
+                </tr>
+            </table>
+        </app:section>
     </main>
 </app:basePage>
 `);
 
-exports.schalter = new RElement(namespaces, 'schalter', (content, args) => `
-<h2>Schalter</h2>
-<table>
-    <tr>
-        <td>Rot: </td>
-        <td><controls:switch toggle="(s)=>colors[0]=s"></controls:switch></td>
-    </tr>
-    <tr>
-        <td>Grün: </td>
-        <td><controls:switch toggle="(s)=>colors[1]=s"></controls:switch></td>
-    </tr>
-    <tr>
-        <td>Blau: </td>
-        <td><controls:switch toggle="(s)=>colors[2]=s"></controls:switch></td>
-    </tr>
-    <tr>
-        <td><button onClick="update('schalter', {testColors: colors}); colors = [false, false, false];">speichern</button></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Ergebnis: </td>
-        <test:colorSquare>
-    </tr>
-</table>
-`);
-
 // FIXME: unreadable code
-exports.colorSquare = new Element(namespaces, (content, args, data) => {
+exports.colorSquare = new RElement(namespaces, 'colorSquare', (content, args, data) => {
     let ps = data.sessionData.pageState;
     if(ps.testColors && ps.testColors[2]) {
         let colors = data.sessionData.pageState.testColors;
         let hex = ((colors[0] == 'true') ? 'F' : '0') + ((colors[1] == 'true') ? 'F' : '0') + ((colors[2] == 'true') ? 'F' : '0');
-        return `<td><div id="color-square" style="width: 1em; height: 1em; background-color: #${hex};"></div></td>`;
+        return `<div id="color-square" style="width: 1em; height: 1em; background-color: #${hex};"></div>`;
     }
-    return '<td><div id="color-square" style="width: 1em; height: 1em;"></div></td>';
+    return '<div id="color-square" style="width: 1em; height: 1em;"></div>';
 });
