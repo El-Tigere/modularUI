@@ -1,3 +1,4 @@
+// TODO: add url parameters
 function parseUrl(url) {
     let parts = url.split('/');
     parts.splice(0, 1);

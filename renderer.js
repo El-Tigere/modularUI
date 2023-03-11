@@ -4,7 +4,7 @@
 class Element {
     
     /**
-     * @callback getElementCallback
+     * @callback GetElementCallback
      * @param {string} content
      * @param {Object} args
      * @returns {string}
@@ -13,7 +13,7 @@ class Element {
     /**
      * constructor
      * @param {Object.<string, Object>} namespaces an Object with this format: {'xmlNamespace': require('according import')}
-     * @param {getElementCallback} getElement
+     * @param {GetElementCallback} getElement
      */
     constructor(namespaces, getElement) {
         this.namespaces = namespaces;

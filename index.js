@@ -164,7 +164,7 @@ function respond(req, res, data) {
     
     // check if the requested url is a resource
     // TODO: add a way to not send server side js files
-    if(fs.existsSync('page/' + url) && fs.lstatSync('page/' + url).isFile()) {
+    if(fs.existsSync('page/' + url) && fs.statSync('page/' + url).isFile()) {
         respondResource(res, url);
         return;
     }
