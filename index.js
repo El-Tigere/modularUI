@@ -1,6 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 
+const parsers = require('./parsers');
+
 const port = 8080;
 const host = '127.0.0.1';
 
@@ -45,15 +47,66 @@ const rElements = collector.rElements;
 
 */
 
-function getCookies(req) {
-    let cookies = {};
-    req.headers?.cookie?.split(';')?.forEach((e) => {
-        let [key, ...value] = e.split('=');
-        key = key.trim();
-        value = decodeURIComponent(value?.join('=').trim());
-        if(key) cookies[key] = value;
+/**
+ * 
+ * @param {http.IncomingMessage} req 
+ * @param {http.ServerResponse} res 
+ * @returns 
+ */
+function serverListener(req, res) {
+    
+    let data = {};
+    data.req = req;
+    
+    // get cookies
+    data.cookies = req.headers?.cookie ? parsers.parseCookies(req.headers.cookie) : {};
+    
+    // get session data and create session token if necessary
+    let sessionToken = data.cookies['sessionToken'];
+    if(!sessionToken || !sessionData.hasOwnProperty(sessionToken)) {
+        sessionToken = generateSessionToken();
+        sessionData[sessionToken] = {pageState: {someKey: 'someData'}};
+        res.setHeader('Set-Cookie', `sessionToken=${sessionToken}; SameSite=Strict`)
+    }
+    data.sessionData = sessionData[sessionToken];
+    
+    if(req.method != 'POST') {
+        // respond
+        respond(req, res, data);
+        return
+    }
+    
+    // get data from http POST
+    let end = false;
+    let postDataString = '';
+    
+    req.on('data', (chunk) => {
+        if(end) return;
+        
+        postDataString += chunk.toString();
+        
+        // limit request size
+        // TODO: find a better way of limiting the request size
+        if(postDataString.length > (1024 * 16)) {
+            end = true;
+            respondMainPage(mainPages.default, res, 404, '/404', data);
+        }
     });
-    return cookies;
+    
+    function endTransfer() {
+        if(end) return;
+        end = true;
+        
+        // parse post data
+        // TODO: check for special characters in postDataString
+        let postDataObject = parsers.parsePostData(decodeURIComponent(postDataString));
+        data.postData = postDataObject;
+        
+        // respond
+        respond(req, res, data);
+    }
+    req.on('end', endTransfer);
+    setTimeout(endTransfer, 5000);
 }
 
 // TODO: make this (a lot) more secure
@@ -66,37 +119,6 @@ function generateSessionToken() {
         }
     } while(sessionData.hasOwnProperty(token))
     return token;
-}
-
-function splitUrl(url) {
-    let parts = url.split('/');
-    parts.splice(0, 1);
-    return parts;
-}
-
-function respondMainPage(element, res, resCode, url, data) {
-    data.url = splitUrl(url);
-    data.resCode = resCode; // sets res code to expected res code
-    res.setHeader('Content-Type', 'text/html');
-    let page = element.render('', {}, data);
-    res.writeHead(data.resCode); // sends res code that might have changed
-    res.end(page);
-}
-
-function respondResource(res, url) {
-    const ending = (url.match(/\.[\w\d]+$/) || [])[0];
-    if(ending && mimeTypes[ending]) {
-        res.setHeader('Content-Type', mimeTypes[ending]);
-        res.writeHead(200);
-        res.end(fs.readFileSync('page/' + url));
-    } else {
-        console.log('unknown file type:')
-        console.log('url: ' + url);
-        console.log(fs.lstatSync('page/' + url).isFile());
-        res.writeHead(415);
-        res.end();
-    }
-    return;
 }
 
 function respond(req, res, data) {
@@ -159,6 +181,33 @@ function respond(req, res, data) {
     respondMainPage(mainPages.default, res, 404, '/404', data);
 }
 
+function respondMainPage(element, res, resCode, url, data) {
+    data.url = parsers.parseUrl(url);
+    data.resCode = resCode; // sets res code to expected res code
+    res.setHeader('Content-Type', 'text/html');
+    let page = element.render('', {}, data);
+    res.writeHead(data.resCode); // sends res code that might have changed
+    res.end(page);
+}
+
+
+
+function respondResource(res, url) {
+    const ending = (url.match(/\.[\w\d]+$/) || [])[0];
+    if(ending && mimeTypes[ending]) {
+        res.setHeader('Content-Type', mimeTypes[ending]);
+        res.writeHead(200);
+        res.end(fs.readFileSync('page/' + url));
+    } else {
+        console.log('unknown file type:')
+        console.log('url: ' + url);
+        console.log(fs.lstatSync('page/' + url).isFile());
+        res.writeHead(415);
+        res.end();
+    }
+    return;
+}
+
 // TODO: add databases for actual user authentication
 function login(username, password, session) {
     if(!username || !password) return false; // login if any username or password is used
@@ -166,105 +215,7 @@ function login(username, password, session) {
     return true;
 }
 
-/**
- * Parses a string from a http post request into an object
- * @param {string} str 
- */
-function parsePostData(str) {
-    let obj = {};
-    
-    // split input into individual property assignments
-    const properties = str.split('&');
-    properties.forEach((p) => {
-        // split property into key and value
-        let [key, val] = p.split('=');
-        if(!(key && val)) return;
-        
-        // go to the object that should be changed
-        const keyParts = key.match(/[\w\d%!().\-_]+|\[\]/g);
-        let current = obj;
-        for(let i = 0; i < keyParts.length - 1; i++)
-        {
-            if(keyParts[i] == '[]') return; // this is only allowed for the last key part
-            
-            // create new object or array if necessary
-            if(!current[keyParts[i]]) {
-                if(keyParts[i + 1] && (!isNaN(keyParts[i + 1]) || keyParts[i + 1] == '[]')) current[keyParts[i]] = [];
-                else current[keyParts[i]] = {};
-            }
-            
-            // go to the next object/array
-            current = current[keyParts[i]];
-        }
-        
-        // insert value
-        const lastKey = keyParts[keyParts.length - 1];
-        if(lastKey == '[]' && current instanceof Array) {
-            current.push(val);
-        } else {
-            current[lastKey] = val;
-        }
-    });
-    
-    return obj;
-}
-
-const server = http.createServer((req, res) => {
-    
-    let data = {};
-    data.req = req;
-    
-    // get cookies
-    const cookies = getCookies(req);
-    data.cookies = cookies;
-    
-    // get session data and create session token if necessary
-    let sessionToken = cookies['sessionToken'];
-    if(!sessionToken || !sessionData.hasOwnProperty(sessionToken)) {
-        sessionToken = generateSessionToken();
-        sessionData[sessionToken] = {pageState: {someKey: 'someData'}};
-        res.setHeader('Set-Cookie', `sessionToken=${sessionToken}; SameSite=Strict`)
-    }
-    data.sessionData = sessionData[sessionToken];
-    
-    if(req.method != 'POST') {
-        // respond
-        respond(req, res, data);
-        return
-    }
-    
-    // get data from http POST
-    let end = false;
-    let postDataString = '';
-    
-    req.on('data', (chunk) => {
-        if(end) return;
-        
-        postDataString += chunk.toString();
-        
-        // limit request size
-        // TODO: find a better way of limiting the request size
-        if(postDataString.length > (1024 * 16)) {
-            end = true;
-            respondMainPage(mainPages.default, res, 404, '/404', data);
-        }
-    });
-    
-    function endTransfer() {
-        if(end) return;
-        end = true;
-        
-        // parse post data
-        // TODO: check for special characters in postDataString
-        let postDataObject = parsePostData(decodeURIComponent(postDataString));
-        data.postData = postDataObject;
-        
-        // respond
-        respond(req, res, data);
-    }
-    req.on('end', endTransfer);
-    setTimeout(endTransfer, 5000);
-});
+const server = http.createServer(serverListener);
 
 server.listen(port, host, () => {
     console.log(`Server listening on ${host}:${port}`);
