@@ -10,6 +10,7 @@ const host = '127.0.0.1';
 const app = require('./page/app.m');
 
 const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
+// TODO: add url parameters to specify error type in page maps
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
 const mainPages = {
     "default": app.main,

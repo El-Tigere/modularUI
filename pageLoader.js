@@ -23,7 +23,7 @@ function traverseDirectory(path, fileCallback) {
 
 // TODO: remove this testfunction
 traverseDirectory('page', (filePath) => {
-    if(!fs.statSync(filePath).isFile) return;
+    if(!fs.statSync(filePath).isFile()) return;
     
-    if(filePath.endsWith('.js')) console.log(filePath);
+    if(filePath.endsWith('.m.js')) console.log(filePath);
 });
