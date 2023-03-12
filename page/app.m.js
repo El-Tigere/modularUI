@@ -1,13 +1,13 @@
 const {Element} = require('../renderer');
 
-const util = require('./util/serverUtil');
+const util = require('./util/serverUtil.m');
 
 const namespaces = {
-    'app': require('./app'),
-    'logos': require('./util/logos'),
-    'login': require('./login/login'),
-    'test': require('./test/test'),
-    'error': require('./util/error')
+    'app': require('./app.m'),
+    'logos': require('./util/logos.m'),
+    'login': require('./login/login.m'),
+    'test': require('./test/test.m'),
+    'error': require('./util/error.m')
 };
 
 // args.scripts = '/script.js;/abc/xyz.js'

@@ -1,9 +1,9 @@
 const {Element, RElement} = require('../../renderer');
 
 const namespaces = {
-    'test': require('./test'),
-    'app': require('../app'),
-    'controls': require('../util/controls')
+    'test': require('./test.m'),
+    'app': require('../app.m'),
+    'controls': require('../util/controls.m')
 }
 
 exports.randomNumber = new Element(namespaces, (content, args) => parseInt(Math.random() * 100).toString());

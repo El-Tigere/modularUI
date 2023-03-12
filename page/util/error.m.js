@@ -1,7 +1,7 @@
 const {Element} = require('../../renderer');
 
 const namespaces = {
-    'app': require('../app')
+    'app': require('../app.m')
 };
 
 exports.notFoundContent = new Element(namespaces, (content, args) => `

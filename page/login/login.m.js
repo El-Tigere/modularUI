@@ -1,8 +1,8 @@
 const {Element} = require('../../renderer');
 
 const namespaces = {
-    'login': require('./login'),
-    'app': require('../app')
+    'login': require('./login.m'),
+    'app': require('../app.m')
 }
 
 exports.form = new Element(namespaces, (content, args) => `
