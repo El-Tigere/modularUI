@@ -4,6 +4,8 @@ const namespaces = {
     'app': require('../app.m')
 };
 
+// TODO: create one main element and select error message from url parameter
+
 exports.notFoundContent = new Element(namespaces, (content, args) => `
 <app:basePage>
     <main>

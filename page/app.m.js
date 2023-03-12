@@ -7,7 +7,7 @@ const namespaces = {
     'logos': require('./util/logos.m'),
     'login': require('./login/login.m'),
     'test': require('./test/test.m'),
-    'error': require('./util/error.m')
+    'error': require('./error/error.m')
 };
 
 // args.scripts = '/script.js;/abc/xyz.js'
