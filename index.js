@@ -191,8 +191,6 @@ function respondMainPage(element, res, resCode, url, data) {
     res.end(page);
 }
 
-
-
 function respondResource(res, url) {
     const ending = (url.match(/\.[\w\d]+$/) || [])[0];
     if(ending && mimeTypes[ending]) {
