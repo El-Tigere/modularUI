@@ -1,3 +1,4 @@
+// TODO: add a custom file path class
 // TODO: add url parameters
 function parseUrl(url) {
     let parts = url.split('/');
