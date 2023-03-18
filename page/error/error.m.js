@@ -6,7 +6,7 @@ const namespaces = {
 
 // TODO: create one main element and select error message from url parameter
 
-exports.notFoundContent = new Element(namespaces, (content, args) => `
+exports.content = new Element(namespaces, (content, args) => `
 <app:basePage>
     <main>
         <h1>Fehler</h1>

@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 
 const parsers = require('./parsers');
+const pageLoader = require('./pageLoader');
 
 // TODO: create a config json file for this and things like the page root
 const port = 8080;
@@ -13,18 +14,13 @@ const app = require('./page/app.m');
 const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 // TODO: add url parameters to specify error type in page maps
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
-const mainPages = {
-    "default": app.main,
-    "": app.main
-};
+const entryElements = pageLoader.getEntries('page');
 
 // TODO: automatically delete entries
 const sessionData = {};
 
-// init Elements
-let collector = {rElements: {}};
-mainPages.default.init(collector);
-const rElements = collector.rElements;
+// init RElements
+const rElements = pageLoader.initializePage(entryElements).rElements;
 
 // TODO: make the names and structure of this less complicated
 /* example for the structure of the data object passed to the getElement function of elements:
@@ -89,9 +85,10 @@ function serverListener(req, res) {
         
         // limit request size
         // TODO: find a better way of limiting the request size
+        // TODO: change error type
         if(postDataString.length > (1024 * 16)) {
             end = true;
-            respondMainPage(mainPages.default, res, 404, '/404', data);
+            respondError(res, 404, data);
         }
     });
     
@@ -125,10 +122,11 @@ function generateSessionToken() {
 
 function respond(req, res, data) {
     let url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
+    const urlParts = parsers.parseUrl(url);
     
     if(!url) {
         // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
-        respondMainPage(mainPages.default, res, 404, '/404', data);
+        respondError(res, 404, data);
         return;
     }
     
@@ -154,7 +152,7 @@ function respond(req, res, data) {
     if(data.postData?.getElement) {
         const element = rElements[data.postData.getElement];
         if(element) {
-            respondMainPage(element, res, 200, url, data);
+            respondMainPage(element, res, 200, urlParts, data);
         } else {
             // invalid requested element -> respond with nothing
             res.setHeader('Content-Type', 'text/plain');
@@ -164,27 +162,25 @@ function respond(req, res, data) {
         return;
     }
     
+    // check if the requested url is an entry page
+    const entry = pageLoader.get(entryElements, urlParts);
+    if(entry) {
+        respondMainPage(entry, res, 200, urlParts, data);
+        return;
+    }
+    
     // check if the requested url is a resource
-    // TODO: add a way to not send server side js files
     if(fs.existsSync('page/' + url) && fs.statSync('page/' + url).isFile()) {
         respondResource(res, url);
         return;
     }
     
-    // check if the requested url is a main page
-    for(let key of Object.keys(mainPages)) {
-        if(url == key || (url.startsWith(key + '/'))) {
-            respondMainPage(mainPages[key], res, 200, url, data);
-            return;
-        }
-    }
-    
     // if this is reached, no useful response was found
-    respondMainPage(mainPages.default, res, 404, '/404', data);
+    respondError(res, 404, data);
 }
 
-function respondMainPage(element, res, resCode, url, data) {
-    data.url = parsers.parseUrl(url);
+function respondMainPage(element, res, resCode, urlParts, data) {
+    data.url = urlParts;
     data.resCode = resCode; // sets res code to expected res code
     res.setHeader('Content-Type', 'text/html');
     let page = element.render('', {}, data);
@@ -206,6 +202,11 @@ function respondResource(res, url) {
         res.end();
     }
     return;
+}
+
+// TODO: use error urls from the page map
+function respondError(res, resCode, data) {
+    respondMainPage(pageLoader.get(entryElements, ['error']), res, resCode, '/' + resCode, data);
 }
 
 // TODO: add databases for actual user authentication
