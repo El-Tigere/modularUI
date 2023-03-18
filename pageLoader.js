@@ -87,15 +87,3 @@ function traverseDirectory(root, path, fileCallback) {
     const subpaths = fs.readdirSync(pathStr);
     subpaths.forEach((e) => traverseDirectory(root, [...path, e], fileCallback));
 }
-
-// TODO: remove this testfunction
-traverseDirectory('page', [], (filePath) => {
-    if(!fs.statSync('page/' + filePath.join('/')).isFile()) return;
-    
-    if(filePath[filePath.length - 1].endsWith('.m.js')) console.log(filePath);
-});
-
-//console.log(getEntries('page'));
-
-//console.log(get(getEntries('page')['error'], []));
-//console.log(get(getEntries('page'), []));

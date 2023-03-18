@@ -6,8 +6,7 @@ const namespaces = {
     'app': require('./app.m'),
     'logos': require('./util/logos.m'),
     'login': require('./login/login.m'),
-    'test': require('./test/test.m'),
-    'error': require('./error/error.m')
+    'test': require('./test/test.m')
 };
 
 // args.scripts = '/script.js;/abc/xyz.js'
@@ -33,17 +32,6 @@ exports.basePage = new Element(namespaces, (content, args) => `
 </html>
 `);
 
-// TODO: use urls to directly get the page entry element
-exports.main = new Element(namespaces, (content, args, data) => {
-    if(!data.url[0]) return '<app:content>';
-    if(data.url[0] == 'login') return '<login:content>';
-    if(data.url[0] == 'test') return '<test:content>';
-    if(data.url[0] == '404') return '<error:notFoundContent>';
-    
-    data.resCode = 404;
-    return '<error:notFoundContent>';
-});
-
 exports.header = new Element(namespaces, (content, args, data) => `
 <header>
     <aside><logos:logo size=64></aside>
@@ -54,7 +42,6 @@ exports.header = new Element(namespaces, (content, args, data) => `
 </header>
 `);
 
-// TODO: use a custom element for the sections with automatic heading
 exports.content = new Element(namespaces, (content, args) => `
 <app:basePage>
     <main>
