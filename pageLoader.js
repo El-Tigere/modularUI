@@ -5,14 +5,17 @@ const fs = require('fs');
  * @param {string} pageRoot
  */
 function getEntries(pageRoot) {
-    const page = {};
+    if(pageRoot == '') return;
     
-    traverseDirectory([pageRoot], (path) => {
-        if(!fs.statSync(path.join('/')).isFile()) return;
-        if(!path[path.length - 1].endsWith('.m.js')) return;
+    let page = {};
+    
+    traverseDirectory(pageRoot, [], (path) => {
+        const pathStr = pageRoot + path.map((e) => '/' + e).join('');
+        if(!fs.statSync(pathStr).isFile()) return;
+        if(!pathStr.endsWith('.m.js')) return;
         
         // TODO: This is horrible. I need to change this.
-        const mod = require(('./' + path.join('/')).replace('.js', ''));
+        const mod = require(('./' + pathStr).replace('.js', ''));
         
         if(!mod.content) return;
         // TODO: make a function for this in parsers.js (also for parsePostData)
@@ -30,6 +33,7 @@ function getEntries(pageRoot) {
     
     return page;
 }
+exports.getEntries = getEntries;
 
 /**
  * @callback FileCallback
@@ -42,8 +46,8 @@ function getEntries(pageRoot) {
  * @param {FileCallback} fileCallback 
  * @returns 
  */
-function traverseDirectory(path, fileCallback) {
-    const pathStr = path.join('/');
+function traverseDirectory(root, path, fileCallback) {
+    const pathStr = root + path.map((e) => '/' + e).join('');
     
     if(!fs.existsSync(pathStr)) return;
     
@@ -51,12 +55,12 @@ function traverseDirectory(path, fileCallback) {
     if(!fs.statSync(pathStr).isDirectory()) return;
     
     const subpaths = fs.readdirSync(pathStr);
-    subpaths.forEach((e) => traverseDirectory([...path, e], fileCallback));
+    subpaths.forEach((e) => traverseDirectory(root, [...path, e], fileCallback));
 }
 
 // TODO: remove this testfunction
-traverseDirectory(['page'], (filePath) => {
-    if(!fs.statSync(filePath.join('/')).isFile()) return;
+traverseDirectory('page', [], (filePath) => {
+    if(!fs.statSync('page/' + filePath.join('/')).isFile()) return;
     
     if(filePath[filePath.length - 1].endsWith('.m.js')) console.log(filePath);
 });
