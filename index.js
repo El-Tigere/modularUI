@@ -165,7 +165,8 @@ function respond(req, res, data) {
     }
     
     // check if the requested url is a resource
-    if(fs.existsSync(config.pageRoot + '/' + url) && fs.statSync(config.pageRoot + '/' + url).isFile()) {
+    const resourcePath = config.pageRoot + '/' + url;
+    if(!resourcePath.endsWith('.m.js') && fs.existsSync(resourcePath) && fs.statSync(resourcePath).isFile()) {
         respondResource(res, url);
         return;
     }
