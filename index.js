@@ -4,14 +4,12 @@ const fs = require('fs');
 const parsers = require('./parsers');
 const pageLoader = require('./pageLoader');
 
-// TODO: create a config json file for this and things like the page root
-const port = 8080;
-const host = '127.0.0.1';
+const config = JSON.parse(fs.readFileSync('config.json'));
 
 const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 // TODO: add url parameters to specify error type in page maps
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
-const entryElements = pageLoader.getEntries('page');
+const entryElements = pageLoader.getEntries(config.pageRoot);
 
 // TODO: automatically delete entries
 const sessionData = {};
@@ -167,7 +165,7 @@ function respond(req, res, data) {
     }
     
     // check if the requested url is a resource
-    if(fs.existsSync('page/' + url) && fs.statSync('page/' + url).isFile()) {
+    if(fs.existsSync(config.pageRoot + '/' + url) && fs.statSync(config.pageRoot + '/' + url).isFile()) {
         respondResource(res, url);
         return;
     }
@@ -190,11 +188,11 @@ function respondResource(res, url) {
     if(ending && mimeTypes[ending]) {
         res.setHeader('Content-Type', mimeTypes[ending]);
         res.writeHead(200);
-        res.end(fs.readFileSync('page/' + url));
+        res.end(fs.readFileSync(config.pageRoot + '/' + url));
     } else {
         console.log('unknown file type:')
         console.log('url: ' + url);
-        console.log(fs.lstatSync('page/' + url).isFile());
+        console.log(fs.lstatSync(config.pageRoot + '/' + url).isFile());
         res.writeHead(415);
         res.end();
     }
@@ -215,6 +213,6 @@ function login(username, password, session) {
 
 const server = http.createServer(serverListener);
 
-server.listen(port, host, () => {
-    console.log(`Server listening on ${host}:${port}`);
+server.listen(config.port, config.host, () => {
+    console.log(`Server listening on ${config.host}:${config.port}`);
 });
