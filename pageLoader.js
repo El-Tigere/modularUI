@@ -1,11 +1,8 @@
 const fs = require('fs');
+const parsers = require('./parsers');
 
 function get(entryElements, urlParts) {
-    let current = entryElements;
-    urlParts.forEach((e) => {
-        if(e) current = current[e] || {};
-    });
-    return current.index;
+    return parsers.getAt(entryElements, urlParts)?.index;
 }
 exports.get = get;
 
@@ -27,7 +24,7 @@ function getEntries(pageRoot) {
         const mod = require(('./' + pathStr).replace('.js', ''));
         
         if(!mod.content) return;
-        // TODO: make a function for this in parsers.js (also for parsePostData)
+        
         // insert object
         let current = page;
         path.slice(0, -1).forEach((e) => {

@@ -3,6 +3,8 @@
 function parseUrl(url) {
     let parts = url.split('/');
     parts.splice(0, 1);
+    
+    if(parts.length == 1 && parts[0] == '') return [];
     return parts;
 }
 exports.parseUrl = parseUrl;
@@ -62,3 +64,25 @@ function parsePostData(str) {
     return obj;
 }
 exports.parsePostData = parsePostData;
+
+function getAt(obj, path) {
+    let current = obj;
+    for(let i = 0; i < path.length; i++) {
+        if(current[path[i]]) current = current[path[i]];
+        else return null;
+    }
+    return current;
+}
+exports.getAt = getAt;
+
+function setAt(obj, path, val) {
+    console.log(obj);
+    console.log(path);
+    console.log(val);
+    let current = obj;
+    for(let i = 0; i < path.length - 1; i++) {
+        current = current[path[i]];
+    }
+    current[path[path.length - 1]] = val;
+}
+exports.setAt = setAt;
