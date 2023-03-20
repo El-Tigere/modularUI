@@ -17,7 +17,6 @@ const sessionData = {};
 // init RElements
 const rElements = pageLoader.initializePage(entryElements).rElements;
 
-// TODO: make the names and structure of this less complicated
 /* example for the structure of the data object passed to the getElement function of elements:
 ? for optional properties
 {
@@ -92,7 +91,6 @@ function serverListener(req, res) {
         end = true;
         
         // parse post data
-        // TODO: check for special characters in postDataString
         let postDataObject = parsers.parsePostData(decodeURIComponent(postDataString));
         data.postData = postDataObject;
         

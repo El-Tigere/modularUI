@@ -13,7 +13,6 @@ Hier ist eine zufällige Zahl: <test:randomNumber>
 <button onClick="update('randomElement', {});">update</button>
 `);
 
-// TODO: fix margin stacking of switches (switch margin is distance from header margin and not from header itself for some reason)
 exports.content = new Element(namespaces, (content, args, data) => `
 <app:basePage scripts="/test/clientTest.js;/test/clientTest.js">
     <main>

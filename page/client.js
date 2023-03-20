@@ -1,4 +1,3 @@
-// TODO: don't do this in main thread
 function update(id, data) {
     $('#' + id).load(document.URL, {getElement: id, updateData: data});
 }
