@@ -10,7 +10,9 @@ class UrlPath {
 
 function parseUrl(url) {
     let parts = url.split('/');
-    parts.splice(0, 1);
+    
+    if(parts[0] == '') parts.splice(0, 1);
+    if(parts[parts.length - 1] == '') parts.splice(parts.length - 1, parts.length);
     
     if(parts.length == 1 && parts[0] == '') return [];
     return parts;
