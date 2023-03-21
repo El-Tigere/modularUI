@@ -1,5 +1,13 @@
-// TODO: add a custom url class
 // TODO: add url parameters
+
+class UrlPath {
+    
+    constructor(str) {
+        this.path = parseUrl(str);
+    }
+    
+}
+
 function parseUrl(url) {
     let parts = url.split('/');
     parts.splice(0, 1);
