@@ -114,14 +114,15 @@ function generateSessionToken() {
 }
 
 function respond(req, res, data) {
-    let url = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
-    const urlParts = parsers.parseUrl(url);
+    const urlStr = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
     
-    if(!url) {
+    if(!urlStr) {
         // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
         respondError(res, 404, data);
         return;
     }
+    
+    let url = new parsers.UrlPath(urlStr);
     
     // update pageState in sessionData
     if(data.postData?.updateData) {
@@ -135,8 +136,8 @@ function respond(req, res, data) {
     
     // redirect the url if possible (not to other domains but inside of the current domain)
     for(let key of Object.keys(pageMap.redirect)) {
-        if(url == key || (url.startsWith(key + '/'))) {
-            url = pageMap.redirect[key] + url.substring(key.length);
+        if(url.pathStr == key || (url.pathStr.startsWith(key + '/'))) {
+            url = new parsers.UrlPath(pageMap.redirect[key] + url.pathStr.substring(key.length));
             break;
         }
     }
@@ -145,7 +146,7 @@ function respond(req, res, data) {
     if(data.postData?.getElement) {
         const element = rElements[data.postData.getElement];
         if(element) {
-            respondMainPage(element, res, 200, urlParts, data);
+            respondMainPage(element, res, 200, url, data);
         } else {
             // invalid requested element -> respond with nothing
             res.setHeader('Content-Type', 'text/plain');
@@ -156,16 +157,16 @@ function respond(req, res, data) {
     }
     
     // check if the requested url is an entry page
-    const entry = pageLoader.get(entryElements, urlParts);
+    const entry = pageLoader.get(entryElements, url.path);
     if(entry) {
-        respondMainPage(entry, res, 200, urlParts, data);
+        respondMainPage(entry, res, 200, url, data);
         return;
     }
     
     // check if the requested url is a resource
-    const resourcePath = config.pageRoot + '/' + url;
+    const resourcePath = config.pageRoot + '/' + url.pathStr;
     if(!resourcePath.endsWith('.m.js') && fs.existsSync(resourcePath) && fs.statSync(resourcePath).isFile()) {
-        respondResource(res, url);
+        respondResource(res, url.str);
         return;
     }
     
@@ -173,8 +174,8 @@ function respond(req, res, data) {
     respondError(res, 404, data);
 }
 
-function respondMainPage(element, res, resCode, urlParts, data) {
-    data.url = urlParts;
+function respondMainPage(element, res, resCode, url, data) {
+    data.url = url;
     data.resCode = resCode; // sets res code to expected res code
     res.setHeader('Content-Type', 'text/html');
     let page = element.render('', {}, data);
@@ -182,16 +183,16 @@ function respondMainPage(element, res, resCode, urlParts, data) {
     res.end(page);
 }
 
-function respondResource(res, url) {
-    const ending = (url.match(/\.[\w\d]+$/) || [])[0];
+function respondResource(res, urlStr) {
+    const ending = (urlStr.match(/\.[\w\d]+$/) || [])[0];
     if(ending && mimeTypes[ending]) {
         res.setHeader('Content-Type', mimeTypes[ending]);
         res.writeHead(200);
-        res.end(fs.readFileSync(config.pageRoot + '/' + url));
+        res.end(fs.readFileSync(config.pageRoot + '/' + urlStr));
     } else {
         console.log('unknown file type:')
-        console.log('url: ' + url);
-        console.log(fs.lstatSync(config.pageRoot + '/' + url).isFile());
+        console.log('url: ' + urlStr);
+        console.log(fs.lstatSync(config.pageRoot + '/' + urlStr).isFile());
         res.writeHead(415);
         res.end();
     }
