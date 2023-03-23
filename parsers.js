@@ -1,18 +1,18 @@
-// TODO: add url parameters
 
 class UrlPath {
     
     constructor(str) {
         this.str = str;
         [this.pathStr, this.argsStr] = str.split('?');
-        this.path = parseUrl(this.pathStr);
+        this.path = parseUrlPath(this.pathStr);
+        if(this.argsStr) this.args = parseHttpData(this.argsStr);
     }
     
 }
 exports.UrlPath = UrlPath;
 
-function parseUrl(url) {
-    let parts = url.split('/');
+function parseUrlPath(pathStr) {
+    let parts = pathStr.split('/');
     
     if(parts[0] == '') parts.splice(0, 1);
     if(parts[parts.length - 1] == '') parts.splice(parts.length - 1, parts.length);
@@ -37,7 +37,7 @@ exports.parseCookies = parseCookies;
  * Parses a string from a http post request into an object
  * @param {string} str 
  */
-function parsePostData(str) {
+function parseHttpData(str) {
     let obj = {};
     
     // split input into individual property assignments
@@ -69,13 +69,13 @@ function parsePostData(str) {
         if(lastKey == '[]' && current instanceof Array) {
             current.push(val);
         } else {
-            current[lastKey] = val;
+            current[lastKey] = decodeURIComponent(val);
         }
     });
     
     return obj;
 }
-exports.parsePostData = parsePostData;
+exports.parseHttpData = parseHttpData;
 
 function getAt(obj, path) {
     let current = obj;

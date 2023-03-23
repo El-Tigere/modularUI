@@ -91,7 +91,8 @@ function serverListener(req, res) {
         end = true;
         
         // parse post data
-        let postDataObject = parsers.parsePostData(decodeURIComponent(postDataString));
+        // TODO: check if decodeURIComponent() is needed here
+        let postDataObject = parsers.parseHttpData(decodeURIComponent(postDataString));
         data.postData = postDataObject;
         
         // respond
@@ -114,7 +115,7 @@ function generateSessionToken() {
 }
 
 function respond(req, res, data) {
-    const urlStr = (((req.url || '/').match(/^([\w\d/]\.?)+$/g) || [''])[0].toLowerCase()).trim();
+    const urlStr = (((req.url || '/').match(/^([\w\d/?%&=]\.?)+$/g) || [''])[0].toLowerCase()).trim();
     
     if(!urlStr) {
         // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
