@@ -115,7 +115,8 @@ function generateSessionToken() {
 }
 
 function respond(req, res, data) {
-    const urlStr = (((req.url || '/').match(/^([\w\d/?%&=]\.?)+$/g) || [''])[0].toLowerCase()).trim();
+    // TODO: find a solution for ignoring case only in path and not in url parameters
+    const urlStr = (((req.url || '/').match(/^([\w\d/?%&=]\.?)+$/g) || [''])[0]/*.toLowerCase()*/).trim();
     
     if(!urlStr) {
         // respond with 404 to all requests with special chars in the url (except / and . (but not ..))
@@ -202,7 +203,8 @@ function respondResource(res, urlStr) {
 
 // TODO: simplify this
 function respondError(res, resCode, data) {
-    respondMainPage(pageLoader.get(entryElements, new parsers.UrlPath(pageMap.error).path), res, resCode, '/' + resCode, data);
+    const url = new parsers.UrlPath(pageMap.error + '?errorCode=' + resCode);
+    respondMainPage(pageLoader.get(entryElements, url.path), res, resCode, url, data);
 }
 
 // TODO: add databases for actual user authentication
