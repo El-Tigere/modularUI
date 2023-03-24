@@ -6,6 +6,7 @@ function get(entryElements, urlParts) {
 }
 exports.get = get;
 
+// TODO: create a custom class for the page entries 8)
 /**
  * Gets the entry points from the specified page.
  * @param {string} pageRoot

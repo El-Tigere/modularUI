@@ -200,9 +200,9 @@ function respondResource(res, urlStr) {
     return;
 }
 
-// TODO: use error urls from the page map
+// TODO: simplify this
 function respondError(res, resCode, data) {
-    respondMainPage(pageLoader.get(entryElements, ['error']), res, resCode, '/' + resCode, data);
+    respondMainPage(pageLoader.get(entryElements, new parsers.UrlPath(pageMap.error).path), res, resCode, '/' + resCode, data);
 }
 
 // TODO: add databases for actual user authentication

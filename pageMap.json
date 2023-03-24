@@ -2,7 +2,5 @@
     "redirect": {
         "/favicon.ico": "/resources/text_logo_64.png"
     },
-    "error": {
-        "notFound": "/util/error.m.js"
-    }
+    "error": "/error"
 }
