@@ -10,13 +10,13 @@ class UrlPath {
         if(this.argsStr) this.args = parsers.parseHttpData(this.argsStr);
     }
     
+    // TODO: not intuitive; move function to page class later
+    getEntryElement(entryElements) {
+        return parsers.getAt(entryElements, this.path)?.index;
+    }
+    
 }
 exports.UrlPath = UrlPath;
-
-function get(entryElements, urlParts) {
-    return parsers.getAt(entryElements, urlParts)?.index;
-}
-exports.get = get;
 
 // TODO: create a custom class for the page entries
 /**

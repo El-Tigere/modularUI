@@ -159,7 +159,7 @@ function respond(req, res, data) {
     }
     
     // check if the requested url is an entry page
-    const entry = pageLoader.get(entryElements, url.path);
+    const entry = url.getEntryElement(entryElements);
     if(entry) {
         respondMainPage(entry, res, 200, url, data);
         return;
@@ -204,7 +204,7 @@ function respondResource(res, urlStr) {
 // TODO: simplify this
 function respondError(res, resCode, data) {
     const url = new pageLoader.UrlPath(pageMap.error + '?errorCode=' + resCode);
-    respondMainPage(pageLoader.get(entryElements, url.path), res, resCode, url, data);
+    respondMainPage(url.getEntryElement(entryElements), res, resCode, url, data);
 }
 
 // TODO: add databases for actual user authentication
