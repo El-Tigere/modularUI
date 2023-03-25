@@ -1,12 +1,24 @@
 const fs = require('fs');
 const parsers = require('./parsers');
 
+class UrlPath {
+    
+    constructor(str) {
+        this.str = str;
+        [this.pathStr, this.argsStr] = str.split('?');
+        this.path = parsers.parseUrlPath(this.pathStr);
+        if(this.argsStr) this.args = parsers.parseHttpData(this.argsStr);
+    }
+    
+}
+exports.UrlPath = UrlPath;
+
 function get(entryElements, urlParts) {
     return parsers.getAt(entryElements, urlParts)?.index;
 }
 exports.get = get;
 
-// TODO: create a custom class for the page entries 8)
+// TODO: create a custom class for the page entries
 /**
  * Gets the entry points from the specified page.
  * @param {string} pageRoot

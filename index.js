@@ -124,7 +124,7 @@ function respond(req, res, data) {
         return;
     }
     
-    let url = new parsers.UrlPath(urlStr);
+    let url = new pageLoader.UrlPath(urlStr);
     
     // update pageState in sessionData
     if(data.postData?.updateData) {
@@ -139,7 +139,7 @@ function respond(req, res, data) {
     // redirect the url if possible (not to other domains but inside of the current domain)
     for(let key of Object.keys(pageMap.redirect)) {
         if(url.pathStr == key || (url.pathStr.startsWith(key + '/'))) {
-            url = new parsers.UrlPath(pageMap.redirect[key] + url.pathStr.substring(key.length));
+            url = new pageLoader.UrlPath(pageMap.redirect[key] + url.pathStr.substring(key.length));
             break;
         }
     }
@@ -203,7 +203,7 @@ function respondResource(res, urlStr) {
 
 // TODO: simplify this
 function respondError(res, resCode, data) {
-    const url = new parsers.UrlPath(pageMap.error + '?errorCode=' + resCode);
+    const url = new pageLoader.UrlPath(pageMap.error + '?errorCode=' + resCode);
     respondMainPage(pageLoader.get(entryElements, url.path), res, resCode, url, data);
 }
 

@@ -1,16 +1,4 @@
 
-class UrlPath {
-    
-    constructor(str) {
-        this.str = str;
-        [this.pathStr, this.argsStr] = str.split('?');
-        this.path = parseUrlPath(this.pathStr);
-        if(this.argsStr) this.args = parseHttpData(this.argsStr);
-    }
-    
-}
-exports.UrlPath = UrlPath;
-
 function parseUrlPath(pathStr) {
     let parts = pathStr.split('/');
     
@@ -20,6 +8,7 @@ function parseUrlPath(pathStr) {
     if(parts.length == 1 && parts[0] == '') return [];
     return parts;
 }
+exports.parseUrlPath = parseUrlPath;
 
 function parseCookies(cookieString) {
     let cookies = {};
