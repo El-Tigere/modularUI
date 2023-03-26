@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 
+const renderer = require('./renderer');
 const parsers = require('./parsers');
 const pageLoader = require('./pageLoader');
 
@@ -182,6 +183,14 @@ function respond(req, res, data) {
     respondError(res, 404, data);
 }
 
+/**
+ * Renders the given entry element and responds to the http request with it.
+ * @param {renderer.Element} element 
+ * @param {http.ServerResponse} res 
+ * @param {Number} resCode 
+ * @param {pageLoader.UrlPath} url 
+ * @param {Object} data 
+ */
 function respondMainPage(element, res, resCode, url, data) {
     data.url = url;
     data.resCode = resCode; // sets res code to expected res code
@@ -191,6 +200,11 @@ function respondMainPage(element, res, resCode, url, data) {
     res.end(page);
 }
 
+/**
+ * Responds to the http request with a resource.
+ * @param {http.ServerResponse} res 
+ * @param {String} urlStr 
+ */
 function respondResource(res, urlStr) {
     const ending = (urlStr.match(/\.[\w\d]+$/) || [])[0];
     if(ending && mimeTypes[ending]) {
@@ -208,6 +222,12 @@ function respondResource(res, urlStr) {
 }
 
 // TODO: simplify this
+/**
+ * Responds to the http request with the error page.
+ * @param {http.ServerResponse} res 
+ * @param {Number} resCode 
+ * @param {Object} data 
+ */
 function respondError(res, resCode, data) {
     const url = new pageLoader.UrlPath(pageMap.error + '?errorCode=' + resCode);
     respondMainPage(url.getEntryElement(entryElements), res, resCode, url, data);
