@@ -218,7 +218,6 @@ function respondResource(res, urlStr) {
         res.writeHead(415);
         res.end();
     }
-    return;
 }
 
 // TODO: simplify this
