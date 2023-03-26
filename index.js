@@ -40,7 +40,7 @@ const rElements = pageLoader.initializePage(entryElements).rElements;
 */
 
 /**
- * 
+ * The function that is used as the http request listener for the server.
  * @param {http.IncomingMessage} req 
  * @param {http.ServerResponse} res 
  * @returns 
@@ -114,6 +114,12 @@ function generateSessionToken() {
     return token;
 }
 
+/**
+ * Responds to a http request after the cookies, session data and post data have been recieved and parsed.
+ * @param {http.IncomingMessage} req 
+ * @param {http.ServerResponse} res 
+ * @param {Object} data 
+ */
 function respond(req, res, data) {
     // TODO: find a solution for ignoring case only in path and not in url parameters
     const urlStr = (((req.url || '/').match(/^([\w\d/?%&=]\.?)+$/g) || [''])[0]/*.toLowerCase()*/).trim();
