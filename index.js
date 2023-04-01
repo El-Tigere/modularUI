@@ -91,8 +91,7 @@ function serverListener(req, res) {
         end = true;
         
         // parse post data
-        // TODO: check if decodeURIComponent() is needed here
-        let postDataObject = parsers.parseHttpData(decodeURIComponent(postDataString));
+        let postDataObject = parsers.parseHttpData(postDataString);
         data.postData = postDataObject;
         
         // respond

@@ -35,6 +35,8 @@ function parseHttpData(str) {
         // split property into key and value
         let [key, val] = p.split('=');
         if(!(key && val)) return;
+        key = decodeURIComponent(key);
+        val = decodeURIComponent(val);
         
         // go to the object that should be changed
         const keyParts = key.match(/[\w\d%!().\-_]+|\[\]/g);
@@ -58,7 +60,7 @@ function parseHttpData(str) {
         if(lastKey == '[]' && current instanceof Array) {
             current.push(val);
         } else {
-            current[lastKey] = decodeURIComponent(val);
+            current[lastKey] = val;
         }
     });
     
