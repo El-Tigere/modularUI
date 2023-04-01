@@ -8,7 +8,6 @@ const pageLoader = require('./pageLoader');
 const config = JSON.parse(fs.readFileSync('config.json'));
 
 const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
-// TODO: add url parameters to specify error type in page maps
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
 const entryElements = pageLoader.getEntries(config.pageRoot);
 
@@ -220,7 +219,6 @@ function respondResource(res, urlStr) {
     }
 }
 
-// TODO: simplify this
 /**
  * Responds to the http request with the error page.
  * @param {http.ServerResponse} res 
