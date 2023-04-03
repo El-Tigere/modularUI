@@ -229,6 +229,13 @@ function respondError(res, resCode, data) {
 }
 
 // TODO: add databases for actual user authentication
+/**
+ * Tries to log in with the given username and password.
+ * @param {string} username 
+ * @param {string} password 
+ * @param {object} session 
+ * @returns {boolean} success
+ */
 function login(username, password, session) {
     if(!username || !password) return false; // login if any username or password is used
     session.login = {username: username};
