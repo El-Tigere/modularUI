@@ -1,4 +1,9 @@
 
+/**
+ * Parses the path of a url int an array of strings.
+ * @param {string} pathStr 
+ * @returns {Array<string>}
+ */
 function parseUrlPath(pathStr) {
     let parts = pathStr.split('/');
     
