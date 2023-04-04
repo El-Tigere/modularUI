@@ -15,6 +15,11 @@ function parseUrlPath(pathStr) {
 }
 exports.parseUrlPath = parseUrlPath;
 
+/**
+ * Parses the http cookie string into an object.
+ * @param {string} cookieString 
+ * @returns {Object}
+ */
 function parseCookies(cookieString) {
     let cookies = {};
     cookieString.split(';')?.forEach((e) => {
