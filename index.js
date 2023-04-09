@@ -11,7 +11,6 @@ const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
 const entryElements = pageLoader.getEntries(config.pageRoot);
 
-// TODO: automatically delete entries
 const sessionData = {};
 
 // init RElements
@@ -28,6 +27,8 @@ const newSession = () => {return {timeCreated: Date.now(), timeUsed: Date.now(),
         "sessionToken": "44bc25832a6ab5361a4308661a9197cd069a9176f14af0f3a585d099aa23e8f8"
     },
     "sessionData": {
+        "timeCreated: 1681067588515,
+        "timeUsed": 1681067687296,
         "pageState": {"someKey": "someData"},
         "login": {"username": "Peter"}
     },
@@ -248,8 +249,23 @@ function login(username, password, session) {
     return true;
 }
 
+/**
+ * Removes sessions that exist for over 24 hours or that have not been used for more than one hour.
+ */
+function removeOldSessions() {
+    let now = Date.now();
+    Object.keys(sessionData).forEach((e) => {
+        if(now - sessionData[e].timeCreated > 1000 * 60 * 60 * 24 || now - sessionData[e].timeUsed > 1000 * 60 * 60)
+        {
+            delete sessionData[e];
+        }
+    });
+}
+
 const server = http.createServer(serverListener);
 
 server.listen(config.port, config.host, () => {
     console.log(`Server listening on ${config.host}:${config.port}`);
 });
+
+setInterval(removeOldSessions, 1000 * 60);
