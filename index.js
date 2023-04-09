@@ -17,6 +17,9 @@ const sessionData = {};
 // init RElements
 const rElements = pageLoader.initializePage(entryElements).rElements;
 
+// supplier for new session
+const newSession = () => {return {pageState: {someKey: 'someData'}}};
+
 /* example for the structure of the data object passed to the getElement function of elements:
 ? for optional properties
 {
@@ -57,7 +60,7 @@ function serverListener(req, res) {
     let sessionToken = data.cookies['sessionToken'];
     if(!sessionToken || !sessionData.hasOwnProperty(sessionToken)) {
         sessionToken = generateSessionToken();
-        sessionData[sessionToken] = {pageState: {someKey: 'someData'}};
+        sessionData[sessionToken] = newSession();
         res.setHeader('Set-Cookie', `sessionToken=${sessionToken}; SameSite=Strict`)
     }
     data.sessionData = sessionData[sessionToken];
