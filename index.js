@@ -18,7 +18,7 @@ const sessionData = {};
 const rElements = pageLoader.initializePage(entryElements).rElements;
 
 // supplier for new session
-const newSession = () => {return {pageState: {someKey: 'someData'}}};
+const newSession = () => {return {timeCreated: Date.now(), timeUsed: Date.now(), pageState: {someKey: 'someData'}}};
 
 /* example for the structure of the data object passed to the getElement function of elements:
 ? for optional properties
@@ -64,6 +64,9 @@ function serverListener(req, res) {
         res.setHeader('Set-Cookie', `sessionToken=${sessionToken}; SameSite=Strict`)
     }
     data.sessionData = sessionData[sessionToken];
+    
+    // update last use of session
+    data.sessionData.timeUsed = Date.now();
     
     if(req.method != 'POST') {
         // respond
