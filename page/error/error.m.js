@@ -11,11 +11,11 @@ const errorMessages = {
     'inverr': 'Der von ihnen verursachte Fehler ist ungültig.'
 }
 
-exports.content = new Element(namespaces, (content, args, data) => {console.log(data.url); return`
+exports.content = new Element(namespaces, (content, args, data) => `
 <app:basePage>
     <main>
         <h1>Fehler ${data.url?.args?.errorCode || ':('}</h1>
         <p>${errorMessages[data.url?.args?.errorCode || 'inverr'] || errorMessages['inverr']}</p>
     </main>
 </app:basePage>
-`});
+`);
