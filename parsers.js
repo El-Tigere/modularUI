@@ -32,6 +32,7 @@ function parseCookies(cookieString) {
 }
 exports.parseCookies = parseCookies;
 
+// TODO: this can probably break very easily
 /**
  * Parses a string from a http post request into an object
  * @param {string} str 

@@ -126,7 +126,6 @@ function generateSessionToken() {
  * @param {Object} data 
  */
 function respond(req, res, data) {
-    // TODO: find a solution for ignoring case only in path and not in url parameters
     const urlStr = (((req.url || '/').match(/^([\w\d/?%&=]\.?)+$/g) || [''])[0]/*.toLowerCase()*/).trim();
     
     if(!urlStr) {
