@@ -65,12 +65,13 @@ exports.content = new Element(namespaces, (content, args, data) => `
 </app:basePage>
 `);
 
-// FIXME: unreadable code
 exports.colorSquare = new RElement(namespaces, 'colorSquare', (content, args, data) => {
-    let ps = data.sessionData.pageState;
-    if(ps.testColors && ps.testColors[2]) {
-        let colors = data.sessionData.pageState.testColors;
-        let hex = ((colors[0] == 'true') ? 'F' : '0') + ((colors[1] == 'true') ? 'F' : '0') + ((colors[2] == 'true') ? 'F' : '0');
+    let colors = data.sessionData.pageState.testColors;
+    if(colors && colors.length == 3) {
+        let hex = '';
+        colors.forEach((e) => {
+            hex += (e == 'true') ? 'F' : '0';
+        });
         return `<div id="color-square" style="width: 1em; height: 1em; background-color: #${hex};"></div>`;
     }
     return '<div id="color-square" style="width: 1em; height: 1em;"></div>';
