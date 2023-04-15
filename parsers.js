@@ -79,6 +79,12 @@ function parseHttpData(str) {
 }
 exports.parseHttpData = parseHttpData;
 
+/**
+ * Get the property of a nested object at the given path.
+ * @param {Object} obj 
+ * @param {Array<string>} path an array of keys of the nested object
+ * @returns 
+ */
 function getAt(obj, path) {
     let current = obj;
     for(let i = 0; i < path.length; i++) {
