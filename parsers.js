@@ -95,6 +95,12 @@ function getAt(obj, path) {
 }
 exports.getAt = getAt;
 
+/**
+ * Sets a property of a nested object at the given path to the given value (val).
+ * @param {Object} obj 
+ * @param {Array<string>} path an array of keys of the nested object
+ * @param {*} val 
+ */
 function setAt(obj, path, val) {
     console.log(obj);
     console.log(path);
