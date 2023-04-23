@@ -23,8 +23,9 @@ exports.UrlPath = UrlPath;
 
 class Page {
     
-    constructor() {
-        this.page = {};
+    constructor(pageRoot) {
+        this.entries = getEntries(pageRoot);
+        this.rElements = initializePage(this.entries).rElements;
     }
     
     addEntry(entry) {
@@ -32,6 +33,7 @@ class Page {
     }
     
 }
+exports.Page = Page;
 
 // TODO: create a custom class for the page entries
 /**
@@ -67,7 +69,6 @@ function getEntries(pageRoot) {
     
     return page;
 }
-exports.getEntries = getEntries;
 
 /**
  * Initializes all elements that are related to (dependencies) or that are one of the entryElements.
@@ -78,7 +79,6 @@ function initializePage(entryElements) {
     initializeSubPage(entryElements, collector);
     return collector;
 }
-exports.initializePage = initializePage;
 
 function initializeSubPage(subPage, collector) {
     Object.keys(subPage).forEach((k) => {

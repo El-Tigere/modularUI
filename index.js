@@ -9,12 +9,14 @@ const config = JSON.parse(fs.readFileSync('config.json'));
 
 const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
-const entryElements = pageLoader.getEntries(config.pageRoot);
-
+//const entryElements = pageLoader.getEntries(config.pageRoot);
+const page = new pageLoader.Page(config.pageRoot);
+console.log(page.rElements);
+console.log(page.entries);
 const sessionData = {};
 
 // init RElements
-const rElements = pageLoader.initializePage(entryElements).rElements;
+//const rElements = pageLoader.initializePage(entryElements).rElements;
 
 // supplier for new session
 const newSession = () => {return {timeCreated: Date.now(), timeUsed: Date.now(), pageState: {someKey: 'someData'}}};
@@ -156,7 +158,7 @@ function respond(req, res, data) {
     
     // refresh single elements
     if(data.postData?.getElement) {
-        const element = rElements[data.postData.getElement];
+        const element = page.rElements[data.postData.getElement];
         if(element) {
             respondMainPage(element, res, 200, url, data);
         } else {
@@ -169,7 +171,7 @@ function respond(req, res, data) {
     }
     
     // check if the requested url is an entry page
-    const entry = url.getEntryElement(entryElements);
+    const entry = url.getEntryElement(page.entries);
     if(entry) {
         respondMainPage(entry, res, 200, url, data);
         return;
@@ -198,9 +200,9 @@ function respondMainPage(element, res, resCode, url, data) {
     data.url = url;
     data.resCode = resCode; // sets res code to expected res code
     res.setHeader('Content-Type', 'text/html');
-    let page = element.render('', {}, data);
+    let pageContent = element.render('', {}, data);
     res.writeHead(data.resCode); // sends res code that might have changed
-    res.end(page);
+    res.end(pageContent);
 }
 
 /**
@@ -231,7 +233,7 @@ function respondResource(res, urlStr) {
  */
 function respondError(res, resCode, data) {
     const url = new pageLoader.UrlPath(pageMap.error + '?errorCode=' + resCode);
-    respondMainPage(url.getEntryElement(entryElements), res, resCode, url, data);
+    respondMainPage(url.getEntryElement(page.entries), res, resCode, url, data);
 }
 
 // TODO: add databases for actual user authentication
