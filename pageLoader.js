@@ -21,6 +21,18 @@ class UrlPath {
 }
 exports.UrlPath = UrlPath;
 
+class Page {
+    
+    constructor() {
+        this.page = {};
+    }
+    
+    addEntry(entry) {
+        
+    }
+    
+}
+
 // TODO: create a custom class for the page entries
 /**
  * Gets the entry points from the specified page.
