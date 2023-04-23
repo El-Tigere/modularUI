@@ -13,11 +13,6 @@ class UrlPath {
         if(this.argsStr) this.args = parsers.parseHttpData(this.argsStr);
     }
     
-    // TODO: not intuitive; move function to page class later
-    getEntryElement(entryElements) {
-        return parsers.getAt(entryElements, this.path)?.index;
-    }
-    
 }
 exports.UrlPath = UrlPath;
 
@@ -28,10 +23,9 @@ class Page {
         this.rElements = initializePage(this.entries).rElements;
     }
     
-    addEntry(entry) {
-        
+    getEntry(url) {
+        return parsers.getAt(this.entries, url.path)?.index;
     }
-    
 }
 exports.Page = Page;
 
