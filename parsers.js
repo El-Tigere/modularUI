@@ -68,8 +68,16 @@ function parseHttpData(str) {
         
         // insert value
         const lastKey = keyParts[keyParts.length - 1];
-        if(lastKey == '[]' && current instanceof Array) {
-            current.push(val);
+        if(current instanceof Array) {
+            if(lastKey == '[]') {
+                // add to array
+                current.push(val);
+            } else {
+                // set at specific index
+                let arrIndex = parseInt(lastKey);
+                if(isNaN(arrIndex)) throw new Error('Invalid array index.');
+                current[arrIndex] = val;
+            }
         } else {
             current[lastKey] = val;
         }
