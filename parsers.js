@@ -54,10 +54,11 @@ function parseHttpData(str) {
         let current = obj;
         for(let i = 0; i < keyParts.length - 1; i++)
         {
-            if(keyParts[i] == '[]') return; // this is only allowed for the last key part
+            if(keyParts[i] == '[]') throw new Error('Invalid http data format.'); // this is only allowed for the last key part
             
             // create new object or array if necessary
             if(!current[keyParts[i]]) {
+                // TODO: check if insertion index is an invalid array index
                 if(keyParts[i + 1] && (!isNaN(keyParts[i + 1]) || keyParts[i + 1] == '[]')) current[keyParts[i]] = [];
                 else current[keyParts[i]] = {};
             }
@@ -75,7 +76,7 @@ function parseHttpData(str) {
             } else {
                 // set at specific index
                 let arrIndex = parseInt(lastKey);
-                if(isNaN(arrIndex)) throw new Error('Invalid array index.');
+                if(isNaN(arrIndex)) throw new Error('Invalid http data format.');
                 current[arrIndex] = val;
             }
         } else {
