@@ -29,7 +29,6 @@ class Page {
 }
 exports.Page = Page;
 
-// TODO: create a custom class for the page entries
 /**
  * Gets the entry points from the specified page.
  * @param {string} pageRoot
