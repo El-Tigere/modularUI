@@ -42,45 +42,52 @@ function parseHttpData(str) {
     
     // split input into individual property assignments
     const properties = str.split('&');
+    
+    // TODO: simplify this
     properties.forEach((p) => {
-        // split property into key and value
-        let [key, val] = p.split('=');
-        if(!(key && val)) return;
-        key = decodeURIComponent(key);
-        val = decodeURIComponent(val);
         
-        // go to the object that should be changed
-        const keyParts = key.match(/[\w\d%!().\-_]+|\[\]/g);
-        let current = obj;
-        for(let i = 0; i < keyParts.length - 1; i++)
-        {
-            if(keyParts[i] == '[]') throw new Error('Invalid http data format.'); // this is only allowed for the last key part
+        try {
+            // split property into key and value
+            let [key, val] = p.split('=');
+            if(!(key && val)) return;
+            key = decodeURIComponent(key);
+            val = decodeURIComponent(val);
             
-            // create new object or array if necessary
-            if(!current[keyParts[i]]) {
-                // TODO: check if insertion index is an invalid array index
-                if(keyParts[i + 1] && (!isNaN(keyParts[i + 1]) || keyParts[i + 1] == '[]')) current[keyParts[i]] = [];
-                else current[keyParts[i]] = {};
+            // go to the object that should be changed
+            const keyParts = key.match(/[\w\d%!().\-_]+|\[\]/g);
+            let current = obj;
+            for(let i = 0; i < keyParts.length - 1; i++)
+            {
+                if(keyParts[i] == '[]') throw new Error('Invalid http data format.'); // this is only allowed for the last key part
+                
+                // create new object or array if necessary
+                if(!current[keyParts[i]]) {
+                    // TODO: check if insertion index is an invalid array index
+                    if(keyParts[i + 1] && (!isNaN(keyParts[i + 1]) || keyParts[i + 1] == '[]')) current[keyParts[i]] = [];
+                    else current[keyParts[i]] = {};
+                }
+                
+                // go to the next object/array
+                current = current[keyParts[i]];
             }
             
-            // go to the next object/array
-            current = current[keyParts[i]];
-        }
-        
-        // insert value
-        const lastKey = keyParts[keyParts.length - 1];
-        if(current instanceof Array) {
-            if(lastKey == '[]') {
-                // add to array
-                current.push(val);
+            // insert value
+            const lastKey = keyParts[keyParts.length - 1];
+            if(current instanceof Array) {
+                if(lastKey == '[]') {
+                    // add to array
+                    current.push(val);
+                } else {
+                    // set at specific index
+                    let arrIndex = parseInt(lastKey);
+                    if(isNaN(arrIndex)) throw new Error('Invalid http data format.');
+                    current[arrIndex] = val;
+                }
             } else {
-                // set at specific index
-                let arrIndex = parseInt(lastKey);
-                if(isNaN(arrIndex)) throw new Error('Invalid http data format.');
-                current[arrIndex] = val;
+                current[lastKey] = val;
             }
-        } else {
-            current[lastKey] = val;
+        } catch (error) {
+            
         }
     });
     
