@@ -23,13 +23,25 @@ class UrlPath {
 }
 exports.UrlPath = UrlPath;
 
+/**
+ * A class for the structure of the page entries and rElements.
+ */
 class Page {
     
+    /**
+     * Uses the page root to read the page structure.
+     * @param {string} pageRoot 
+     */
     constructor(pageRoot) {
         this.entries = getEntries(pageRoot);
         this.rElements = initializePage(this.entries).rElements;
     }
     
+    /**
+     * Returns the entry element of the given url.
+     * @param {UrlPath} url 
+     * @returns entry element
+     */
     getEntry(url) {
         return parsers.getAt(this.entries, url.path)?.index;
     }
