@@ -1,8 +1,15 @@
 const fs = require('fs');
 const parsers = require('./parsers');
 
+/**
+ * A class for urls. Contains the string- and array-form of the url.
+ */
 class UrlPath {
     
+    /**
+     * Constructor for a url using the url string.
+     * @param {string} str 
+     */
     constructor(str) {
         this.str = str;
         [this.pathStr, this.argsStr] = str.split('?');
