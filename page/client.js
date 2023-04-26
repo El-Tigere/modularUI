@@ -1,5 +1,5 @@
 function update(id, data) {
-    $('#' + id).load(document.URL, {getElement: id, updateData: data});
+    $('#' + id).load(document.URL, {getElement: id, updateData: JSON.stringify(data)});
 }
 
 // controls

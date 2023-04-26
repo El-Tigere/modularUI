@@ -70,7 +70,7 @@ exports.colorSquare = new RElement(namespaces, 'colorSquare', (content, args, da
     if(colors && colors.length == 3) {
         let hex = '';
         colors.forEach((e) => {
-            hex += (e == 'true') ? 'F' : '0';
+            hex += e ? 'F' : '0';
         });
         return `<div id="color-square" style="width: 1em; height: 1em; background-color: #${hex};"></div>`;
     }

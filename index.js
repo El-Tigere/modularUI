@@ -138,7 +138,13 @@ function respond(req, res, data) {
     
     // update pageState in sessionData
     if(data.postData?.updateData) {
-        Object.assign(data.sessionData.pageState, data.postData.updateData);
+        try {
+            // TODO: do this in a server side script on the page
+            let pageState = JSON.parse(data.postData.updateData);
+            Object.assign(data.sessionData.pageState, pageState);
+        } catch (error) {
+            
+        }
     }
     
     // login
@@ -201,6 +207,11 @@ function respondMainPage(element, res, resCode, url, data) {
     let pageContent = element.render('', {}, data);
     res.writeHead(data.resCode); // sends res code that might have changed
     res.end(pageContent);
+    console.log(Object.keys(data));
+    console.log(data.cookies);
+    console.log(data.sessionData);
+    console.log(data.url);
+    console.log(data.resCode);
 }
 
 /**
