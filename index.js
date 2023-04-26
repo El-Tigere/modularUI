@@ -11,8 +11,6 @@ const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
 //const entryElements = pageLoader.getEntries(config.pageRoot);
 const page = new pageLoader.Page(config.pageRoot);
-console.log(page.rElements);
-console.log(page.entries);
 const sessionData = {};
 
 // init RElements
