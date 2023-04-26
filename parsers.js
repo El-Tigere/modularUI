@@ -46,7 +46,16 @@ function parseHttpData(str) {
     // TODO: simplify this
     properties.forEach((p) => {
         
-        try {
+        // split property into key and value
+        let [key, val] = p.split('=');
+        if(!(key && val)) return;
+        key = decodeURIComponent(key);
+        val = decodeURIComponent(val);
+        
+        // insert property
+        obj[key] = val;
+        
+        /*try {
             // split property into key and value
             let [key, val] = p.split('=');
             if(!(key && val)) return;
@@ -88,7 +97,7 @@ function parseHttpData(str) {
             }
         } catch (error) {
             
-        }
+        }*/
     });
     
     return obj;
