@@ -13,10 +13,12 @@ class Element {
     /**
      * constructor
      * @param {Object.<string, Object>} namespaces an Object with this format: {'xmlNamespace': require('according import')}
+     * @param {boolean} hasContent elements with no content are compact elements like the <img> element
      * @param {GetElementCallback} getElement
      */
-    constructor(namespaces, getElement) {
+    constructor(namespaces, hasContent, getElement) {
         this.namespaces = namespaces;
+        this.hasContent = hasContent;
         this.getElement = getElement;
         this.initialized = false;
     }
@@ -55,10 +57,11 @@ class Element {
         
         // find first tag
         let tags = part.match(tagRegex);
+        console.log(tags);
         while(tags && tags[0]) {
             
             // get last open tag (can not contain another custom tag)
-            let tag = tags[tags.length - 1];
+            let tag = tags[/*tags.length - 1*/ 0];
             
             // get tag information
             let start = part.indexOf(tag);
@@ -66,18 +69,28 @@ class Element {
             let open = `<${name}`; // > is missing because open tags can have arguments but always start with <name
             let close = `</${name}>`;
             
-            // find closing tag
-            let counter = 1;
-            let i;
-            for(i = start + tag.length; i < part.length; i++) {
-                if(part.substring(i).startsWith(open)) counter++;
-                if(part.substring(i).startsWith(close)) counter--;
-                if(counter == 0) break;
-            }
+            // get element type
+            let nameParts = name.split(':');
+            let type = this.namespaces[nameParts[0]][nameParts[1]];
             
-            let compactElement = counter > 0; // compactElement: element with only an open tag
-            let content = compactElement ? '' : part.substring(start + tag.length, i);
-            let end = compactElement ? start + tag.length : i + close.length; 
+            // find closing tag
+            //let compactElement = !; // compactElement: element with only an open tag
+            
+            let content, end;
+            if(type.hasContent) {
+                let counter = 1;
+                let i;
+                for(i = start + tag.length; i < part.length; i++) {
+                    if(part.substring(i).startsWith(open)) counter++;
+                    if(part.substring(i).startsWith(close)) counter--;
+                    if(counter == 0) break;
+                }
+                content = part.substring(start + tag.length, i);
+                end = i + close.length;
+            } else {
+                content = '';
+                end = start + tag.length;
+            }
             
             // find arguments
             let args = {};
@@ -92,8 +105,7 @@ class Element {
             });
             
             // insert the resulting elements
-            let nameParts = name.split(':');
-            let result = this.namespaces[nameParts[0]][nameParts[1]].render(content, args, requestData).trim();
+            let result = type.render(content, args, requestData).trim();
             part = part.substring(0, start) + result + part.substring(end, part.length);
             
             // find next tag
@@ -110,8 +122,8 @@ exports.Element = Element;
 // refreshable / reloadable element
 class RElement extends Element {
     
-    constructor(namespaces, id, getElement) {
-        super(namespaces, getElement);
+    constructor(namespaces, id, hasContent, getElement) {
+        super(namespaces, hasContent, getElement);
         this.id = id;
     }
     
