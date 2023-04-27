@@ -207,11 +207,6 @@ function respondMainPage(element, res, resCode, url, data) {
     let pageContent = element.render('', {}, data);
     res.writeHead(data.resCode); // sends res code that might have changed
     res.end(pageContent);
-    console.log(Object.keys(data));
-    console.log(data.cookies);
-    console.log(data.sessionData);
-    console.log(data.url);
-    console.log(data.resCode);
 }
 
 /**
