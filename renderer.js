@@ -53,14 +53,14 @@ class Element {
     
     // renders the custom elements used in this element; there are probably much better ways of implementing this
     renderCustomElements(part, requestData) {
-        const tagRegex = /<[\w\d]+:[\w\d]+(?:\s+[\w\d]+(?:\s*=\s*(?:".*"|\d+))?)*>/g; // matches an open tag with arguments like <div class="h">
+        
         
         // find first tag
-        let tags = part.match(tagRegex);
-        console.log(tags);
-        while(tags && tags[0]) {
+        let tags;
+        
+        while(tags = this.getKnownParts(part)) {
             
-            // get last open tag (can not contain another custom tag)
+            // get first open tag
             let tag = tags[/*tags.length - 1*/ 0];
             
             // get tag information
@@ -109,11 +109,28 @@ class Element {
             part = part.substring(0, start) + result + part.substring(end, part.length);
             
             // find next tag
-            tags = part.match(tagRegex);
+            //tags = part.match(tagRegex);
             
         }
         
         return part.trim();
+    }
+    
+    // TODO: improve performance
+    getKnownParts(part) {
+        const tagRegex = /<[\w\d]+:[\w\d]+(?:\s+[\w\d]+(?:\s*=\s*(?:".*"|\d+))?)*>/g; // matches an open tag with arguments like <div class="h">
+        
+        let tags = part.match(tagRegex);
+        if(tags == null) return null;
+        
+        // exclude unknown parts
+        tags = tags.filter((e) => {
+            let name = e.match(/[\w\d]+:[\w\d]+/)[0];
+            let nameParts = name.split(':');
+            return this.namespaces[nameParts[0]] && this.namespaces[nameParts[0]][nameParts[1]];
+        });
+        
+        return tags.length > 0 ? tags : null;
     }
     
 }
