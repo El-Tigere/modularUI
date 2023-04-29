@@ -10,7 +10,7 @@ const namespaces = {
 };
 
 // args.scripts = '/script.js;/abc/xyz.js'
-exports.basePage = new Element(namespaces, (content, args) => `
+exports.basePage = new Element(namespaces, true, (content, args) => `
 <!DOCTYPE html>
 <html lang="de">
     <head>
@@ -32,7 +32,7 @@ exports.basePage = new Element(namespaces, (content, args) => `
 </html>
 `);
 
-exports.header = new Element(namespaces, (content, args, data) => `
+exports.header = new Element(namespaces, false, (content, args, data) => `
 <header>
     <aside><logos:logo size=64></aside>
     <h1><a href="/">${args.title}</a></h1>
@@ -42,7 +42,7 @@ exports.header = new Element(namespaces, (content, args, data) => `
 </header>
 `);
 
-exports.content = new Element(namespaces, (content, args) => `
+exports.content = new Element(namespaces, false, (content, args) => `
 <app:basePage>
     <main>
         <h1>Testseite</h1>
@@ -69,7 +69,7 @@ exports.content = new Element(namespaces, (content, args) => `
 </app:basePage>
 `);
 
-exports.section = new Element(namespaces, (content, args) => {
+exports.section = new Element(namespaces, true, (content, args) => {
     let name = args?.name?.trim();
     if(!name) {
         return `<section>${content}</section>`;
