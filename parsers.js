@@ -43,7 +43,6 @@ function parseHttpData(str) {
     // split input into individual property assignments
     const properties = str.split('&');
     
-    // TODO: simplify this
     properties.forEach((p) => {
         
         // split property into key and value

@@ -1,4 +1,3 @@
-// TODO: reverse order of element rendering to allow for server side script elements that get executed in the correct order
 // TODO: add global imports that can be used in every element (for example app.js elements are needed in nearly every file)
 
 class Element {
