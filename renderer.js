@@ -52,15 +52,13 @@ class Element {
     
     // renders the custom elements used in this element; there are probably much better ways of implementing this
     renderCustomElements(part, requestData) {
-        
         if(!part) return part;
+        
         // find first tag
         let tags = this.getKnownParts(part)
         if(!tags) return part;
+        
         tags.forEach((tag) => {
-            
-            // get first open tag
-            //let tag = tags[/*tags.length - 1*/ 0];
             
             // get tag information
             let start = part.indexOf(tag);
@@ -74,8 +72,6 @@ class Element {
             let type = this.namespaces[nameParts[0]][nameParts[1]];
             
             // find closing tag
-            //let compactElement = !; // compactElement: element with only an open tag
-            
             let content, end;
             if(type.hasContent) {
                 let counter = 1;
@@ -108,12 +104,9 @@ class Element {
             let result = type.render(content, args, requestData).trim();
             part = part.substring(0, start) + result + part.substring(end, part.length);
             
-            // find next tag
-            //tags = part.match(tagRegex);
-            
         });
         
-        return part.trim();
+        return part;
     }
     
     getKnownParts(part) {
