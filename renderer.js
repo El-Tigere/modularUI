@@ -44,7 +44,7 @@ class Element {
      */
     render(content, args, requestData) {
         // first call the getElement function
-        let part = this.getElement(content, args, requestData);
+        let part = this.getElement(content, args, requestData) || '';
         
         // then render the custom tags
         return this.renderCustomElements(part, requestData).trim();
@@ -53,10 +53,10 @@ class Element {
     // renders the custom elements used in this element; there are probably much better ways of implementing this
     renderCustomElements(part, requestData) {
         
-        
+        if(!part) return part;
         // find first tag
         let tags = this.getKnownParts(part)
-        
+        if(!tags) return part;
         tags.forEach((tag) => {
             
             // get first open tag

@@ -3,6 +3,7 @@ const {Element} = require('../renderer');
 const util = require('./util/serverUtil.m');
 
 const namespaces = {
+    'serscr': require('./serverScriptTest.m'),
     'app': require('./app.m'),
     'logos': require('./util/logos.m'),
     'login': require('./login/login.m'),
@@ -11,6 +12,7 @@ const namespaces = {
 
 // args.scripts = '/script.js;/abc/xyz.js'
 exports.basePage = new Element(namespaces, true, (content, args) => `
+<serscr:test t="hallo">
 <!DOCTYPE html>
 <html lang="de">
     <head>
