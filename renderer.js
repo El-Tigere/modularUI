@@ -55,15 +55,16 @@ class Element {
         
         
         // find first tag
-        let tags;
+        let tags = this.getKnownParts(part)
         
-        while(tags = this.getKnownParts(part)) {
+        tags.forEach((tag) => {
             
             // get first open tag
-            let tag = tags[/*tags.length - 1*/ 0];
+            //let tag = tags[/*tags.length - 1*/ 0];
             
             // get tag information
             let start = part.indexOf(tag);
+            if(start == -1) return;
             let name = tag.match(/[\w\d]+:[\w\d]+/)[0];
             let open = `<${name}`; // > is missing because open tags can have arguments but always start with <name
             let close = `</${name}>`;
@@ -110,12 +111,11 @@ class Element {
             // find next tag
             //tags = part.match(tagRegex);
             
-        }
+        });
         
         return part.trim();
     }
     
-    // TODO: improve performance
     getKnownParts(part) {
         const tagRegex = /<[\w\d]+:[\w\d]+(?:\s+[\w\d]+(?:\s*=\s*(?:".*"|\d+))?)*>/g; // matches an open tag with arguments like <div class="h">
         
