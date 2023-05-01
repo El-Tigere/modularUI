@@ -136,22 +136,6 @@ function respond(req, res, data) {
     
     let url = new pageLoader.UrlPath(urlStr);
     
-    // update pageState in sessionData
-    if(data.postData?.updateData) {
-        try {
-            // TODO: do this in a server side script on the page
-            let pageState = JSON.parse(data.postData.updateData);
-            Object.assign(data.sessionData.pageState, pageState);
-        } catch (error) {
-            
-        }
-    }
-    
-    // login
-    if(data.postData?.username && data.postData?.password) {
-        login(data.postData.username, data.postData.password, data.sessionData);
-    }
-    
     // redirect the url if possible (not to other domains but inside of the current domain)
     for(let key of Object.keys(pageMap.redirect)) {
         if(url.pathStr == key || (url.pathStr.startsWith(key + '/'))) {
