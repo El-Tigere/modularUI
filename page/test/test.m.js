@@ -1,4 +1,5 @@
 const {Element, RElement} = require('../../renderer');
+const sessionManager = require('../sessionManager.m');
 
 const namespaces = {
     'test': require('./test.m'),
@@ -66,6 +67,9 @@ exports.content = new Element(namespaces, false, (content, args, data) => `
 `);
 
 exports.colorSquare = new RElement(namespaces, 'colorSquare', false, (content, args, data) => {
+    
+    sessionManager.updatePageState(data);
+    
     let colors = data.sessionData.pageState.testColors;
     if(colors && colors.length == 3) {
         let hex = '';
@@ -75,4 +79,5 @@ exports.colorSquare = new RElement(namespaces, 'colorSquare', false, (content, a
         return `<div id="color-square" style="width: 1em; height: 1em; background-color: #${hex};"></div>`;
     }
     return '<div id="color-square" style="width: 1em; height: 1em;"></div>';
+    
 });
