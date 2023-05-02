@@ -224,20 +224,6 @@ function respondError(res, resCode, data) {
     respondMainPage(page.getEntry(url), res, resCode, url, data);
 }
 
-// TODO: add databases for actual user authentication
-/**
- * Tries to log in with the given username and password.
- * @param {string} username 
- * @param {string} password 
- * @param {object} session 
- * @returns {boolean} success
- */
-function login(username, password, session) {
-    if(!username || !password) return false; // login if any username or password is used
-    session.login = {username: username};
-    return true;
-}
-
 /**
  * Removes sessions that exist for over 24 hours or that have not been used for more than one hour.
  */
