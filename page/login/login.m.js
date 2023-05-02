@@ -28,10 +28,3 @@ exports.content = new Element(namespaces, false, (content, args) => `
     </main>
 </app:basePage>
 `);
-
-
-/* debug element */
-exports.info = new Element(namespaces, false, (content, args, data) => `
-<p>username: ${(data.formData || {}).username || ''}</p>
-<p>method: ${data.req.method}</p>
-`);

@@ -9,12 +9,8 @@ const config = JSON.parse(fs.readFileSync('config.json'));
 
 const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
-//const entryElements = pageLoader.getEntries(config.pageRoot);
 const page = new pageLoader.Page(config.pageRoot);
 const sessionData = {};
-
-// init RElements
-//const rElements = pageLoader.initializePage(entryElements).rElements;
 
 // supplier for new session
 const newSession = () => {return {timeCreated: Date.now(), timeUsed: Date.now(), pageState: {someKey: 'someData'}}};
