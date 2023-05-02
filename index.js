@@ -244,7 +244,7 @@ function login(username, password, session) {
 function removeOldSessions() {
     let now = Date.now();
     Object.keys(sessionData).forEach((e) => {
-        if(now - sessionData[e].timeCreated > 1000 * 60 * 60 * 24 || now - sessionData[e].timeUsed > 1000 * 60 * 60)
+        if(now - sessionData[e].timeCreated > 1000 * 60 * 60 * config.maxSessionAgeHours || now - sessionData[e].timeUsed > 1000 * 60 * 60 * config.maxSessionNoUseHours)
         {
             delete sessionData[e];
         }
