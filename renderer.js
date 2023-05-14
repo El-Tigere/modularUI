@@ -1,5 +1,9 @@
 // TODO: add global imports that can be used in every element (for example app.js elements are needed in nearly every file)
 
+/**
+ * A class for custom html elements. These elements are replaced with the result of the getElement function of the element when the page is rendered.
+ * getElement can also be used as a server script (for example a script that updates / parses session data before the rest of the page is loaded).
+ */
 class Element {
     
     /**
