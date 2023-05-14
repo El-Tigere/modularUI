@@ -128,7 +128,9 @@ class Element {
 }
 exports.Element = Element;
 
-// refreshable / reloadable element
+/**
+ * RElements are Elements that can be individualy reloaded without reloading and rendering the entire page.
+ */
 class RElement extends Element {
     
     constructor(namespaces, id, hasContent, getElement) {
