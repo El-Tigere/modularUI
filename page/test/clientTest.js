@@ -4,7 +4,7 @@ function testSessionData() {
     $.ajax({
         type: 'POST',
         url: document.URL,
-        data: {updateData: {someKey: 'some other data'}},
+        data: {updateData: JSON.stringify({someKey: 'some other data'})},
         success: () => console.log('success')
     });
 }
