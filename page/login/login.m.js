@@ -5,7 +5,7 @@ const namespaces = {
     'app': require('../app.m')
 }
 
-exports.form = new Element(namespaces, false, (content, args) => `
+exports.form = new Element(namespaces, false, true, (content, args) => `
 <form action="/" method="post">
     <fieldset>
         <legend>login</legend>
@@ -18,7 +18,7 @@ exports.form = new Element(namespaces, false, (content, args) => `
 </form>
 `);
 
-exports.content = new Element(namespaces, false, (content, args) => `
+exports.content = new Element(namespaces, false, true, (content, args) => `
 <app:basePage>
     <main>
         <h1>Login</h1>

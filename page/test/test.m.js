@@ -7,14 +7,14 @@ const namespaces = {
     'controls': require('../util/controls.m')
 }
 
-exports.randomNumber = new Element(namespaces, false, (content, args) => parseInt(Math.random() * 100).toString());
+exports.randomNumber = new Element(namespaces, false, false, (content, args) => parseInt(Math.random() * 100).toString());
 
-exports.randomElement = new RElement(namespaces, 'randomElement', false, (content, args) => `
+exports.randomElement = new RElement(namespaces, 'randomElement', false, true, (content, args) => `
 Hier ist eine zufällige Zahl: <test:randomNumber>
 <button onClick="update('randomElement', {});">update</button>
 `);
 
-exports.content = new Element(namespaces, false, (content, args, data) => `
+exports.content = new Element(namespaces, false, false, (content, args, data) => `
 <app:basePage scripts="/test/clientTest.js;/test/clientTest.js">
     <main>
         <h1>Tests</h1>
@@ -66,7 +66,7 @@ exports.content = new Element(namespaces, false, (content, args, data) => `
 </app:basePage>
 `);
 
-exports.colorSquare = new RElement(namespaces, 'colorSquare', false, (content, args, data) => {
+exports.colorSquare = new RElement(namespaces, 'colorSquare', false, false, (content, args, data) => {
     
     sessionManager.updatePageState(data);
     
