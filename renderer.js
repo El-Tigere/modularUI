@@ -145,11 +145,9 @@ class RElement extends Element {
     }
     
     init(collector) {
-        if(this.initialized) return;
+        super.init(collector);
         
         collector.rElements[this.id] = this;
-        
-        super.init(collector);
     }
     
 }
