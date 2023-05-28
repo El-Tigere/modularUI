@@ -39,6 +39,10 @@ class Element {
         Object.values(this.namespaces).forEach((e) => Object.values(e).forEach((se) => {
             if(se instanceof Element) se.init(collector);
         }));
+        
+        if(this.preRender) {
+            this.preRenderedContent = this.getElement('', {}, {});
+        }
     }
     
     /**
