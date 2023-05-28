@@ -53,8 +53,8 @@ class Element {
      * @returns {string}
      */
     render(content, args, requestData) {
-        // first call the getElement function
-        let part = this.getElement(content, args, requestData) || '';
+        // first call the getElement function (or get the prerendered content)
+        let part = this.preRender ? this.preRenderedContent : (this.getElement(content, args, requestData) || '');
         
         // then render the custom tags
         return this.renderCustomElements(part, requestData).trim();
