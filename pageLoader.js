@@ -33,7 +33,7 @@ class Page {
      * @param {string} pageRoot 
      */
     constructor(pageRoot) {
-        this.entries = getEntries(pageRoot);
+        this.entries = loadPage(pageRoot);
         this.rElements = initializePage(this.entries).rElements;
     }
     
@@ -49,10 +49,10 @@ class Page {
 exports.Page = Page;
 
 /**
- * Gets the entry points from the specified page.
+ * Loads the specified page.
  * @param {string} pageRoot
  */
-function getEntries(pageRoot) {
+function loadPage(pageRoot) {
     if(pageRoot == '') return;
     
     let page = {};
