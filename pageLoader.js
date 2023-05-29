@@ -53,6 +53,13 @@ exports.Page = Page;
  * @param {string} pageRoot
  */
 function loadPage(pageRoot) {
+    if(!pageRoot) return;
+    if(!fs.existsSync(pageRoot)) return;
+    if(!fs.statSync(pageRoot).isDirectory()) return;
+    
+    return loadPageDir(pageRoot);
+}
+/*function loadPage(pageRoot) {
     if(pageRoot == '') return;
     
     let page = {};
@@ -80,6 +87,31 @@ function loadPage(pageRoot) {
     });
     
     return page;
+}*/
+
+function loadPageDir(dir) {
+    let subPage = {};
+    
+    const subpaths = fs.readdirSync(dir);
+    subpaths.forEach((e) => {
+        
+        let dire = dir + '/' + e;
+        
+        // load module
+        if(fs.statSync(dire).isFile() && dire.endsWith('.m.js')) {
+            // TODO: This is horrible. I need to change this.
+            const module = require(('./' + dire).replace('.js', ''));
+            if(module.content) subPage['index'] = module.content;
+        }
+        
+        // load subpage
+        if(fs.statSync(dire).isDirectory()) {
+            subPage[e] = loadPageDir(dire);
+        }
+        
+    });
+    
+    return subPage;
 }
 
 /**
