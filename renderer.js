@@ -70,7 +70,7 @@ class Element {
         if(!part) return part;
         
         // find first tag
-        let tags = this.getKnownParts(part)
+        let tags = this.getKnownTags(part)
         if(!tags) return part;
         
         tags.forEach((tag) => {
@@ -124,7 +124,7 @@ class Element {
         return part;
     }
     
-    getKnownParts(part) {
+    getKnownTags(part) {
         const tagRegex = /<[\w\d]+:[\w\d]+(?:\s+[\w\d]+(?:\s*=\s*(?:".*"|\d+))?)*>/g; // matches an open tag with arguments like <div class="h">
         
         let tags = part.match(tagRegex);
