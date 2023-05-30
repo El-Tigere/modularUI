@@ -57,7 +57,12 @@ class Element {
         let part = this.preRender ? this.preRenderedContent : (this.getElement(content, args, requestData) || '');
         
         // then render the custom tags
-        return this.renderCustomElements(part, requestData).trim();
+        try {
+            return this.renderCustomElements(part, requestData).trim();
+        } catch (e) {
+            console.error('An error has occured while rendering:');
+            console.error(e);
+        }
     }
     
     // renders the custom elements used in this element; there are probably much better ways of implementing this
