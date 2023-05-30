@@ -2,6 +2,8 @@ const {Element} = require('../renderer');
 
 const util = require('./util/serverUtil.m');
 
+exports.elements = {};
+
 const namespaces = {
     'sm': require('./sessionManager.m'),
     'app': require('./app.m'),
@@ -11,7 +13,7 @@ const namespaces = {
 };
 
 // args.scripts = '/script.js;/abc/xyz.js'
-exports.basePage = new Element(namespaces, true, false, (content, args) => `
+exports.elements.basePage = new Element(namespaces, true, false, (content, args) => `
 <sm:load>
 <!DOCTYPE html>
 <html lang="de">
@@ -34,7 +36,7 @@ exports.basePage = new Element(namespaces, true, false, (content, args) => `
 </html>
 `);
 
-exports.header = new Element(namespaces, false, false, (content, args, data) => `
+exports.elements.header = new Element(namespaces, false, false, (content, args, data) => `
 <header>
     <aside><logos:logo size=64></aside>
     <h1><a href="/">${args.title}</a></h1>
@@ -44,7 +46,7 @@ exports.header = new Element(namespaces, false, false, (content, args, data) => 
 </header>
 `);
 
-exports.content = new Element(namespaces, false, true, (content, args) => `
+exports.elements.content = new Element(namespaces, false, true, (content, args) => `
 <app:basePage>
     <main>
         <h1>Testseite</h1>
@@ -71,7 +73,7 @@ exports.content = new Element(namespaces, false, true, (content, args) => `
 </app:basePage>
 `);
 
-exports.section = new Element(namespaces, true, false, (content, args) => {
+exports.elements.section = new Element(namespaces, true, false, (content, args) => {
     let name = args?.name?.trim();
     if(!name) {
         return `<section>${content}</section>`;

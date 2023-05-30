@@ -36,8 +36,8 @@ class Element {
         if(this.initialized) return;
         this.initialized = true;
         
-        Object.values(this.namespaces).forEach((e) => Object.values(e).forEach((se) => {
-            if(se instanceof Element) se.init(collector);
+        Object.values(this.namespaces || {}).forEach((e) => Object.values(e.elements || {}).forEach((se) => {
+            se.init(collector);
         }));
         
         if(this.preRender) {
@@ -79,7 +79,7 @@ class Element {
             
             // get element type
             let nameParts = name.split(':');
-            let type = this.namespaces[nameParts[0]][nameParts[1]];
+            let type = this.namespaces[nameParts[0]]['elements'][nameParts[1]];
             
             // find closing tag
             let content, end;
@@ -129,7 +129,7 @@ class Element {
         tags = tags.filter((e) => {
             let name = e.match(/[\w\d]+:[\w\d]+/)[0];
             let nameParts = name.split(':');
-            return this.namespaces[nameParts[0]] && this.namespaces[nameParts[0]][nameParts[1]];
+            return this.namespaces[nameParts[0]] && this.namespaces[nameParts[0]]['elements'][nameParts[1]];
         });
         
         return tags.length > 0 ? tags : null;

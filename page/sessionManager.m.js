@@ -1,8 +1,10 @@
 const {Element} = require('../renderer');
 
+exports.elements = {};
+
 const namespaces = {};
 
-exports.load = new Element(namespaces, false, false, (content, args, data) => {
+exports.elements.load = new Element(namespaces, false, false, (content, args, data) => {
     updatePageState(data);
     if(data?.postData?.username && data?.postData?.password) {
         login(data.postData.username, data.postData.password, data.sessionData);

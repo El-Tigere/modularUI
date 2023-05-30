@@ -101,7 +101,7 @@ function loadPageDir(dir) {
         if(fs.statSync(dire).isFile() && dire.endsWith('.m.js')) {
             // TODO: This is horrible. I need to change this.
             const module = require(('./' + dire).replace('.js', ''));
-            if(module.content) subPage['index'] = module.content;
+            if(module?.elements?.content) subPage['index'] = module.elements.content;
         }
         
         // load subpage

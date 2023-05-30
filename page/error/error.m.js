@@ -1,5 +1,7 @@
 const {Element} = require('../../renderer');
 
+exports.elements = {};
+
 const namespaces = {
     'app': require('../app.m')
 };
@@ -11,7 +13,7 @@ const errorMessages = {
     'inverr': 'Der von ihnen verursachte Fehler ist ungültig.'
 }
 
-exports.content = new Element(namespaces, false, false, (content, args, data) => `
+exports.elements.content = new Element(namespaces, false, false, (content, args, data) => `
 <app:basePage>
     <main>
         <h1>Fehler ${data.url?.args?.errorCode || ':('}</h1>
