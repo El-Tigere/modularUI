@@ -53,14 +53,15 @@ exports.Page = Page;
  * @param {string} pageRoot
  */
 function loadPage(pageRoot) {
-    if(!pageRoot) return;
-    if(!fs.existsSync(pageRoot)) return;
-    if(!fs.statSync(pageRoot).isDirectory()) return;
+    if(!pageRoot) return null;
+    if(!fs.existsSync(pageRoot)) return null;
+    if(!fs.statSync(pageRoot).isDirectory()) return null;
     
-    return loadPageDir(pageRoot);
+    let allElements = {};
+    return loadPageDir(pageRoot, allElements);
 }
 
-function loadPageDir(dir) {
+function loadPageDir(dir, allElements) {
     let subPage = {};
     
     const subpaths = fs.readdirSync(dir);
@@ -71,12 +72,15 @@ function loadPageDir(dir) {
         // load module
         if(fs.statSync(dire).isFile() && dire.endsWith('.m.js')) {
             const module = require(('./' + dire).replace('.js', ''));
-            if(module?.elements?.content) subPage['index'] = module.elements.content;
+            if(module.elements) {
+                allElements[e] = module.elements;
+                if(module.elements.content) subPage['index'] = module.elements.content;
+            }
         }
         
         // load subpage
         if(fs.statSync(dire).isDirectory()) {
-            subPage[e] = loadPageDir(dire);
+            subPage[e] = loadPageDir(dire, allElements);
         }
         
     });
