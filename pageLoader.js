@@ -59,35 +59,6 @@ function loadPage(pageRoot) {
     
     return loadPageDir(pageRoot);
 }
-/*function loadPage(pageRoot) {
-    if(pageRoot == '') return;
-    
-    let page = {};
-    
-    traverseDirectory(pageRoot, [], (path) => {
-        const pathStr = pageRoot + path.map((e) => '/' + e).join('');
-        if(!fs.statSync(pathStr).isFile()) return;
-        if(!pathStr.endsWith('.m.js')) return;
-        
-        // TODO: This is horrible. I need to change this.
-        const mod = require(('./' + pathStr).replace('.js', ''));
-        
-        if(!mod.content) return;
-        
-        // insert object
-        let current = page;
-        path.slice(0, -1).forEach((e) => {
-            if(current[e]) {
-                current = current[e];
-            } else {
-                current = current[e] = {};
-            }
-        });
-        current.index = mod.content;
-    });
-    
-    return page;
-}*/
 
 function loadPageDir(dir) {
     let subPage = {};
@@ -99,7 +70,6 @@ function loadPageDir(dir) {
         
         // load module
         if(fs.statSync(dire).isFile() && dire.endsWith('.m.js')) {
-            // TODO: This is horrible. I need to change this.
             const module = require(('./' + dire).replace('.js', ''));
             if(module?.elements?.content) subPage['index'] = module.elements.content;
         }

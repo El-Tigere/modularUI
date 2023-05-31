@@ -32,7 +32,6 @@ function parseCookies(cookieString) {
 }
 exports.parseCookies = parseCookies;
 
-// TODO: this can probably break very easily
 /**
  * Parses a string from a http post request into an object
  * @param {string} str 
@@ -54,49 +53,6 @@ function parseHttpData(str) {
         // insert property
         obj[key] = val;
         
-        /*try {
-            // split property into key and value
-            let [key, val] = p.split('=');
-            if(!(key && val)) return;
-            key = decodeURIComponent(key);
-            val = decodeURIComponent(val);
-            
-            // go to the object that should be changed
-            const keyParts = key.match(/[\w\d%!().\-_]+|\[\]/g);
-            let current = obj;
-            for(let i = 0; i < keyParts.length - 1; i++)
-            {
-                if(keyParts[i] == '[]') throw new Error('Invalid http data format.'); // this is only allowed for the last key part
-                
-                // create new object or array if necessary
-                if(!current[keyParts[i]]) {
-                    // TODO: check if insertion index is an invalid array index
-                    if(keyParts[i + 1] && (!isNaN(keyParts[i + 1]) || keyParts[i + 1] == '[]')) current[keyParts[i]] = [];
-                    else current[keyParts[i]] = {};
-                }
-                
-                // go to the next object/array
-                current = current[keyParts[i]];
-            }
-            
-            // insert value
-            const lastKey = keyParts[keyParts.length - 1];
-            if(current instanceof Array) {
-                if(lastKey == '[]') {
-                    // add to array
-                    current.push(val);
-                } else {
-                    // set at specific index
-                    let arrIndex = parseInt(lastKey);
-                    if(isNaN(arrIndex)) throw new Error('Invalid http data format.');
-                    current[arrIndex] = val;
-                }
-            } else {
-                current[lastKey] = val;
-            }
-        } catch (error) {
-            
-        }*/
     });
     
     return obj;
