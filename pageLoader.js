@@ -33,7 +33,8 @@ class Page {
      * @param {string} pageRoot 
      */
     constructor(pageRoot) {
-        this.entries = loadPage(pageRoot);
+        this.allElements = {};
+        this.entries = loadPage(pageRoot, this.allElements);
         this.rElements = initializePage(this.entries).rElements;
     }
     
@@ -49,15 +50,15 @@ class Page {
 exports.Page = Page;
 
 /**
- * Loads the specified page.
+ * Loads the specified page and adds all custom elements to allElements.
  * @param {string} pageRoot
+ * @param {object} allElements
  */
-function loadPage(pageRoot) {
+function loadPage(pageRoot, allElements) {
     if(!pageRoot) return null;
     if(!fs.existsSync(pageRoot)) return null;
     if(!fs.statSync(pageRoot).isDirectory()) return null;
     
-    let allElements = {};
     return loadPageDir(pageRoot, allElements);
 }
 
