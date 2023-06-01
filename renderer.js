@@ -36,10 +36,6 @@ class Element {
         if(this.initialized) return;
         this.initialized = true;
         
-        Object.values(this.namespaces || {}).forEach((e) => Object.values(e.elements || {}).forEach((se) => {
-            se.init(collector);
-        }));
-        
         if(this.preRender) {
             this.preRenderedContent = this.getElement('', {}, {});
         }
@@ -154,6 +150,7 @@ class RElement extends Element {
     }
     
     init(collector) {
+        if(this.initialized) return;
         super.init(collector);
         
         collector.rElements[this.id] = this;

@@ -35,7 +35,7 @@ class Page {
     constructor(pageRoot) {
         this.allElements = {};
         this.entries = loadPage(pageRoot, this.allElements);
-        this.rElements = initializePage(this.entries).rElements;
+        this.rElements = initializePage(this.allElements).rElements;
     }
     
     /**
@@ -91,23 +91,17 @@ function loadPageDir(dir, allElements) {
 }
 
 /**
- * Initializes all elements that are related to (dependencies) or that are one of the entryElements.
- * @param {Object} entryElements
+ * Initializes all elements.
+ * @param {Object} allElements
  */
-function initializePage(entryElements) {
+function initializePage(allElements) {
     let collector = {rElements: {}};
-    initializeSubPage(entryElements, collector);
+    
+    Object.values(allElements).forEach((module) => Object.values(module).forEach((element) => {
+        element.init(collector);
+    }));
+    
     return collector;
-}
-
-function initializeSubPage(subPage, collector) {
-    Object.keys(subPage).forEach((k) => {
-        if(k == 'index') {
-            subPage[k].init(collector);
-        } else {
-            initializeSubPage(subPage[k], collector);
-        }
-    });
 }
 
 /**
