@@ -52,13 +52,13 @@ class Element {
      * @param {Object} request the data from the http request (req: http request, formData: data from forms)
      * @returns {string}
      */
-    render(content, args, requestData) {
+    render(content, args, requestData, allElements) {
         // first call the getElement function (or get the prerendered content)
         let part = this.preRender ? this.preRenderedContent : (this.getElement(content, args, requestData) || '');
         
         // then render the custom tags
         try {
-            return this.renderCustomElements(part, requestData).trim();
+            return this.renderCustomElements(part, requestData, allElements).trim();
         } catch (e) {
             console.error('An error has occured while rendering:');
             console.error(e);
@@ -66,11 +66,11 @@ class Element {
     }
     
     // renders the custom elements used in this element; there are probably much better ways of implementing this
-    renderCustomElements(part, requestData) {
+    renderCustomElements(part, requestData, allElements) {
         if(!part) return part;
         
         // find first tag
-        let tags = this.getKnownTags(part)
+        let tags = this.getKnownTags(part, allElements)
         if(!tags) return part;
         
         tags.forEach((tag) => {
@@ -84,7 +84,7 @@ class Element {
             
             // get element type
             let nameParts = name.split(':');
-            let type = this.namespaces[nameParts[0]]['elements'][nameParts[1]];
+            let type = allElements[nameParts[0]][nameParts[1]];
             
             // find closing tag
             let content, end;
@@ -116,7 +116,7 @@ class Element {
             });
             
             // insert the resulting elements
-            let result = type.render(content, args, requestData).trim();
+            let result = type.render(content, args, requestData, allElements).trim();
             part = part.substring(0, start) + result + part.substring(end, part.length);
             
         });
@@ -124,7 +124,7 @@ class Element {
         return part;
     }
     
-    getKnownTags(part) {
+    getKnownTags(part, allElements) {
         const tagRegex = /<[\w\d]+:[\w\d]+(?:\s+[\w\d]+(?:\s*=\s*(?:".*"|\d+))?)*>/g; // matches an open tag with arguments like <div class="h">
         
         let tags = part.match(tagRegex);
@@ -134,7 +134,7 @@ class Element {
         tags = tags.filter((e) => {
             let name = e.match(/[\w\d]+:[\w\d]+/)[0];
             let nameParts = name.split(':');
-            return this.namespaces[nameParts[0]] && this.namespaces[nameParts[0]]['elements'][nameParts[1]];
+            return allElements[nameParts[0]] && allElements[nameParts[0]][nameParts[1]];
         });
         
         return tags.length > 0 ? tags : null;
