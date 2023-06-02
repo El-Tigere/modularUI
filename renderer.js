@@ -27,7 +27,7 @@ class Element {
     }
     
     /**
-     * Initializes this Element and every other element relatet through namespaces recursively.
+     * Initializes the Element.
      * @param {Object} collector an object that can be modified by every Element during initialization
      */
     init(collector) {
