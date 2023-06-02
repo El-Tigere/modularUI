@@ -2,12 +2,7 @@ const {Element} = require('../../renderer');
 
 exports.elements = {};
 
-const namespaces = {
-    'login': require('./login.m'),
-    'app': require('../app.m')
-}
-
-exports.elements.form = new Element(namespaces, false, true, (content, args) => `
+exports.elements.form = new Element(false, true, (content, args) => `
 <form action="/" method="post">
     <fieldset>
         <legend>login</legend>
@@ -20,7 +15,7 @@ exports.elements.form = new Element(namespaces, false, true, (content, args) => 
 </form>
 `);
 
-exports.elements.content = new Element(namespaces, false, true, (content, args) => `
+exports.elements.content = new Element(false, true, (content, args) => `
 <app:basePage>
     <main>
         <h1>Login</h1>

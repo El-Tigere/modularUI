@@ -2,10 +2,6 @@ const {Element} = require('../../renderer');
 
 exports.elements = {};
 
-const namespaces = {
-    'app': require('../app.m')
-};
-
 const errorMessages = {
     '400': 'Die Anfrage ist ungültig.',
     '404': 'Die von ihnen aufgerufene Seite wurde nicht gefunden.',
@@ -13,7 +9,7 @@ const errorMessages = {
     'inverr': 'Der von ihnen verursachte Fehler ist ungültig.'
 }
 
-exports.elements.content = new Element(namespaces, false, false, (content, args, data) => `
+exports.elements.content = new Element(false, false, (content, args, data) => `
 <app:basePage>
     <main>
         <h1>Fehler ${data.url?.args?.errorCode || ':('}</h1>

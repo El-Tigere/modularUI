@@ -15,13 +15,11 @@ class Element {
     
     /**
      * constructor
-     * @param {Object.<string, Object>} namespaces an Object with this format: {'xmlNamespace': require('according import')}
      * @param {boolean} hasContent elements with no content are compact elements like the <img> element
      * @param {boolean} preRender
      * @param {GetElementCallback} getElement
      */
-    constructor(namespaces, hasContent, preRender, getElement) {
-        this.namespaces = namespaces;
+    constructor(hasContent, preRender, getElement) {
         this.hasContent = hasContent;
         this.preRender = preRender;
         this.getElement = getElement;
@@ -144,8 +142,8 @@ exports.Element = Element;
  */
 class RElement extends Element {
     
-    constructor(namespaces, id, hasContent, preRender, getElement) {
-        super(namespaces, hasContent, preRender, getElement);
+    constructor(id, hasContent, preRender, getElement) {
+        super(hasContent, preRender, getElement);
         this.id = id;
     }
     

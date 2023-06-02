@@ -3,20 +3,14 @@ const sessionManager = require('../sessionManager.m');
 
 exports.elements = {};
 
-const namespaces = {
-    'test': require('./test.m'),
-    'app': require('../app.m'),
-    'controls': require('../util/controls.m')
-}
+exports.elements.randomNumber = new Element(false, false, (content, args) => parseInt(Math.random() * 100).toString());
 
-exports.elements.randomNumber = new Element(namespaces, false, false, (content, args) => parseInt(Math.random() * 100).toString());
-
-exports.elements.randomElement = new RElement(namespaces, 'randomElement', false, true, (content, args) => `
+exports.elements.randomElement = new RElement('randomElement', false, true, (content, args) => `
 Hier ist eine zufällige Zahl: <test:randomNumber>
 <button onClick="update('randomElement', {});">update</button>
 `);
 
-exports.elements.content = new Element(namespaces, false, false, (content, args, data) => `
+exports.elements.content = new Element(false, false, (content, args, data) => `
 <app:basePage scripts="/test/clientTest.js;/test/clientTest.js">
     <main>
         <h1>Tests</h1>
@@ -68,7 +62,7 @@ exports.elements.content = new Element(namespaces, false, false, (content, args,
 </app:basePage>
 `);
 
-exports.elements.colorSquare = new RElement(namespaces, 'colorSquare', false, false, (content, args, data) => {
+exports.elements.colorSquare = new RElement('colorSquare', false, false, (content, args, data) => {
     
     sessionManager.updatePageState(data);
     
