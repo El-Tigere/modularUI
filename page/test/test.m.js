@@ -2,6 +2,7 @@ const {Element, RElement} = require('../../renderer');
 const sessionManager = require('../sessionManager.m');
 
 exports.elements = {};
+exports.groupName = 'test';
 
 exports.elements.randomNumber = new Element(false, false, (content, args) => parseInt(Math.random() * 100).toString());
 

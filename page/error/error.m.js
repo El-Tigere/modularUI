@@ -1,6 +1,7 @@
 const {Element} = require('../../renderer');
 
 exports.elements = {};
+exports.groupName = 'error';
 
 const errorMessages = {
     '400': 'Die Anfrage ist ungültig.',

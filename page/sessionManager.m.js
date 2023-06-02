@@ -1,6 +1,7 @@
 const {Element} = require('../renderer');
 
 exports.elements = {};
+exports.groupName = 'sessionManager';
 
 exports.elements.load = new Element(false, false, (content, args, data) => {
     updatePageState(data);

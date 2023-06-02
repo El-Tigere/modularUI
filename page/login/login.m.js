@@ -1,6 +1,7 @@
 const {Element} = require('../../renderer');
 
 exports.elements = {};
+exports.groupName = 'login';
 
 exports.elements.form = new Element(false, true, (content, args) => `
 <form action="/" method="post">

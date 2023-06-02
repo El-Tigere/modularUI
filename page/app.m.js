@@ -3,6 +3,7 @@ const {Element} = require('../renderer');
 const util = require('./util/serverUtil.m');
 
 exports.elements = {};
+exports.groupName = 'app';
 
 // args.scripts = '/script.js;/abc/xyz.js'
 exports.elements.basePage = new Element(true, false, (content, args) => `
