@@ -74,7 +74,13 @@ function loadPageDir(dir, allElements) {
         if(fs.statSync(dire).isFile() && dire.endsWith('.m.js')) {
             const module = require(('./' + dire).replace('.js', ''));
             if(module.elements && module.groupName) {
-                allElements[module.groupName] = module.elements; // TODO: allow multiple files with the same group name
+                // add elements to allElements
+                if(allElements[module.groupName]) {
+                    Object.assign(allElements[module.groupName], module.elements)
+                } else {
+                    allElements[module.groupName] = module.elements;
+                }
+                // add content element to entry elements (if possible)
                 if(module.elements.content) subPage['index'] = module.elements.content;
             }
         }
