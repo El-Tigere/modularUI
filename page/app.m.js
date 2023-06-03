@@ -7,7 +7,7 @@ exports.groupName = 'app';
 
 // args.scripts = '/script.js;/abc/xyz.js'
 exports.elements.basePage = new Element(true, false, (content, args) => `
-<sm:load>
+<app:sessionManager>
 <!DOCTYPE html>
 <html lang="de">
     <head>
