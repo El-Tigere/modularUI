@@ -84,7 +84,7 @@ function serverListener(req, res) {
         
         // limit request size
         // TODO: find a better way of limiting the request size
-        if(postDataString.length > (1024 * 1024 /* 1MB */)) {
+        if(postDataString.length > (1024 * 1024 * config.maxPostDataMB)) {
             end = true;
             respondError(res, 413, data);
         }
