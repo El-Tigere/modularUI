@@ -4,5 +4,6 @@
     "pageRoot": "page",
     "maxPostDataMB": 1,
     "maxSessionAgeHours": 24,
-    "maxSessionNoUseHours": 1
+    "maxSessionNoUseHours": 1,
+    "oldSessionCheckMinutes": 1
 }

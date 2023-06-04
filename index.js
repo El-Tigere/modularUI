@@ -241,4 +241,4 @@ server.listen(config.port, config.host, () => {
     console.log(`Server listening on ${config.host}:${config.port}`);
 });
 
-setInterval(removeOldSessions, 1000 * 60);
+setInterval(removeOldSessions, 1000 * 60 * config.oldSessionCheckMinutes);
