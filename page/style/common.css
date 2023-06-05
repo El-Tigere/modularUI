@@ -2,11 +2,13 @@
     --background-0: #111;
     --background-1: #222;
     --background-2: #333;
+    --text-0: #EEE;
+    --highlight-0: #07F;
 }
 
 body {
     background-color: var(--background-0);
-    color: #EEE;
+    color: var(--text-0);
     font-family: Arial, Helvetica, sans-serif;
     margin: 0px;
 }
@@ -25,7 +27,7 @@ header h1 {
     margin: 0.5em 0em 0.5em 0em;
 }
 header h1 a {
-    color: #EEE;
+    color: var(--text-0);
     text-decoration: none;
 }
 header h1 a:hover {
@@ -110,5 +112,5 @@ main .test-square {
 }
 .switch.active span {
     transform: translateX(1.5em);
-    background-color: #07F;
+    background-color: var(--highlight-0);
 }
