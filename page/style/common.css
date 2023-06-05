@@ -49,6 +49,11 @@ header aside {
     margin: 0.25em 0em 0em 0em;
 }
 
+/* general */
+a {
+    color: var(--highlight-0);
+}
+
 /* main content */
 .center {
     display: flex;
