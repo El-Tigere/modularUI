@@ -7,6 +7,7 @@ const pageLoader = require('./pageLoader');
 
 // config
 const config = JSON.parse(fs.readFileSync('defaultConfig.json'));
+parsers.deepAssign(config, JSON.parse(fs.readFileSync('config.json')));
 const mimeTypes = JSON.parse(fs.readFileSync('mime.json'));
 const pageMap = JSON.parse(fs.readFileSync('pageMap.json'));
 
