@@ -92,3 +92,21 @@ function setAt(obj, path, val) {
     current[path[path.length - 1]] = val;
 }
 exports.setAt = setAt;
+
+/**
+ * Assign all properties of the source object that also exist in the target to the target.
+ * @param {Object} target 
+ * @param {Object} source 
+ */
+function deepAssign(target, source) {
+    Object.keys(source).forEach((e) => {
+        if(target.hasOwnProperty(e)) {
+            if(source[e] instanceof Object) {
+                deepAssign(target[e], source[e]);
+            } else {
+                target[e] = source[e];
+            }
+        }
+    });
+}
+exports.deepAssign = deepAssign;
