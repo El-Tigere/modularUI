@@ -61,6 +61,7 @@ exports.elements.content = new Element(false, true, (content, args) => `
         </app:section>
         <app:section name="Links">
             <p>Tests: <a href="/test">Tests</a></p>
+            <p>Seite mit viel Inhalt: <a href="/test2">viel Inhalt</a></p>
         </app:section>
     </main>
 </app:basePage>
