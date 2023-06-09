@@ -58,13 +58,15 @@ a {
 .center {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+    padding-top: 3em;
 }
 
 main {
     text-align: left;
     background-color: var(--background-1);
     width: 64em;
-    margin: 3em 2em 3em 2em;
+    margin: 0em 2em 3em 2em;
     padding: 0.25em 1em 0.75em 1em;
     box-shadow: 0 0 0.5em #000;
 }
