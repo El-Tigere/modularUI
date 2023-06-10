@@ -39,7 +39,8 @@ const newSession = () => {return {timeCreated: Date.now(), timeUsed: Date.now(),
         "updateData[colorTheme]": "hotdogStand"
     },
     "url": ["play", "level-select", "3-B"],
-    "resCode": 200
+    "resCode": 200,
+    "config": {...}
 }
 
 */
@@ -54,6 +55,7 @@ function serverListener(req, res) {
     
     let data = {};
     data.req = req;
+    data.config = config;
     
     // get cookies
     data.cookies = req.headers?.cookie ? parsers.parseCookies(req.headers.cookie) : {};
