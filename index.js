@@ -17,6 +17,15 @@ const page = new pageLoader.Page(config.pageRoot);
 
 const sessionData = {};
 
+// database
+const database = require('./database');
+// TODO: group config properties
+database.connect({
+    host: config.dbHost,
+    user: config.dbUserName,
+    password: config.dbPassword
+});
+
 // supplier for new session
 const newSession = () => {return {timeCreated: Date.now(), timeUsed: Date.now(), pageState: {someKey: 'someData'}}};
 
