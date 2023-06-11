@@ -3,9 +3,11 @@
     "host": "127.0.0.1",
     "pageRoot": "page",
     
-    "dbHost": "<host>",
-    "dbUserName": "<username>",
-    "dbPassword": "<password>",
+    "databaseLogin": {
+        "host": "<host>",
+        "user": "<username>",
+        "password": "<password>"
+    },
     
     "maxPostDataMB": 1,
     "maxSessionAgeHours": 24,
