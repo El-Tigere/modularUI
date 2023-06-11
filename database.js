@@ -1,4 +1,7 @@
+// TODO: move part of this to the test page
+
 const mysql = require('mysql');
+const crypto = require('crypto');
 
 var connection;
 
@@ -17,3 +20,8 @@ function connect(connectionConfig) {
     });
 }
 exports.connect = connect;
+
+function sha256(input) {
+    let hash = crypto.createHash('sha256').update(input).digest('hex');
+    return hash;
+}
