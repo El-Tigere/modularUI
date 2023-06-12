@@ -62,6 +62,12 @@ function loadPage(pageRoot, allElements) {
     return loadPageDir(pageRoot, allElements);
 }
 
+/**
+ * Loads a directory.
+ * @param {string} dir 
+ * @param {object} allElements 
+ * @returns 
+ */
 function loadPageDir(dir, allElements) {
     let subPage = {};
     
