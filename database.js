@@ -25,20 +25,19 @@ exports.connect = connect;
  * Searches a user with matching login data and returns the id (or -1 when none was found).
  * @param {string} username 
  * @param {string} password 
- * @param {(id : number) => {}} callback 
  */
-function login(username, password, callback) {
+async function login(username, password) {
     const escapedUserName = mysql.escape(username);
     const escapedPWHash = mysql.escape(sha256(password));
     const query = `SELECT ID FROM users WHERE Name = ${escapedUserName} AND PWHash = ${escapedPWHash}`;
-    connection.query(query, (err, result) => {
+    let ret = -1;
+    await connection.query(query, (err, result) => {
         if(err) throw err;
         if(result.length > 0) {
-            callback(result[0]['ID']);
-        } else {
-            callback(-1);
+            ret = result[0]['ID'];
         }
     });
+    return ret;
 }
 exports.login = login;
 
