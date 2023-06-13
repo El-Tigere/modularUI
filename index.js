@@ -20,7 +20,7 @@ const page = new pageLoader.Page(config.pageRoot);
 const sessionData = {};
 
 // database
-const database = require('./database');
+const database = require('./page/util/database.m');
 database.connect(config.databaseLogin);
 
 // supplier for new session

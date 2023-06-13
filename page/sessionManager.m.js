@@ -1,5 +1,5 @@
 const {Element} = require('../renderer');
-const database = require('../database');
+const database = require('./util/database.m');
 
 exports.elements = {};
 exports.groupName = 'app';

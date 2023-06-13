@@ -1,5 +1,3 @@
-// TODO: move part of this to the test page
-
 const mysql = require('mysql');
 const crypto = require('crypto');
 
