@@ -1,13 +1,14 @@
 const {Element} = require('../renderer');
+const database = require('../database');
 
 exports.elements = {};
 exports.groupName = 'app';
 
 exports.elements.sessionManager = new Element(false, false, (content, args, data) => {
     updatePageState(data);
-    if(data?.postData?.username && data?.postData?.password) {
+    /*if(data?.postData?.username && data?.postData?.password) {
         login(data.postData.username, data.postData.password, data.sessionData);
-    }
+    }*/
 });
 
 function updatePageState(data) {
@@ -22,7 +23,6 @@ function updatePageState(data) {
 }
 exports.updatePageState = updatePageState;
 
-// TODO: add databases for actual user authentication
 /**
  * Tries to log in with the given username and password.
  * @param {string} username 
@@ -30,10 +30,12 @@ exports.updatePageState = updatePageState;
  * @param {object} session 
  * @returns {boolean} success
  */
-function login(username, password, session) {
-    if(!username || !password) return false; // login if any username or password is used
+async function login(username, password, session) {
+    if(!username || !password) return;
+    if(await database.login(username, password) <= -1) return;
     session.login = {username: username};
-    return true;
+    
+    return;
 }
 
 exports.login = login;

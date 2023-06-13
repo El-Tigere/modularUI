@@ -26,18 +26,23 @@ exports.connect = connect;
  * @param {string} username 
  * @param {string} password 
  */
-async function login(username, password) {
+function login(username, password) {
     const escapedUserName = mysql.escape(username);
     const escapedPWHash = mysql.escape(sha256(password));
     const query = `SELECT ID FROM users WHERE Name = ${escapedUserName} AND PWHash = ${escapedPWHash}`;
-    let ret = -1;
-    await connection.query(query, (err, result) => {
-        if(err) throw err;
-        if(result.length > 0) {
-            ret = result[0]['ID'];
-        }
+    
+    let promise = new Promise((resolve, reject) => {
+        connection.query(query, (err, result) => {
+            if(err) throw err;
+            if(result.length > 0) {
+                resolve(result[0]['ID']);
+            } else {
+                resolve(-1);
+            }
+        });
     });
-    return ret;
+    
+    return promise;
 }
 exports.login = login;
 

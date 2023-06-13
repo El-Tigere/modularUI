@@ -5,6 +5,8 @@ const renderer = require('./renderer');
 const parsers = require('./parsers');
 const pageLoader = require('./pageLoader');
 
+const sessionManager = require('./page/sessionManager.m');
+
 // config
 const config = JSON.parse(fs.readFileSync('defaultConfig.json'));
 try {
@@ -195,9 +197,20 @@ function respondMainPage(element, res, resCode, url, data) {
     data.url = url;
     data.resCode = resCode; // sets res code to expected res code
     res.setHeader('Content-Type', 'text/html');
-    let pageContent = element.render('', {}, data, page.allElements);
-    res.writeHead(data.resCode); // sends res code that might have changed
-    res.end(pageContent);
+    
+    // TODO: somehow move this back to page
+    if(data?.postData?.username && data?.postData?.password) {
+        sessionManager.login(data.postData.username, data.postData.password, data.sessionData).then(() => {
+            let pageContent = element.render('', {}, data, page.allElements);
+            res.writeHead(data.resCode); // sends res code that might have changed
+            res.end(pageContent);
+        });
+    } else {
+        let pageContent = element.render('', {}, data, page.allElements);
+        res.writeHead(data.resCode); // sends res code that might have changed
+        res.end(pageContent);
+    }
+    
 }
 
 /**
