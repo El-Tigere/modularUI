@@ -18,9 +18,12 @@ class Element {
      * @param {boolean} preRender
      * @param {GetElementCallback} getElement
      */
-    constructor(hasContent, preRender, getElement) {
-        this.hasContent = hasContent;
-        this.preRender = preRender;
+    constructor(options, getElement) {
+        if(options) {
+            this.hasContent = options.hasContent || false;
+            this.preRender = options.preRender || false;
+        }
+        
         this.getElement = getElement;
         this.initialized = false;
     }
@@ -141,8 +144,8 @@ exports.Element = Element;
  */
 class RElement extends Element {
     
-    constructor(id, hasContent, preRender, getElement) {
-        super(hasContent, preRender, getElement);
+    constructor(id, options, getElement) {
+        super(options, getElement);
         this.id = id;
     }
     

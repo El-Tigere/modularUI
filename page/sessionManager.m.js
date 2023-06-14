@@ -4,7 +4,7 @@ const database = require('./util/database.m');
 exports.elements = {};
 exports.groupName = 'app';
 
-exports.elements.sessionManager = new Element(false, false, (content, args, data) => {
+exports.elements.sessionManager = new Element({}, (content, args, data) => {
     updatePageState(data);
     /*if(data?.postData?.username && data?.postData?.password) {
         login(data.postData.username, data.postData.password, data.sessionData);

@@ -3,7 +3,7 @@ const {Element} = require('../../renderer');
 exports.elements = {};
 exports.groupName = 'test2';
 
-exports.elements.content = new Element(false, false, (content, args) => `
+exports.elements.content = new Element({}, (content, args) => `
 <app:basePage scripts="/test/clientTest.js;/test/clientTest.js">
     <main>
         <h1>Teil 1</h1>

@@ -10,7 +10,7 @@ const errorMessages = {
     'inverr': 'Der von ihnen verursachte Fehler ist ungültig.'
 }
 
-exports.elements.content = new Element(false, false, (content, args, data) => `
+exports.elements.content = new Element({}, (content, args, data) => `
 <app:basePage>
     <main>
         <h1>Fehler ${data.url?.args?.errorCode || ':('}</h1>

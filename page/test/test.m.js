@@ -4,14 +4,14 @@ const sessionManager = require('../sessionManager.m');
 exports.elements = {};
 exports.groupName = 'test';
 
-exports.elements.randomNumber = new Element(false, false, (content, args) => parseInt(Math.random() * 100).toString());
+exports.elements.randomNumber = new Element({}, (content, args) => parseInt(Math.random() * 100).toString());
 
-exports.elements.randomElement = new RElement('randomElement', false, true, (content, args) => `
+exports.elements.randomElement = new RElement('randomElement', {preRender: true}, (content, args) => `
 Hier ist eine zufällige Zahl: <test:randomNumber>
 <button onClick="update('randomElement', {});">update</button>
 `);
 
-exports.elements.content = new Element(false, false, (content, args, data) => `
+exports.elements.content = new Element({}, (content, args, data) => `
 <app:basePage scripts="/test/clientTest.js;/test/clientTest.js">
     <main>
         <h1>Tests</h1>
@@ -63,7 +63,7 @@ exports.elements.content = new Element(false, false, (content, args, data) => `
 </app:basePage>
 `);
 
-exports.elements.colorSquare = new RElement('colorSquare', false, false, (content, args, data) => {
+exports.elements.colorSquare = new RElement('colorSquare', {}, (content, args, data) => {
     
     sessionManager.updatePageState(data);
     

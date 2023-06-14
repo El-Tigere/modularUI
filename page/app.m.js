@@ -6,7 +6,7 @@ exports.elements = {};
 exports.groupName = 'app';
 
 // args.scripts = '/script.js;/abc/xyz.js'
-exports.elements.basePage = new Element(true, false, (content, args) => `
+exports.elements.basePage = new Element({hasContent: true}, (content, args) => `
 <app:sessionManager>
 <!DOCTYPE html>
 <html lang="de">
@@ -29,7 +29,7 @@ exports.elements.basePage = new Element(true, false, (content, args) => `
 </html>
 `);
 
-exports.elements.header = new Element(false, false, (content, args, data) => `
+exports.elements.header = new Element({}, (content, args, data) => `
 <header>
     <aside><logos:logo size=64></aside>
     <h1><a href="/">${args.title}</a></h1>
@@ -39,7 +39,7 @@ exports.elements.header = new Element(false, false, (content, args, data) => `
 </header>
 `);
 
-exports.elements.content = new Element(false, true, (content, args) => `
+exports.elements.content = new Element({preRender: true}, (content, args) => `
 <app:basePage>
     <main>
         <h1>Testseite</h1>
@@ -67,7 +67,7 @@ exports.elements.content = new Element(false, true, (content, args) => `
 </app:basePage>
 `);
 
-exports.elements.section = new Element(true, false, (content, args) => {
+exports.elements.section = new Element({hasContent: true}, (content, args) => {
     let name = args?.name?.trim();
     if(!name) {
         return `<section>${content}</section>`;

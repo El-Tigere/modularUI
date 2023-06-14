@@ -3,7 +3,7 @@ const {Element} = require('../../renderer');
 exports.elements = {};
 exports.groupName = 'login';
 
-exports.elements.form = new Element(false, true, (content, args) => `
+exports.elements.form = new Element({preRender: true}, (content, args) => `
 <form action="/" method="post">
     <fieldset>
         <legend>login</legend>
@@ -16,7 +16,7 @@ exports.elements.form = new Element(false, true, (content, args) => `
 </form>
 `);
 
-exports.elements.content = new Element(false, true, (content, args) => `
+exports.elements.content = new Element({preRender: true}, (content, args) => `
 <app:basePage>
     <main>
         <h1>Login</h1>
