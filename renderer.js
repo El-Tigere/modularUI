@@ -8,6 +8,7 @@ class Element {
      * @callback GetElementCallback
      * @param {string} content
      * @param {Object} args
+     * @param {Object} data
      * @returns {string}
      */
     
