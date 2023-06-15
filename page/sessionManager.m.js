@@ -4,11 +4,11 @@ const database = require('./util/database.m');
 exports.elements = {};
 exports.groupName = 'app';
 
-exports.elements.sessionManager = new Element({}, (content, args, data) => {
+exports.elements.sessionManager = new Element({isAsync: true}, async (content, args, data) => {
     updatePageState(data);
-    /*if(data?.postData?.username && data?.postData?.password) {
-        login(data.postData.username, data.postData.password, data.sessionData);
-    }*/
+    if(data?.postData?.username && data?.postData?.password) {
+        await login(data.postData.username, data.postData.password, data.sessionData);
+    }
 });
 
 function updatePageState(data) {
