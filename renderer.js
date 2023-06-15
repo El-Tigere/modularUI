@@ -22,6 +22,7 @@ class Element {
         if(options) {
             this.hasContent = options.hasContent || false;
             this.preRender = options.preRender || false;
+            this.isAsync = options.isAsync || false;
         }
         
         this.getElement = getElement;
@@ -37,6 +38,7 @@ class Element {
         this.initialized = true;
         
         if(this.preRender) {
+            // TODO: change prerendering to actual prerendering
             this.preRenderedContent = this.getElement('', {}, {});
         }
     }
@@ -48,13 +50,23 @@ class Element {
      * @param {Object} request the data from the http request (req: http request, formData: data from forms)
      * @returns {string}
      */
-    render(content, args, requestData, allElements) {
+    async render(content, args, requestData, allElements) {
         // first call the getElement function (or get the prerendered content)
-        let part = this.preRender ? this.preRenderedContent : (this.getElement(content, args, requestData) || '');
+        let part;
+        if(this.preRender) {
+            part = this.preRenderedContent;
+        } else {
+            if(this.isAsync) {
+                part = (await this.getElement(content, args, requestData)) || '';
+            } else {
+                part = this.getElement(content, args, requestData) || '';
+            }
+        }
         
         // then render the custom tags
         try {
-            return this.renderCustomElements(part, requestData, allElements).trim();
+            let asdfd = await this.renderCustomElements(part, requestData, allElements);
+            return asdfd.trim();
         } catch (e) {
             console.error('An error has occured while rendering:');
             console.error(e);
@@ -62,18 +74,19 @@ class Element {
     }
     
     // renders the custom elements used in this element; there are probably much better ways of implementing this
-    renderCustomElements(part, requestData, allElements) {
+    async renderCustomElements(part, requestData, allElements) {        
         if(!part) return part;
         
         // find first tag
         let tags = this.getKnownTags(part, allElements)
         if(!tags) return part;
         
-        tags.forEach((tag) => {
+        for(let i = 0; i < tags.length; i++) {
+            let tag = tags[i];
             
             // get tag information
             let start = part.indexOf(tag);
-            if(start == -1) return;
+            if(start == -1) continue;
             let name = tag.match(/[\w\d]+:[\w\d]+/)[0];
             let open = `<${name}`; // > is missing because open tags can have arguments but always start with <name
             let close = `</${name}>`;
@@ -112,10 +125,11 @@ class Element {
             });
             
             // insert the resulting elements
-            let result = type.render(content, args, requestData, allElements).trim();
+            let asdfd = await type.render(content, args, requestData, allElements);
+            let result = asdfd.trim();
             part = part.substring(0, start) + result + part.substring(end, part.length);
             
-        });
+        }
         
         return part;
     }
