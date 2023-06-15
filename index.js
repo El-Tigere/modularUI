@@ -198,19 +198,10 @@ function respondMainPage(element, res, resCode, url, data) {
     data.resCode = resCode; // sets res code to expected res code
     res.setHeader('Content-Type', 'text/html');
     
-    // TODO: somehow move this back to page
-    if(data?.postData?.username && data?.postData?.password) {
-        sessionManager.login(data.postData.username, data.postData.password, data.sessionData).then(() => {
-            let pageContent = element.render('', {}, data, page.allElements);
-            res.writeHead(data.resCode); // sends res code that might have changed
-            res.end(pageContent);
-        });
-    } else {
-        let pageContent = element.render('', {}, data, page.allElements);
+    element.render('', {}, data, page.allElements).then((pageContent) => {
         res.writeHead(data.resCode); // sends res code that might have changed
         res.end(pageContent);
-    }
-    
+    });
 }
 
 /**
