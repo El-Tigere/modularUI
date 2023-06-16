@@ -6,8 +6,13 @@ exports.groupName = 'app';
 
 exports.elements.sessionManager = new Element({isAsync: true}, async (content, args, data) => {
     updatePageState(data);
+    // login
     if(data?.postData?.username && data?.postData?.password) {
         await login(data.postData.username, data.postData.password, data.sessionData);
+    }
+    //register
+    if(data?.postData?.rUsername && data?.postData?.rPassword && data?.postData?.rPassword2) {
+        await register(data.postData.rUsername, data.postData.rPassword, data.postData.rPassword2, data.sessionData);
     }
 });
 
@@ -33,9 +38,19 @@ exports.updatePageState = updatePageState;
 async function login(username, password, session) {
     if(!username || !password) return;
     if(await database.login(username, password) <= -1) return;
+    
     session.login = {username: username};
     
     return;
 }
-
 exports.login = login;
+
+async function register(username, password, password2, session) {
+    if(!username || !password || !password2) return;
+    if(!(await database.register(username, password, password2))) return;
+    
+    console.log('*register*');
+    
+    return;
+}
+exports.register = register;

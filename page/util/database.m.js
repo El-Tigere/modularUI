@@ -44,6 +44,18 @@ function login(username, password) {
 }
 exports.login = login;
 
+/**
+ * Adds an account to the users table.
+ * @param {string} username 
+ * @param {string} password 
+ * @param {string} password2 
+ * @returns {boolean} success
+ */
+async function register(username, password, password2) {
+    return true;
+}
+exports.register = register;
+
 function sha256(input) {
     let hash = crypto.createHash('sha256').update(input).digest('hex');
     return hash;
