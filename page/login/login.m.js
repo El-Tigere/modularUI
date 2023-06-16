@@ -22,6 +22,7 @@ exports.elements.content = new Element({preRender: true}, (content, args) => `
         <h1>Login</h1>
         <app:section>
             <login:form>
+            <p>Don't have an account yet? <a href="/login/register">Create a new account.</a></p>
         </app:section>
     </main>
 </app:basePage>
