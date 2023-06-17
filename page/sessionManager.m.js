@@ -6,13 +6,18 @@ exports.groupName = 'app';
 
 exports.elements.sessionManager = new Element({isAsync: true}, async (content, args, data) => {
     updatePageState(data);
-    // login
-    if(data?.postData?.username && data?.postData?.password) {
-        await login(data.postData.username, data.postData.password, data.sessionData);
-    }
-    //register
-    if(data?.postData?.rUsername && data?.postData?.rPassword && data?.postData?.rPassword2) {
-        await register(data.postData.rUsername, data.postData.rPassword, data.postData.rPassword2, data.sessionData);
+    
+    if(data.postData) {
+        let pd = data.postData;
+        
+        // login
+        if(pd.username && pd.password) {
+            await login(pd.username, pd.password, pd);
+        }
+        //register
+        if(pd.rUsername && pd.rPassword && pd.rPassword2) {
+            await register(pd.rUsername, pd.rPassword, pd.rPassword2, pd);
+        }
     }
 });
 
