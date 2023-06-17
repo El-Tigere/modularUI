@@ -12,11 +12,11 @@ exports.elements.sessionManager = new Element({isAsync: true}, async (content, a
         
         // login
         if(pd.username && pd.password) {
-            await login(pd.username, pd.password, pd);
+            await login(pd.username, pd.password, data.sessionData);
         }
         //register
         if(pd.rUsername && pd.rPassword && pd.rPassword2) {
-            await register(pd.rUsername, pd.rPassword, pd.rPassword2, pd);
+            await register(pd.rUsername, pd.rPassword, pd.rPassword2, data.sessionData);
         }
     }
 });
