@@ -33,7 +33,12 @@ function login(username, password) {
         connection.query(query, (err, result) => {
             if(err) throw err;
             if(result.length > 0) {
-                resolve(result[0]['ID']);
+                // set LoggedIn in users table to 1
+                const id = result[0]['ID'];
+                const escapedId = mysql.escape(id);
+                const query2 = `UPDATE users SET LoggedIn = 1 WHERE ID = ${escapedId}`;
+                connection.query(query2);
+                resolve(id);
             } else {
                 resolve(-1);
             }
