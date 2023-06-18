@@ -54,6 +54,14 @@ a:hover {
     text-decoration: underline;
 }
 
+button {
+    border: 1px solid var(--text-0);
+    padding: 0.25em 0.5em;
+    font-size: inherit;
+    background-color: var(--background-1);
+    color: var(--text-0);
+}
+
 /* main content */
 .center {
     display: flex;
