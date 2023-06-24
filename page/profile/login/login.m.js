@@ -1,10 +1,35 @@
 const {Element} = require('../../../renderer');
 
+const sessionManager = require('../../sessionManager.m');
+
 exports.elements = {};
 exports.groupName = 'login';
 
+exports.elements.content = new Element({isAsync: true}, async (content, args, data) => {
+    let loginSuccess = false;
+    if(data?.postData?.username && data?.postData?.password) {
+        loginSuccess = await sessionManager.login(data.postData.username, data.postData.password, data.sessionData);
+        console.log(loginSuccess);
+    }
+    return `
+    <app:basePage>
+        <main>
+            <h1>Login</h1>
+            <app:section>
+                ${loginSuccess
+                    ? `<p>Successfully logged in. Welcome back, ${data.sessionData.login.username}!</p>`
+                    : data.sessionData.login
+                        ? '<login:loggedin>'
+                        : '<login:form>'
+                }
+            </app:section>
+        </main>
+    </app:basePage>
+    `
+});
+
 exports.elements.form = new Element({preRender: true}, (content, args) => `
-<form action="/" method="post">
+<form action="/profile/login" method="post">
     <fieldset>
         <legend>login</legend>
         <table>
@@ -14,16 +39,10 @@ exports.elements.form = new Element({preRender: true}, (content, args) => `
         <input type="submit" value="login">
     </fieldset>
 </form>
+<p>Don\'t have an account yet? <a href="/profile/register">Create a new account.</a></p>
 `);
 
-exports.elements.content = new Element({preRender: true}, (content, args) => `
-<app:basePage>
-    <main>
-        <h1>Login</h1>
-        <app:section>
-            <login:form>
-            <p>Don't have an account yet? <a href="/profile/register">Create a new account.</a></p>
-        </app:section>
-    </main>
-</app:basePage>
+exports.elements.loggedin = new Element({}, (content, args, data) => `
+    <p>logged in as</p>
+    <p>${args.a ? '<a href="/profile/settings">' : ''}<b>${data.sessionData.login.username}</b>${args.a ? '</a>' : ''}</p>
 `);

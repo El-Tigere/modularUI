@@ -34,7 +34,7 @@ exports.elements.header = new Element({}, (content, args, data) => `
     <aside><logos:logo size=64></aside>
     <h1><a href="/">${args.title}</a></h1>
     <aside class="user-info">
-        ${data.sessionData.login ? `<p>logged in as</p><p><a href="/profile/settings"><b>${data.sessionData.login.username}</b></a></p>` : '<p>not logged in</p><p><a href="/profile/login">login</a></p>'}
+        ${data.sessionData.login ? '<login:loggedin a>' : '<p>not logged in</p><p><a href="/profile/login">login</a></p>'}
     </aside>
 </header>
 `);

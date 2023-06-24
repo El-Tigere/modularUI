@@ -7,7 +7,7 @@ exports.groupName = 'app';
 exports.elements.sessionManager = new Element({isAsync: true}, async (content, args, data) => {
     updatePageState(data);
     
-    if(data.postData) {
+    /*if(data.postData) {
         let pd = data.postData;
         
         // login
@@ -18,7 +18,7 @@ exports.elements.sessionManager = new Element({isAsync: true}, async (content, a
         if(pd.rUsername && pd.rPassword && pd.rPassword2) {
             await register(pd.rUsername, pd.rPassword, pd.rPassword2, data.sessionData);
         }
-    }
+    }*/
 });
 
 function updatePageState(data) {
@@ -41,12 +41,12 @@ exports.updatePageState = updatePageState;
  * @returns {boolean} success
  */
 async function login(username, password, session) {
-    if(!username || !password) return;
-    if(await database.login(username, password) <= -1) return;
+    if(!username || !password) return false;
+    if(await database.login(username, password) <= -1) return false;
     
     session.login = {username: username};
     
-    return;
+    return true;
 }
 exports.login = login;
 
