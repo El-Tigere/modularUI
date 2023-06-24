@@ -115,12 +115,15 @@ class Element {
             // find arguments
             let args = {};
             (tag.substring(1 + name.length).match(/[\w\d]+(?:\s*=\s*(?:".*"|\d+))?/g) || []).forEach((e) => {
-                let eqPos = e.indexOf('=')
-                let parts = [e.substring(0, eqPos), e.substring(eqPos + 1)];
-                if(parts[1]) {
-                    args[parts[0]] = parts[1].startsWith('"') ? parts[1].substring(1, parts[1].length - 1) : + parts[1];
+                let eqPos = e.indexOf('=');
+                if(eqPos > -1) {
+                    // arguments with '=' and a value
+                    let argK = e.substring(0, eqPos);
+                    let argV = e.substring(eqPos + 1);
+                    args[argK] = argV.startsWith('"') ? argV.substring(1, argV.length - 1) : + argV;
                 } else {
-                    args[parts[0]] = 1;
+                    // flags without a value
+                    args[e] = 1;
                 }
             });
             
