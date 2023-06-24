@@ -54,7 +54,7 @@ a:hover {
     text-decoration: underline;
 }
 
-button {
+button, input[type="submit"] {
     border: 1px solid var(--text-0);
     padding: 0.25em 0.5em;
     font-size: inherit;
@@ -88,7 +88,10 @@ main section > * + * {
     margin-top: 1em;
 }
 
-main fieldset > * + * + * {
+main fieldset {
+    border: 1px solid var(--text-0);
+}
+main fieldset input[type="submit"] {
     margin-top: 1em;
 }
 
