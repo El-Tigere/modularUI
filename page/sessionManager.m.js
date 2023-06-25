@@ -42,9 +42,10 @@ exports.updatePageState = updatePageState;
  */
 async function login(username, password, session) {
     if(!username || !password) return false;
-    if(await database.login(username, password) <= -1) return false;
+    let id = await database.login(username, password);
+    if(id <= -1) return false;
     
-    session.login = {username: username};
+    session.login = {id: id, username: username};
     
     return true;
 }
