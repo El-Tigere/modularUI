@@ -50,6 +50,17 @@ function login(username, password) {
 exports.login = login;
 
 /**
+ * Tries to log out a user.
+ * @param {number} userId 
+ */
+function logout(userId) {
+    const escapedId = mysql.escape(userId);
+    const query = `UPDATE users SET LoggedIn = 0 WHERE ID = ${escapedId}`;
+    connection.query(query);
+}
+exports.logout = logout;
+
+/**
  * Adds an account to the users table.
  * @param {string} username 
  * @param {string} password 
