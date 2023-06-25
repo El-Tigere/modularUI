@@ -1,6 +1,6 @@
 const {Element} = require('../../../renderer');
 
-const sessionManager = require('../../sessionManager.m');
+const database = require('../../util/database.m');
 
 exports.elements = {};
 exports.groupName = 'login';
@@ -8,7 +8,7 @@ exports.groupName = 'login';
 exports.elements.content = new Element({isAsync: true}, async (content, args, data) => {
     let loginSuccess = false;
     if(data?.postData?.username && data?.postData?.password) {
-        loginSuccess = await sessionManager.login(data.postData.username, data.postData.password, data.sessionData);
+        loginSuccess = await login(data.postData.username, data.postData.password, data.sessionData);
         console.log(loginSuccess);
     }
     return `
@@ -27,6 +27,23 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
     </app:basePage>
     `
 });
+
+/**
+ * Tries to log in with the given username and password.
+ * @param {string} username 
+ * @param {string} password 
+ * @param {object} session 
+ * @returns {boolean} success
+ */
+async function login(username, password, session) {
+    if(!username || !password) return false;
+    let id = await database.login(username, password);
+    if(id <= -1) return false;
+    
+    session.login = {id: id, username: username};
+    
+    return true;
+}
 
 exports.elements.form = new Element({preRender: true}, (content, args) => `
 <form action="/profile/login" method="post">
