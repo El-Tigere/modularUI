@@ -9,7 +9,6 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
     let loginSuccess = false;
     if(data?.postData?.username && data?.postData?.password) {
         loginSuccess = await login(data.postData.username, data.postData.password, data.sessionData);
-        console.log(loginSuccess);
     }
     return `
     <app:basePage>
