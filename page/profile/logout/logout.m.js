@@ -6,6 +6,7 @@ exports.elements = {};
 exports.groupName = 'logout';
 
 exports.elements.content = new Element({isAsync: true}, async (content, args, data) => {
+    logout(data.sessionData);
     return `
     <app:basePage>
         <main>
@@ -13,10 +14,16 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
             <app:section>
                 ${data.sessionData.login
                     ? '<login:loggedin>'
-                    : 'You are not logged in'
+                    : '<p>You are not logged in.</p>'
                 }
             </app:section>
         </main>
     </app:basePage>
     `;
 });
+
+function logout(session) {
+    if(!session.login) return;
+    database.logout(session.login.id);
+    session.login = undefined;
+}
