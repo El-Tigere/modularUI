@@ -25,7 +25,7 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
 });
 
 async function logout(session) {
-    if(!session.login) return;
+    if(!session || !session.login) return false;
     let success = await database.logout(session.login.id);
     if(success) session.login = undefined;
     return success;
