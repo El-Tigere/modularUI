@@ -30,15 +30,19 @@ function login(username, password) {
     const query = `SELECT ID FROM users WHERE Name = ${escapedUserName} AND PWHash = ${escapedPWHash}`;
     
     let promise = new Promise((resolve, reject) => {
+        // get user id
         connection.query(query, (err, result) => {
             if(err) throw err;
             if(result.length > 0) {
-                // set LoggedIn in users table to 1
                 const id = result[0]['ID'];
                 const escapedId = mysql.escape(id);
                 const query2 = `UPDATE users SET LoggedIn = 1 WHERE ID = ${escapedId}`;
-                connection.query(query2);
-                resolve(id);
+                // set LoggedIn in users table to 1
+                connection.query(query2, (err2, result2) => {
+                    if(err2) throw err2;
+                    if(result2.affectedRows == 1) resolve(id);
+                    else resolve(-1);
+                });
             } else {
                 resolve(-1);
             }
@@ -56,7 +60,17 @@ exports.login = login;
 function logout(userId) {
     const escapedId = mysql.escape(userId);
     const query = `UPDATE users SET LoggedIn = 0 WHERE ID = ${escapedId}`;
-    connection.query(query);
+    
+    let promise = new Promise((resolve, reject) => {
+        connection.query(query, (err, result) => {
+            if(err) throw err;
+            
+            if(result.affectedRows == 1) resolve(true);
+            else resolve(false);
+        });
+    });
+    
+    return promise;
 }
 exports.logout = logout;
 

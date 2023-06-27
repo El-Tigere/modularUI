@@ -6,15 +6,17 @@ exports.elements = {};
 exports.groupName = 'logout';
 
 exports.elements.content = new Element({isAsync: true}, async (content, args, data) => {
-    logout(data.sessionData);
+    let logoutSuccess = await logout(data.sessionData);
     return `
     <app:basePage>
         <main>
             <h1>Logout</h1>
             <app:section>
-                ${data.sessionData.login
-                    ? '<login:loggedin>'
-                    : '<p>You are not logged in.</p>'
+                ${logoutSuccess
+                    ? '<p>Successfully logged out.</p>'
+                    : data.sessionData.login
+                        ? '<login:loggedin>'
+                        : '<p>You are not logged in.</p>'
                 }
             </app:section>
         </main>
@@ -22,8 +24,9 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
     `;
 });
 
-function logout(session) {
+async function logout(session) {
     if(!session.login) return;
-    database.logout(session.login.id);
-    session.login = undefined;
+    let success = await database.logout(session.login.id);
+    if(success) session.login = undefined;
+    return success;
 }
