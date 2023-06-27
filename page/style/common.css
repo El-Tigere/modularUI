@@ -83,8 +83,12 @@ main h1 {
     text-align: center;
 }
 
-main section > * + * {
+main section > * {
     margin-left: 1em;
+    margin-top: 1em;
+}
+main section > h2 {
+    margin-left: 0em;
     margin-top: 1em;
 }
 
