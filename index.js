@@ -5,8 +5,6 @@ const renderer = require('./renderer');
 const parsers = require('./parsers');
 const pageLoader = require('./pageLoader');
 
-const sessionManager = require('./page/sessionManager.m');
-
 // config
 const config = JSON.parse(fs.readFileSync('defaultConfig.json'));
 try {
