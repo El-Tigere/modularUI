@@ -3,6 +3,9 @@ const crypto = require('crypto');
 
 var connection;
 
+/**
+ * Starts a new cinnection with the given login if there is no existing connection.
+ */
 function connect(connectionConfig) {
     if(connection) return; // don't reconnect if a connection already exists
     
