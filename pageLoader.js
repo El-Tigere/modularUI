@@ -16,7 +16,7 @@ class UrlPath {
         
         this.path = parsers.parseUrlPath(this.pathStr);
         
-        if(this.argsStr) this.args = parsers.parseHttpData(this.argsStr);
+        this.args = parsers.parseHttpData(this.argsStr);
     }
     
 }
