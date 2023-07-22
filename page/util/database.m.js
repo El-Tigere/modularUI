@@ -89,6 +89,9 @@ async function register(username, password, password2) {
 }
 exports.register = register;
 
+/**
+ * Returns the SHA256 value of the input in hexadecimal.
+ */
 function sha256(input) {
     let hash = crypto.createHash('sha256').update(input).digest('hex');
     return hash;
