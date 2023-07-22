@@ -1,4 +1,7 @@
 
+/**
+ * Takes an input seperated by spaces and returns rhe camel case version.
+ */
 function seperatedToCamelCase(str) {
     let parts = str.match(/[\w\d]+/g) || [];
     parts = parts.map((e) => e[0].toUpperCase() + e.substring(1).toLowerCase());
