@@ -12,5 +12,9 @@
     "maxPostDataMB": 1,
     "maxSessionAgeHours": 24,
     "maxSessionNoUseHours": 1,
-    "oldSessionCheckMinutes": 1
+    "oldSessionCheckMinutes": 1,
+
+    "debug": {
+        "noDatabase": false
+    }
 }
