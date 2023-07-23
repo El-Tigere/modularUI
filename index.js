@@ -19,7 +19,7 @@ const sessionData = {};
 
 // database
 const database = require('./page/util/database.m');
-database.connect(config.databaseLogin);
+if(!config.debug.noDatabase) database.connect(config.databaseLogin);
 
 // supplier for new session
 const newSession = () => {return {timeCreated: Date.now(), timeUsed: Date.now(), pageState: {someKey: 'someData'}}};
