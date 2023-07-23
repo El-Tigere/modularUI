@@ -33,6 +33,11 @@ function login(username, password) {
     const query = `SELECT ID FROM users WHERE Name = ${escapedUserName} AND PWHash = ${escapedPWHash}`;
     
     let promise = new Promise((resolve, reject) => {
+        if(!connection) {
+            resolve(-1);
+            return;
+        }
+
         // get user id
         connection.query(query, (err, result) => {
             if(err) throw err;
@@ -65,6 +70,11 @@ function logout(userId) {
     const query = `UPDATE users SET LoggedIn = 0 WHERE ID = ${escapedId}`;
     
     let promise = new Promise((resolve, reject) => {
+        if(!connection) {
+            resolve(false);
+            return;
+        }
+
         connection.query(query, (err, result) => {
             if(err) throw err;
             
