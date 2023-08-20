@@ -59,6 +59,16 @@ exports.elements.content = new Element({}, (content, args, data) => `
                 </tr>
             </table>
         </app:section>
+        <app:section name="MathMl">
+            <p>
+                x
+            </p>    
+            <math>
+                <mrow>
+                    <mi>x</mi><mo>=</mo><mn>41</mn><mo>+</mo><mfrac><mrow><mn>42</mn></mrow><mrow><mn>42</mn></mrow></mfrac>
+                </mrow>
+            </math>
+        </app:section>
     </main>
 </app:basePage>
 `);
