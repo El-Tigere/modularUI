@@ -65,8 +65,7 @@ class Element {
         
         // then render the custom tags
         try {
-            let asdfd = await this.renderCustomElements(part, requestData, allElements);
-            return asdfd.trim();
+            return (await this.renderCustomElements(part, requestData, allElements)).trim();
         } catch (e) {
             console.error('An error has occured while rendering:');
             console.error(e);
