@@ -5,8 +5,6 @@ const renderer = require('./renderer');
 const parsers = require('./parsers');
 const pageLoader = require('./pageLoader');
 
-const sessionManager = require('./page/sessionManager.m');
-
 // config
 const config = JSON.parse(fs.readFileSync('defaultConfig.json'));
 try {
@@ -21,7 +19,7 @@ const sessionData = {};
 
 // database
 const database = require('./page/util/database.m');
-database.connect(config.databaseLogin);
+if(!config.debug.noDatabase) database.connect(config.databaseLogin);
 
 // supplier for new session
 const newSession = () => {return {timeCreated: Date.now(), timeUsed: Date.now(), pageState: {someKey: 'someData'}}};

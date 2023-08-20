@@ -3,6 +3,9 @@ const crypto = require('crypto');
 
 var connection;
 
+/**
+ * Starts a new cinnection with the given login if there is no existing connection.
+ */
 function connect(connectionConfig) {
     if(connection) return; // don't reconnect if a connection already exists
     
@@ -30,6 +33,11 @@ function login(username, password) {
     const query = `SELECT ID FROM users WHERE Name = ${escapedUserName} AND PWHash = ${escapedPWHash}`;
     
     let promise = new Promise((resolve, reject) => {
+        if(!connection) {
+            resolve(-1);
+            return;
+        }
+
         // get user id
         connection.query(query, (err, result) => {
             if(err) throw err;
@@ -62,6 +70,11 @@ function logout(userId) {
     const query = `UPDATE users SET LoggedIn = 0 WHERE ID = ${escapedId}`;
     
     let promise = new Promise((resolve, reject) => {
+        if(!connection) {
+            resolve(false);
+            return;
+        }
+
         connection.query(query, (err, result) => {
             if(err) throw err;
             
@@ -86,6 +99,9 @@ async function register(username, password, password2) {
 }
 exports.register = register;
 
+/**
+ * Returns the SHA256 value of the input in hexadecimal.
+ */
 function sha256(input) {
     let hash = crypto.createHash('sha256').update(input).digest('hex');
     return hash;

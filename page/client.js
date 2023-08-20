@@ -1,3 +1,6 @@
+/**
+ * Requests the content of the given id and places it into the element on the page with that id.
+ */
 function update(id, data) {
     $('#' + id).load(document.URL, {getElement: id, updateData: JSON.stringify(data)});
 }

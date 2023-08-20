@@ -38,6 +38,7 @@ exports.parseCookies = parseCookies;
  */
 function parseHttpData(str) {
     let obj = {};
+    if(!str) return obj;
     
     // split input into individual property assignments
     const properties = str.split('&');

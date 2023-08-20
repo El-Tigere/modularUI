@@ -14,10 +14,9 @@ class UrlPath {
         this.str = str;
         [this.pathStr, this.argsStr] = str.split('?');
         
-        this.pathStr = this.pathStr.toLowerCase();
         this.path = parsers.parseUrlPath(this.pathStr);
         
-        if(this.argsStr) this.args = parsers.parseHttpData(this.argsStr);
+        this.args = parsers.parseHttpData(this.argsStr);
     }
     
 }
