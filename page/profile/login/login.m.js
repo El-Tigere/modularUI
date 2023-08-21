@@ -7,7 +7,8 @@ exports.groupName = 'login';
 
 exports.elements.content = new Element({isAsync: true}, async (content, args, data) => {
     let loginSuccess = false;
-    if(data?.postData?.username && data?.postData?.password) {
+    let pd = data.postData;
+    if(pd && pd.username && pd.password)  {
         loginSuccess = await login(data.postData.username, data.postData.password, data.sessionData);
     }
     return `
