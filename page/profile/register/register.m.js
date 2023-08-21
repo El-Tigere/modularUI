@@ -15,7 +15,7 @@ exports.elements.content = new Element({}, (content, args, data) => `
 `);
 
 exports.elements.form = new Element({preRender: true}, (content, args) => `
-<form action="/" method="post">
+<form action="/profile/register" method="post">
     <fieldset>
         <legend>register</legend>
         <table>
