@@ -1,5 +1,7 @@
 const {Element} = require('../../../renderer');
 
+const database = require('../../util/database.m');
+
 exports.elements = {};
 exports.groupName = 'register';
 
@@ -13,6 +15,23 @@ exports.elements.content = new Element({}, (content, args, data) => `
     </main>
 </app:basePage>
 `);
+
+// TODO: merge this with the according function in database
+async function register(username, password, password2, session) {
+    if(!username || !password || !password2 || !session) return false;
+    if(password != password2) return false;
+    
+    // create account
+    if(await database.register(username, password) != 0) return false;
+    
+    // login with new account
+    let id = await database.login(username, password);
+    if(id <= -1) return false;
+    
+    session.login = {id: id, username: username}; // TODO: remove duplicate code for login
+    
+    return true;
+}
 
 exports.elements.form = new Element({preRender: true}, (content, args) => `
 <form action="/profile/register" method="post">
