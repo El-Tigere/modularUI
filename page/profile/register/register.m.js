@@ -5,16 +5,23 @@ const database = require('../../util/database.m');
 exports.elements = {};
 exports.groupName = 'register';
 
-exports.elements.content = new Element({}, (content, args, data) => `
-<app:basePage>
-    <main>
-        <h1>Create a new account</h1>
-        <app:section>
+exports.elements.content = new Element({isAsync: true}, async (content, args, data) => {
+    let registerSuccess = false;
+    let pd = data.postData;
+    if(pd && pd.username && pd.password && pd.password2) {
+        registerSuccess = await register(pd.username, pd.password, pd.password2, data.sessionData); // TODO: fix space being replaced by + in input data
+    }
+    return `
+    <app:basePage>
+        <main>
+            <h1>Create a new account</h1>
+            <app:section>
             <register:form>
         </app:section>
     </main>
 </app:basePage>
-`);
+    `
+});
 
 // TODO: merge this with the according function in database
 async function register(username, password, password2, session) {
