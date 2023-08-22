@@ -87,15 +87,45 @@ function logout(userId) {
 }
 exports.logout = logout;
 
+// TODO: make an async function for sql querys (not callbacks)
 /**
  * Adds an account to the users table.
  * @param {string} username 
  * @param {string} password 
  * @param {string} password2 
- * @returns {boolean} success
+ * @returns {number} 0: success; 1: name already exists; 2: invalid username; 3: other error
  */
-async function register(username, password, password2) {
-    return true;
+async function register(username, password) {
+    // TODO: check for illegal special characters in the username
+    const escapedUserName = mysql.escape(username);
+    const escapedPWHash = mysql.escape(sha256(password));
+    const query = `SELECT ID FROM users WHERE Name = ${escapedUserName}`;
+    
+    let promise = new Promise((resolve, reject) => {
+        if(!connection) {
+            resolve(3);
+            return;
+        }
+        
+        // check if username already exists
+        connection.query(query, (err, result) => {
+            if(err) throw err;
+            
+            if(result.length == 1) {
+                resolve(1);
+                return;
+            }
+            
+            const query2 = `INSERT INTO users (Name, PWHash, LoggedIn) VALUES (${escapedUserName}, ${escapedPWHash}, 0)`;
+            // insert new user
+            connection.query(query2, (err, result2) => {
+                if(result2.affectedRows == 1) resolve(0);
+                else resolve(3);
+            });
+        });
+    });
+    
+    return promise;
 }
 exports.register = register;
 
