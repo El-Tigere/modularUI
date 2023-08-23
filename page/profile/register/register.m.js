@@ -16,10 +16,15 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
         <main>
             <h1>Create a new account</h1>
             <app:section>
-            <register:form>
-        </app:section>
-    </main>
-</app:basePage>
+                ${registerSuccess
+                    ? `<p>Successfully registered. Welcome, ${data.sessionData.login.username}!</p>`
+                    : data.sessionData.login
+                        ? '<p>You can\'t create an account when logged in.</p><login:loggedin>'
+                        : '<register:form>' // TODO: registration failed message
+                }
+            </app:section>
+        </main>
+    </app:basePage>
     `
 });
 
