@@ -20,7 +20,9 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
                     ? `<p>Successfully logged in. Welcome back, ${data.sessionData.login.username}!</p>`
                     : data.sessionData.login
                         ? '<login:loggedin>'
-                        : '<login:form>'
+                        : pd && (pd.username || pd.password)
+                            ? '<p class="loginFail">Login failed. Please try again.</p><login:form>'
+                            : '<login:form>'
                 }
             </app:section>
         </main>
