@@ -9,7 +9,7 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
     let loginSuccess = false;
     let pd = data.postData;
     if(pd && pd.username && pd.password)  {
-        loginSuccess = await login(data.postData.username, data.postData.password, data.sessionData);
+        loginSuccess = await login(pd.username, pd.password, data.sessionData);
     }
     return `
     <app:basePage>
