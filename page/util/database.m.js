@@ -129,6 +129,18 @@ async function register(username, password) {
 }
 exports.register = register;
 
+// TODO: handle case where connection is undefined
+function asyncQuery(query) {
+    let promise = new Promise((resolve, reject) => {
+        connection.query(query, (err, result) => {
+            if(err) throw err;
+            resolve(result);
+        })
+    });
+    
+    return promise;
+}
+
 /**
  * Returns the SHA256 value of the input in hexadecimal.
  */
