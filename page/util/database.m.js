@@ -130,6 +130,11 @@ async function register(username, password) {
 exports.register = register;
 
 // TODO: handle case where connection is undefined
+/**
+ * An async version of the query function of connections.
+ * @param {string} query SQL-query
+ * @returns promise for the result of the sql query
+ */
 function asyncQuery(query) {
     let promise = new Promise((resolve, reject) => {
         connection.query(query, (err, result) => {
