@@ -53,25 +53,15 @@ exports.login = login;
  * Tries to log out a user.
  * @param {number} userId 
  */
-function logout(userId) {
+async function logout(userId) {
+    if(!connection) return false;
+    
     const escapedId = mysql.escape(userId);
     const query = `UPDATE users SET LoggedIn = 0 WHERE ID = ${escapedId}`;
+    const result = await asyncQuery(query);
+    if(result.affectedRows != 1) return false;
     
-    let promise = new Promise((resolve, reject) => {
-        if(!connection) {
-            resolve(false);
-            return;
-        }
-
-        connection.query(query, (err, result) => {
-            if(err) throw err;
-            
-            if(result.affectedRows == 1) resolve(true);
-            else resolve(false);
-        });
-    });
-    
-    return promise;
+    return true;
 }
 exports.logout = logout;
 
