@@ -27,37 +27,25 @@ exports.connect = connect;
  * @param {string} username 
  * @param {string} password 
  */
-function login(username, password) {
+async function login(username, password) {
+    if(!connection) return -1;
+    
     const escapedUserName = mysql.escape(username);
     const escapedPWHash = mysql.escape(sha256(password));
     const query = `SELECT ID FROM users WHERE Name = ${escapedUserName} AND PWHash = ${escapedPWHash}`;
     
-    let promise = new Promise((resolve, reject) => {
-        if(!connection) {
-            resolve(-1);
-            return;
-        }
-
-        // get user id
-        connection.query(query, (err, result) => {
-            if(err) throw err;
-            if(result.length > 0) {
-                const id = result[0]['ID'];
-                const escapedId = mysql.escape(id);
-                const query2 = `UPDATE users SET LoggedIn = 1 WHERE ID = ${escapedId}`;
-                // set LoggedIn in users table to 1
-                connection.query(query2, (err2, result2) => {
-                    if(err2) throw err2;
-                    if(result2.affectedRows == 1) resolve(id);
-                    else resolve(-1);
-                });
-            } else {
-                resolve(-1);
-            }
-        });
-    });
+    // get user id
+    const result = await asyncQuery(query);
+    if(result.length <= 0) return -1;
+    const id = result[0]['ID'];
     
-    return promise;
+    // set LoggedIn in users table to 1
+    const escapedId = mysql.escape(id);
+    const query2 = `UPDATE users SET LoggedIn = 1 WHERE ID = ${escapedId}`;
+    const result2 = await asyncQuery(query2);
+    if(result2.affectedRows != 1) return -1;
+    
+    return id;
 }
 exports.login = login;
 
