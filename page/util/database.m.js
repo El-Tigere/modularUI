@@ -74,36 +74,23 @@ exports.logout = logout;
  * @returns {number} 0: success; 1: name already exists; 2: invalid username; 3: other error
  */
 async function register(username, password) {
+    if(!connection) return 3;
+    
     // TODO: check for illegal special characters in the username
     const escapedUserName = mysql.escape(username);
     const escapedPWHash = mysql.escape(sha256(password));
     const query = `SELECT ID FROM users WHERE Name = ${escapedUserName}`;
     
-    let promise = new Promise((resolve, reject) => {
-        if(!connection) {
-            resolve(3);
-            return;
-        }
-        
-        // check if username already exists
-        connection.query(query, (err, result) => {
-            if(err) throw err;
-            
-            if(result.length == 1) {
-                resolve(1);
-                return;
-            }
-            
-            const query2 = `INSERT INTO users (Name, PWHash, LoggedIn) VALUES (${escapedUserName}, ${escapedPWHash}, 0)`;
-            // insert new user
-            connection.query(query2, (err, result2) => {
-                if(result2.affectedRows == 1) resolve(0);
-                else resolve(3);
-            });
-        });
-    });
+    // check if username already exists
+    const result = await asyncQuery(query);
+    if(result.length == 1) return 1;
     
-    return promise;
+    // insert new user
+    const query2 = `INSERT INTO users (Name, PWHash, LoggedIn) VALUES (${escapedUserName}, ${escapedPWHash}, 0)`;
+    const result2 = await asyncQuery(query2);
+    if(result2.affectedRows != 1) return 3;
+    
+    return 0;
 }
 exports.register = register;
 
