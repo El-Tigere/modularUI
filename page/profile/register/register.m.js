@@ -6,21 +6,25 @@ exports.elements = {};
 exports.groupName = 'register';
 
 exports.elements.content = new Element({isAsync: true}, async (content, args, data) => {
-    let registerSuccess = false;
+    let registerStatus = -1;
     let pd = data.postData;
     if(pd && pd.username && pd.password && pd.password2) {
-        registerSuccess = await register(pd.username, pd.password, pd.password2, data.sessionData); // TODO: fix space being replaced by + in input data
+        registerStatus = await register(pd.username, pd.password, pd.password2, data.sessionData); // TODO: fix space being replaced by + in input data
     }
     return `
     <app:basePage>
         <main>
             <h1>Create a new account</h1>
             <app:section>
-                ${registerSuccess
-                    ? `<p>Successfully registered. Welcome, ${data.sessionData.login.username}!</p>`
-                    : data.sessionData.login
-                        ? '<p>You can\'t create an account when logged in.</p><login:loggedin>'
-                        : '<register:form>' // TODO: registration failed message
+                ${
+                    registerStatus == -1 ? '<register:form>'
+                    : registerStatus == 0 ? `<p>Successfully registered. Welcome, ${data.sessionData.login.username}!</p>`
+                    : registerStatus == 1 ? '<p>This username already exists</p><register:form>' // TODO: check duplicate usernames as soon as the username is typed (not when the register form is submitted)
+                    : registerStatus == 2 ? '<p>Your Input is invalid.</p><register:form>'
+                    : '<p>An error has occured.</p><register:form>'
+                
+                    //: data.sessionData.login
+                    //    ? '<p>You can\'t create an account when logged in.</p><login:loggedin>'
                 }
             </app:section>
         </main>
@@ -29,20 +33,22 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
 });
 
 // TODO: merge this with the according function in database
+// returns: 0: success; 1: name already exists; 2: invalid input; 3: other error
 async function register(username, password, password2, session) {
-    if(!username || !password || !password2 || !session) return false;
-    if(password != password2) return false;
+    if(!username || !password || !password2 || !session) return 2;
+    if(password != password2) return 2;
     
     // create account
-    if(await database.register(username, password) != 0) return false;
+    let registerStatus = await database.register(username, password);
+    if(registerStatus != 0) return registerStatus;
     
     // login with new account
     let id = await database.login(username, password);
-    if(id <= -1) return false;
+    if(id <= -1) return 3;
     
     session.login = {id: id, username: username}; // TODO: remove duplicate code for login
     
-    return true;
+    return 0;
 }
 
 exports.elements.form = new Element({preRender: true}, (content, args) => `
