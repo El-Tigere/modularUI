@@ -9,7 +9,10 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
     let loginSuccess = false;
     let pd = data.postData;
     if(pd && pd.username && pd.password)  {
-        loginSuccess = await login(pd.username, pd.password, data.sessionData);
+        // try login
+        let id = await database.login(pd.username, pd.password);
+        loginSuccess = id > -1;
+        if(loginSuccess) data.sessionData.login = {id: id, username: pd.username};
     }
     return `
     <app:basePage>
@@ -29,23 +32,6 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
     </app:basePage>
     `
 });
-
-/**
- * Tries to log in with the given username and password.
- * @param {string} username 
- * @param {string} password 
- * @param {object} session 
- * @returns {boolean} success
- */
-async function login(username, password, session) {
-    if(!username || !password) return false;
-    let id = await database.login(username, password);
-    if(id <= -1) return false;
-    
-    session.login = {id: id, username: username};
-    
-    return true;
-}
 
 exports.elements.form = new Element({preRender: true}, (content, args) => `
 <form action="/profile/login" method="post">
