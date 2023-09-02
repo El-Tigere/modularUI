@@ -48,7 +48,7 @@ function parseHttpData(str) {
         // split property into key and value
         let [key, val] = p.split('=');
         if(!(key && val)) return;
-        key = decodeURIComponent(key);
+        key = key;
         val = decodeURIComponent(val);
         
         // insert property
