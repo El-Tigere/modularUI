@@ -49,7 +49,7 @@ function parseHttpData(str) {
         let [key, val] = p.split('=');
         if(!(key && val)) return;
         key = key;
-        val = decodeURIComponent(val);
+        val = decodeURIComponent(val.replace(/\+/g, '%20'));
         
         // insert property
         obj[key] = val;
