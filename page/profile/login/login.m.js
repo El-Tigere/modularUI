@@ -9,6 +9,7 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
     let loginSuccess = false;
     let pd = data.postData;
     if(pd && pd.username && pd.password)  {
+        console.log(pd.username);
         // try login
         let id = await database.login(pd.username, pd.password);
         loginSuccess = id > -1;

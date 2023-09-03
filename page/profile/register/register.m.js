@@ -9,7 +9,7 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
     let registerStatus = -1;
     let pd = data.postData;
     if(pd && pd.username && pd.password && pd.password2) {
-        registerStatus = await register(pd.username, pd.password, pd.password2, data.sessionData); // TODO: fix space being replaced by + in input data
+        registerStatus = await register(pd.username, pd.password, pd.password2, data.sessionData);
     }
     return `
     <app:basePage>
@@ -24,7 +24,7 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
                     : '<p>An error has occured.</p><register:form>'
                 
                     //: data.sessionData.login
-                    //    ? '<p>You can\'t create an account when logged in.</p><login:loggedin>'
+                    //    ? '<p>You can\'t create an account when logged in.</p><login:loggedin>' // TODO: make it impossible to login or register when logged in (or logout automatically)
                 }
             </app:section>
         </main>

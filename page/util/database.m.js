@@ -65,7 +65,6 @@ async function logout(userId) {
 }
 exports.logout = logout;
 
-// TODO: make an async function for sql querys (not callbacks)
 /**
  * Adds an account to the users table.
  * @param {string} username 
