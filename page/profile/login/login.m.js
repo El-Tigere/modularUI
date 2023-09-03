@@ -8,8 +8,7 @@ exports.groupName = 'login';
 exports.elements.content = new Element({isAsync: true}, async (content, args, data) => {
     let loginSuccess = false;
     let pd = data.postData;
-    if(pd && pd.username && pd.password)  {
-        console.log(pd.username);
+    if(pd && pd.username && pd.password && !data.sessionData.login)  {
         // try login
         let id = await database.login(pd.username, pd.password);
         loginSuccess = id > -1;
@@ -20,13 +19,11 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
         <main>
             <h1>Login</h1>
             <app:section>
-                ${loginSuccess
-                    ? `<p>Successfully logged in. Welcome back, ${data.sessionData.login.username}!</p>`
-                    : data.sessionData.login
-                        ? '<login:loggedin>'
-                        : pd && (pd.username || pd.password)
-                            ? '<p class="loginFail">Login failed. Please try again.</p><login:form>'
-                            : '<login:form>'
+                ${
+                    loginSuccess ? `<p>Successfully logged in. Welcome back, ${data.sessionData.login.username}!</p>`
+                    : data.sessionData.login ? '<p>You can not log in when already logged in.</p><login:loggedin>'
+                    : pd && (pd.username || pd.password) ? '<p class="loginFail">Login failed. Please try again.</p><login:form>'
+                    : '<login:form>'
                 }
             </app:section>
         </main>
