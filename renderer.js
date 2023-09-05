@@ -37,7 +37,6 @@ class Element {
         if(this.initialized) return;
         
         if(this.preRender) {
-            // TODO: change prerendering to actual prerendering
             this.preRenderedContent = await this.render('', {}, {}, {});
         }
         
@@ -52,19 +51,17 @@ class Element {
      * @returns {string}
      */
     async render(content, args, requestData, allElements) {
-        // first call the getElement function (or get the prerendered content)
+        if(this.preRender && !this.initialized) return this.preRenderedContent;
+        
+        // call the getElement function
         let part;
-        if(this.preRender) {
-            part = this.preRenderedContent;
+        if(this.isAsync) {
+            part = (await this.getElement(content, args, requestData)) || '';
         } else {
-            if(this.isAsync) {
-                part = (await this.getElement(content, args, requestData)) || '';
-            } else {
-                part = this.getElement(content, args, requestData) || '';
-            }
+            part = this.getElement(content, args, requestData) || '';
         }
         
-        // then render the custom tags
+        // render the custom tags
         try {
             return (await this.renderCustomElements(part, requestData, allElements)).trim();
         } catch (e) {
