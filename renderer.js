@@ -35,12 +35,13 @@ class Element {
      */
     init(collector) {
         if(this.initialized) return;
-        this.initialized = true;
         
         if(this.preRender) {
             // TODO: change prerendering to actual prerendering
             this.preRenderedContent = this.getElement('', {}, {});
         }
+        
+        this.initialized = true;
     }
     
     /**
@@ -167,9 +168,10 @@ class RElement extends Element {
     
     init(collector) {
         if(this.initialized) return;
-        super.init(collector);
         
         collector.rElements[this.id] = this;
+        
+        super.init(collector);
     }
     
 }
