@@ -51,7 +51,7 @@ class Element {
      * @returns {string}
      */
     async render(content, args, requestData, allElements) {
-        if(this.preRender && !this.initialized) return this.preRenderedContent;
+        if(this.preRender && this.initialized) return this.preRenderedContent;
         
         // call the getElement function
         let part;
