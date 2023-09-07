@@ -6,7 +6,7 @@ exports.groupName = 'test';
 
 exports.elements.randomNumber = new Element({}, (content, args) => parseInt(Math.random() * 100).toString());
 
-exports.elements.randomElement = new RElement('randomElement', {preRender: true}, (content, args) => `
+exports.elements.randomElement = new RElement('randomElement', {}, (content, args) => `
 Hier ist eine zufällige Zahl: <test:randomNumber>
 <button onClick="update('randomElement', {});">update</button>
 `);

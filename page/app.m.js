@@ -39,7 +39,7 @@ exports.elements.header = new Element({}, (content, args, data) => `
 </header>
 `);
 
-exports.elements.content = new Element({preRender: true}, (content, args) => `
+exports.elements.content = new Element({}, (content, args) => `
 <app:basePage>
     <main>
         <h1>Testseite</h1>
