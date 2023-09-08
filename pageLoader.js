@@ -108,7 +108,7 @@ function initializePage(allElements) {
     let collector = {rElements: {}};
     
     Object.values(allElements).forEach((module) => Object.values(module).forEach((element) => {
-        element.init(collector);
+        element.init(collector, allElements);
     }));
     
     return collector;

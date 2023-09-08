@@ -33,11 +33,11 @@ class Element {
      * Initializes the Element.
      * @param {Object} collector an object that can be modified by every Element during initialization
      */
-    async init(collector) {
+    async init(collector, allElements) {
         if(this.initialized) return;
         
         if(this.preRender) {
-            this.preRenderedContent = await this.render('', {}, {}, {});
+            this.preRenderedContent = await this.render('', {}, {}, allElements);
         }
         
         this.initialized = true;
@@ -51,7 +51,7 @@ class Element {
      * @returns {string}
      */
     async render(content, args, requestData, allElements) {
-        if(this.preRender && this.initialized) return this.preRenderedContent;
+        if(this.preRender && this.initialized) return this.preRenderedContent; // TODO: preRender-Elements can be rendered more than once if rendered by another preRender-Element during initialization
         
         // call the getElement function
         let part;
@@ -163,12 +163,12 @@ class RElement extends Element {
         this.id = id;
     }
     
-    init(collector) {
+    init(collector, allElements) {
         if(this.initialized) return;
         
         collector.rElements[this.id] = this;
         
-        super.init(collector);
+        super.init(collector, allElements);
     }
     
 }
