@@ -18,11 +18,11 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
             <app:section>
                 ${
                     registerStatus == -1 ? '<register:form>'
-                    : data.sessionData.login ? '<p>You can not create an account when logged in.</p><login:loggedin>'
+                    : data.sessionData.login ? '<p class="errorMessage">You can not create an account when logged in.</p><login:loggedin>'
                     : registerStatus == 0 ? `<p>Successfully registered. Welcome, ${data.sessionData.login.username}!</p>`
-                    : registerStatus == 1 ? '<p>This username already exists</p><register:form>' // TODO: check duplicate usernames as soon as the username is typed (not when the register form is submitted)
-                    : registerStatus == 2 ? '<p>Your Input is invalid.</p><register:form>'
-                    : '<p>An error has occured.</p><register:form>'
+                    : registerStatus == 1 ? '<p class="errorMessage">This username already exists</p><register:form>' // TODO: check duplicate usernames as soon as the username is typed (not when the register form is submitted)
+                    : registerStatus == 2 ? '<p class="errorMessage">Your Input is invalid.</p><register:form>'
+                    : '<p class="errorMessage">An error has occured.</p><register:form>'
                 }
             </app:section>
         </main>
