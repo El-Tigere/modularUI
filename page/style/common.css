@@ -69,7 +69,7 @@ button, input[type="submit"] {
     }
     100% {}
 }
-.loginFail {
+.errorMessage {
     animation: blink-red 0.5s ease;
 }
 
