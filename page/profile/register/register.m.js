@@ -27,7 +27,7 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
             </app:section>
         </main>
     </app:basePage>
-    `
+    `;
 });
 
 // TODO: merge this with the according function in database
