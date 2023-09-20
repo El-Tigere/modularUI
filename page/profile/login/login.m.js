@@ -28,7 +28,7 @@ exports.elements.content = new Element({isAsync: true}, async (content, args, da
             </app:section>
         </main>
     </app:basePage>
-    `
+    `;
 });
 
 exports.elements.form = new Element({preRender: true}, (content, args) => `
